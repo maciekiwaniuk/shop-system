@@ -1,0 +1,31 @@
+version: '3'
+
+networks:
+  nginx-php:
+
+services:
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/project
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+    networks:
+      - nginx-php
+
+  php:
+    container_name: php
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    ports:
+      - "9000:9000"
+    volumes:
+      - .:/var/www/project
+    networks:
+      - nginx-php
