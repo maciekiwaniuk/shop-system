@@ -54,5 +54,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="chat-gpt-api-service" />
+    <orderEntry type="module" module-name="demo-crypto-exchange" />
   </component>
 </module>

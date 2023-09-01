@@ -3,15 +3,24 @@
   <component name="ChangeListManager">
     <list default="true" id="df145181-5365-4a48-afa9-1096a805dbce" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../chatgpt-api-service/docker/php/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/../chatgpt-api-service/docker/php/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/bundles.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/bundles.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/routes.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/services.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/services.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/symfony.lock" beforeDir="false" afterPath="$PROJECT_DIR$/symfony.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shop-service.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shop-service.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Application/Constraint/UniqueFieldInEntity.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Application/Constraint/UniqueFieldInEntity.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Application/Constraint/Validators/UniqueFieldInEntityValidator.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Application/Constraint/Validators/UniqueFieldInEntityValidator.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Domain/Entity/Order.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/Entity/Order.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Domain/Entity/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/Entity/User.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Infrastructure/Doctrine/DataFixtures/AppFixtures.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Infrastructure/Doctrine/DataFixtures/AppFixtures.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Infrastructure/Doctrine/Repository/OrderRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Infrastructure/Doctrine/Repository/OrderRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Infrastructure/Doctrine/Repository/UserRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Infrastructure/Doctrine/Repository/UserRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/Console/CreateAdminCommand.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/Console/CreateUserCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/Console/CreateUserCommand.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/Controller/Admin/OrdersController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/Controller/Admin/ProductsController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/Controller/Admin/UsersController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/Controller/User/OrdersController.php" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,7 +151,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/kazo/Desktop/GitHubRepos/shop-service/docker",
+    "last_opened_file_path": "C:/Users/kazo/Desktop/GitHubRepos/demo-crypto-exchange",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -176,6 +185,10 @@
       <workItem from="1693135192485" duration="1077000" />
       <workItem from="1693138023906" duration="2329000" />
       <workItem from="1693146392856" duration="3909000" />
+      <workItem from="1693567722802" duration="1216000" />
+      <workItem from="1693570475128" duration="3588000" />
+      <workItem from="1693576202602" duration="3273000" />
+      <workItem from="1693587875924" duration="1139000" />
     </task>
     <servers />
   </component>
