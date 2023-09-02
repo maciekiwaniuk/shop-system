@@ -1,31 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Application\Query\GetOrders;
 
+use App\Application\Bus\QueryBus\QueryBusInterface;
+use App\Application\Query\QueryResultInterface;
 use App\Infrastructure\Doctrine\Repository\OrderRepository;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Component\Messenger\HandleTrait;
-use Symfony\Component\Messenger\MessageBusInterface;
 
 #[AsMessageHandler]
 class GetOrdersQueryHandler
 {
-    use HandleTrait;
-
     public function __construct(
         protected readonly OrderRepository $orderRepository,
-        MessageBusInterface $messageBus
+        protected readonly QueryBusInterface $queryBus
     ) {
-        $this->messageBus = $messageBus;
     }
 
-    public function __invoke(GetOrdersQuery $getOrdersQuery): array
+    public function __invoke(GetOrdersQuery $getOrdersQuery): QueryResultInterface
     {
-        return $this->query($getOrdersQuery);
-    }
-
-    public function query(GetOrdersQuery $getOrdersQuery): array
-    {
-        return $this->handle();
+        return $this->queryBus->handle($getOrdersQuery);
     }
 }

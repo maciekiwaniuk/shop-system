@@ -3,24 +3,16 @@
   <component name="ChangeListManager">
     <list default="true" id="df145181-5365-4a48-afa9-1096a805dbce" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../chatgpt-api-service/docker/php/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/../chatgpt-api-service/docker/php/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shop-service.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shop-service.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Application/Constraint/UniqueFieldInEntity.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Application/Constraint/UniqueFieldInEntity.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Application/Constraint/Validators/UniqueFieldInEntityValidator.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Application/Constraint/Validators/UniqueFieldInEntityValidator.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Application/Command/NewOrder/NewOrderCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Application/Command/CreateOrder/CreateOrderCommand.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Application/Command/NewOrder/NewOrderCommandHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Application/Command/CreateOrder/CreateOrderCommandHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Application/Query/GetOrders/GetOrdersQuery.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Application/Query/GetOrders/GetOrdersQuery.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Application/Query/GetOrders/GetOrdersQueryHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Application/Query/GetOrders/GetOrdersQueryHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Application/ValueResolver/NewOrderValueResolver.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Application/ValueResolver/CreateOrderValueResolver.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Domain/DTO/Order/NewOrderDTO.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/DTO/Order/CreateOrderDTO.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Domain/Entity/Order.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/Entity/Order.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Domain/Entity/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/Entity/User.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Infrastructure/Doctrine/DataFixtures/AppFixtures.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Infrastructure/Doctrine/DataFixtures/AppFixtures.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Infrastructure/Doctrine/Repository/OrderRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Infrastructure/Doctrine/Repository/OrderRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Infrastructure/Doctrine/Repository/UserRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Infrastructure/Doctrine/Repository/UserRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UI/Console/CreateAdminCommand.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UI/Console/CreateUserCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/Console/CreateUserCommand.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UI/Controller/Admin/OrdersController.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UI/Controller/Admin/ProductsController.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UI/Controller/Admin/UsersController.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UI/Controller/User/OrdersController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/Controller/OrdersController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/Controller/OrdersController.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,15 +138,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/kazo/Desktop/GitHubRepos/demo-crypto-exchange",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/kazo/Desktop/GitHubRepos/demo-crypto-exchange&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\kazo\Desktop\GitHubRepos\shop-service\docker" />
@@ -188,7 +180,11 @@
       <workItem from="1693567722802" duration="1216000" />
       <workItem from="1693570475128" duration="3588000" />
       <workItem from="1693576202602" duration="3273000" />
-      <workItem from="1693587875924" duration="1139000" />
+      <workItem from="1693587875924" duration="2361000" />
+      <workItem from="1693601409687" duration="2385000" />
+      <workItem from="1693647455302" duration="594000" />
+      <workItem from="1693648550794" duration="998000" />
+      <workItem from="1693658070341" duration="4017000" />
     </task>
     <servers />
   </component>
