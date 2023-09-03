@@ -2,9 +2,10 @@
 
 namespace App\Application\Bus\CommandBus;
 
-use App\Application\Command\CommandResult;
+use App\Application\BusResult\CommandResult;
+use App\Application\Command\CommandInterface;
 
 interface CommandBusInterface
 {
-    public function handle(object $message): CommandResult;
+    public function handle(CommandInterface $command): CommandResult;
 }

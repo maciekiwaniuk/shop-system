@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Application\Command\CreateOrder;
 
+use App\Application\Command\CommandInterface;
 use App\Domain\DTO\Order\CreateOrderDTO;
 
-class CreateOrderCommand
+class CreateOrderCommand implements CommandInterface
 {
     public function __construct(
         public readonly CreateOrderDTO $dto

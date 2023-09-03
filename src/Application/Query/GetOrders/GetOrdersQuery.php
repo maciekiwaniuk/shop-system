@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Application\Query\GetOrders;
 
-class GetOrdersQuery
+use App\Application\Query\QueryInterface;
+
+class GetOrdersQuery implements QueryInterface
 {
 
 }

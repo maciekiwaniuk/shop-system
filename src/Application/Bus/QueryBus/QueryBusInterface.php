@@ -2,9 +2,10 @@
 
 namespace App\Application\Bus\QueryBus;
 
-use App\Application\Query\QueryResultInterface;
+use App\Application\BusResult\QueryResult;
+use App\Application\Query\QueryInterface;
 
 interface QueryBusInterface
 {
-    public function handle(object $message): QueryResultInterface;
+    public function handle(QueryInterface $query): QueryResult;
 }

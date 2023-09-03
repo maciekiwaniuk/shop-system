@@ -9,15 +9,13 @@ use App\Application\Command\CreateOrder\CreateOrderCommand;
 use App\Domain\DTO\Order\CreateOrderDTO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/api/v1/orders/', name: 'orders.')]
 class OrdersController extends AbstractController
 {
     public function __construct(
-        protected readonly CommandBusInterface $bus,
-        protected readonly SerializerInterface $serializer
+        protected readonly CommandBusInterface $bus
     ) {
     }
 
@@ -51,10 +49,11 @@ class OrdersController extends AbstractController
         $result = match (true) {
             $commandResult->success => [
                 'success' => true,
-                'data' => $this->serializer->encode($commandResult->data)
+                'message' => 'Successfully created order.'
             ],
             default => [
-                'success' => false
+                'success' => false,
+                'message' => 'Something went wrong while creating order.'
             ]
         };
 

@@ -1,14 +1,11 @@
 <?php
 
-declare(strict_types=1);
+namespace App\Application\BusResult;
 
-namespace App\Application\Command;
-
-class CommandResult
+class QueryResult implements BusResultInterface
 {
     public function __construct(
         public readonly ?bool $success = null,
-        public readonly ?bool $failure = null,
         public readonly mixed $data = null
     ) {
     }

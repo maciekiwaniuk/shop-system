@@ -22,8 +22,7 @@ class CreateOrderValueResolver implements ValueResolverInterface
         $data = json_decode($request->getContent(), true);
 
         $dto = new CreateOrderDTO();
-        $dto->symbol = $data['symbol'];
-        $dto->status = $data['status'];
+        $dto->name = $data['name'];
 
         $errors = $this->validator->validate($dto);
         if (count($errors) > 0) {
