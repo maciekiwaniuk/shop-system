@@ -6,7 +6,8 @@ class QueryResult implements BusResultInterface
 {
     public function __construct(
         public readonly ?bool $success = null,
-        public readonly mixed $data = null
+        public readonly mixed $data = null,
+        public readonly ?int $statusCode = null
     ) {
     }
 }

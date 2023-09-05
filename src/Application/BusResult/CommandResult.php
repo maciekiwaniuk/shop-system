@@ -5,7 +5,8 @@ namespace App\Application\BusResult;
 class CommandResult implements BusResultInterface
 {
     public function __construct(
-        public readonly ?bool $success = null
+        public readonly ?bool $success = null,
+        public readonly ?int $statusCode = null
     ) {
     }
 }
