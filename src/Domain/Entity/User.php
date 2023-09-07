@@ -21,19 +21,19 @@ class User
     private ?int $id = null;
 
     #[ORM\Column(length: 200, unique: true)]
-    private ?string $email = null;
+    private string $email;
 
     #[ORM\Column]
     private array $roles = [];
 
     #[ORM\Column]
-    private ?string $password = null;
+    private string $password;
 
     #[ORM\Column(length: 100, unique: true)]
-    private ?string $name = null;
+    private string $name;
 
     #[ORM\Column(length: 100, unique: true)]
-    private ?string $surname = null;
+    private string $surname;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $lastLoginIp = null;
@@ -50,8 +50,16 @@ class User
     #[ORM\Column]
     private DateTimeImmutable $createdAt;
 
-    public function __construct()
-    {
+    public function __construct(
+        string $email,
+        string $password,
+        string $name,
+        string $surname
+    ) {
+        $this->email = $email;
+        $this->password = $password;
+        $this->name = $name;
+        $this->surname = $surname;
         $this->createdAt = new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
     }
@@ -72,16 +80,9 @@ class User
         return $this->email;
     }
 
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return $this->email;
     }
 
     public function getRoles(): array
@@ -112,35 +113,14 @@ class User
         return $this->password;
     }
 
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
     public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
     public function getSurname(): ?string
     {
         return $this->surname;
-    }
-
-    public function setSurname(string $surname): self
-    {
-        $this->surname = $surname;
-
-        return $this;
     }
 
     public function getLastLoginIp(): ?string
