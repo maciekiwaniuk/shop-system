@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Application\Bus\QueryBus;
 
 use App\Application\BusResult\CommandResult;
