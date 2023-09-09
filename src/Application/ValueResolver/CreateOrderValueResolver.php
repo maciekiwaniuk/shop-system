@@ -19,7 +19,7 @@ class CreateOrderValueResolver implements ValueResolverInterface
 
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
-        $data = json_decode($request->getContent(), true);
+        $data = $request->toArray();
 
         $dto = new CreateOrderDTO();
         $dto->name = $data['name'];

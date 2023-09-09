@@ -12,10 +12,6 @@ services:
             - '../src/Domain/Entity'
             - '../src/Kernel.php'
 
-    App\Application\Query\QueryHandlerInterface:
+    App\Application\ValueResolver\CreateOrderValueResolver:
         tags:
-            - { name: messenger.message_handler, bus: query.bus }
-
-    App\Application\Command\CommandHandlerInterface:
-        tags:
-            - { name: messenger.message_handler, bus: command.bus }
+            - { name: controller.argument_value_resolver, priority: 150 }

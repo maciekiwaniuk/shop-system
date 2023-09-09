@@ -6,7 +6,7 @@ namespace App\Domain\DTO\User;
 
 use App\Domain\DTO\BaseDTO;
 
-class NewUserDTO extends BaseDTO
+class CreateUserDTO extends BaseDTO
 {
 
 }

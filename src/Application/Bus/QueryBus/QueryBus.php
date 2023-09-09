@@ -4,22 +4,17 @@ declare(strict_types=1);
 
 namespace App\Application\Bus\QueryBus;
 
-use App\Application\BusResult\CommandResult;
 use App\Application\BusResult\QueryResult;
 use App\Application\Query\QueryInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\MessageBus;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 
 class QueryBus implements QueryBusInterface
 {
     public function __construct(
-        protected readonly MessageBusInterface $bus,
-        protected readonly LoggerInterface $logger
+        protected readonly MessageBusInterface $bus
     ) {
-
     }
 
     public function handle(QueryInterface $query): QueryResult
