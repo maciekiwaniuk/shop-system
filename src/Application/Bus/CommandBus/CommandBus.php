@@ -9,20 +9,20 @@ use App\Application\Command\CommandInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBus;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 
-class CommandBus extends MessageBus implements CommandBusInterface
+class CommandBus implements CommandBusInterface
 {
     public function __construct(
-        protected readonly LoggerInterface $logger,
-        iterable $middlewareHandlers = []
+        protected readonly MessageBusInterface $bus,
+        protected readonly LoggerInterface $logger
     ) {
-        parent::__construct($middlewareHandlers);
     }
 
     public function handle(CommandInterface $command): CommandResult
     {
-        $envelope = $this->dispatch($command);
+        $envelope = $this->bus->dispatch($command);
         $handledStamps = $envelope->all(HandledStamp::class);
 
         $result = $handledStamps[0]->getResult();

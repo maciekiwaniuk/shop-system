@@ -5,22 +5,25 @@ declare(strict_types=1);
 namespace App\UI\Controller;
 
 use App\Application\Bus\CommandBus\CommandBusInterface;
+use App\Application\Bus\QueryBus\QueryBus;
 use App\Application\Bus\QueryBus\QueryBusInterface;
 use App\Application\Command\CreateOrder\CreateOrderCommand;
 use App\Application\Query\GetOrders\GetOrdersQuery;
 use App\Domain\DTO\Order\CreateOrderDTO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
-#[Route('/api/v1/orders/', name: 'orders.')]
+#[Route('/api/v1/orders', name: 'orders.')]
 class OrdersController extends AbstractController
 {
     public function __construct(
         protected readonly CommandBusInterface $commandBus,
-        protected readonly QueryBusInterface $queryBus,
-        protected readonly SerializerInterface $serializer
+        protected readonly QueryBus $queryBus,
+        protected readonly SerializerInterface $serializer,
+        protected readonly MessageBusInterface $messageBus
     ) {
     }
 
@@ -32,13 +35,12 @@ class OrdersController extends AbstractController
         $result = match (true) {
             $queryResult->success => [
                 'success' => true,
-                'data' => $this->serializer->encode($queryResult->data)
+                'data' => $this->serializer->encode($queryResult->data, 'json')
             ],
             default => [
                 'success' => false
             ]
         };
-
         return $this->json($result, $queryResult->statusCode);
     }
 

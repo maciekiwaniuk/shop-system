@@ -8,5 +8,7 @@ use App\Application\Query\QueryInterface;
 
 class GetOrdersQuery implements QueryInterface
 {
-
+    public function __construct()
+    {
+    }
 }
