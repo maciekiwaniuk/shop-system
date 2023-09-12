@@ -6,10 +6,12 @@ namespace App\Application\ValueResolver\OrdersController;
 
 use App\Domain\DTO\Order\CreateOrderDTO;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Attribute\AsTargetedValueResolver;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+#[AsTargetedValueResolver('create_order_dto')]
 class CreateOrderValueResolver implements ValueResolverInterface
 {
     public function __construct(

@@ -11,6 +11,7 @@ use App\Application\Query\GetOrders\GetOrdersQuery;
 use App\Domain\DTO\Order\CreateOrderDTO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/api/v1/orders', name: 'orders.')]
@@ -40,7 +41,7 @@ class OrdersController extends AbstractController
     }
 
     #[Route('/new', name: 'new', methods: ['POST'])]
-    public function new(CreateOrderDTO $dto): Response
+    public function new(#[ValueResolver('create_order_dto')] CreateOrderDTO $dto): Response
     {
         if ($dto->hasErrors()) {
             return $this->json([

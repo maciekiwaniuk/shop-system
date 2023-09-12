@@ -13,6 +13,7 @@ use App\Domain\DTO\Order\CreateOrderDTO;
 use App\Domain\DTO\Product\CreateProductDTO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/api/v1/products', name: 'products.')]
@@ -42,7 +43,7 @@ class ProductsController extends AbstractController
     }
 
     #[Route('/new', name: 'new', methods: ['POST'])]
-    public function new(CreateProductDTO $dto): Response
+    public function new(#[ValueResolver('create_product_dto')] CreateProductDTO $dto): Response
     {
         if ($dto->hasErrors()) {
             return $this->json([

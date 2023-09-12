@@ -4,10 +4,12 @@ namespace App\Application\ValueResolver\ProductsController;
 
 use App\Domain\DTO\Product\CreateProductDTO;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Attribute\AsTargetedValueResolver;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+#[AsTargetedValueResolver('create_product_dto')]
 class CreateProductValueResolver implements ValueResolverInterface
 {
     public function __construct(
