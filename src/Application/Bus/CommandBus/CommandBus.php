@@ -6,6 +6,7 @@ namespace App\Application\Bus\CommandBus;
 
 use App\Application\BusResult\CommandResult;
 use App\Application\Command\CommandInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
@@ -13,7 +14,8 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 class CommandBus implements CommandBusInterface
 {
     public function __construct(
-        protected readonly MessageBusInterface $bus
+        protected readonly MessageBusInterface $bus,
+        protected readonly LoggerInterface $logger
     ) {
     }
 
@@ -24,6 +26,7 @@ class CommandBus implements CommandBusInterface
 
         $result = $handledStamps[0]->getResult();
         if (!$handledStamps || count($handledStamps) > 1 || !$result instanceof CommandResult) {
+            $this->logger->error('Something went wrong while handling action in command bus');
             return new CommandResult(
                 success: false,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR

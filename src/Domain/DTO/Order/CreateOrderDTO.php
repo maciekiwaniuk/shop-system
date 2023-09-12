@@ -17,5 +17,11 @@ class CreateOrderDTO extends BaseDTO
         'max' => 100,
         'maxMessage' => 'Name can be up to 100 characters long.'
     ])]
-    public string $name;
+    public readonly string $name;
+
+    public function __construct(
+        string $name
+    ) {
+        $this->name = $name;
+    }
 }

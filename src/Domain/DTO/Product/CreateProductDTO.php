@@ -18,11 +18,19 @@ class CreateProductDTO extends BaseDTO
         'max' => 100,
         'maxMessage' => 'Name can be up to 100 characters long.'
     ])]
-    public string $name;
+    public readonly string $name;
 
     #[NotBlank()]
     #[Positive([
         'message' => 'Price must be valid number.'
     ])]
-    public float $price;
+    public readonly float $price;
+
+    public function __construct(
+        string $name,
+        float $price
+    ) {
+        $this->name = $name;
+        $this->price = $price;
+    }
 }

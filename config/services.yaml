@@ -12,6 +12,10 @@ services:
             - '../src/Domain/Entity'
             - '../src/Kernel.php'
 
-    App\Application\ValueResolver\CreateOrderValueResolver:
+#    App\Application\ValueResolver\OrdersController\CreateOrderValueResolver:
+#        tags:
+#            - { name: controller.argument_value_resolver, priority: 150 }
+
+    App\Application\ValueResolver\ProductsController\CreateProductValueResolver:
         tags:
             - { name: controller.argument_value_resolver, priority: 150 }

@@ -15,7 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/v1/products', name: 'orders.')]
+#[Route('/api/v1/products', name: 'products.')]
 class ProductsController extends AbstractController
 {
     public function __construct(

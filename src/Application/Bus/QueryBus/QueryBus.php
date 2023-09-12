@@ -6,6 +6,7 @@ namespace App\Application\Bus\QueryBus;
 
 use App\Application\BusResult\QueryResult;
 use App\Application\Query\QueryInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
@@ -13,7 +14,8 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 class QueryBus implements QueryBusInterface
 {
     public function __construct(
-        protected readonly MessageBusInterface $bus
+        protected readonly MessageBusInterface $bus,
+        protected readonly LoggerInterface $logger
     ) {
     }
 
@@ -24,6 +26,7 @@ class QueryBus implements QueryBusInterface
 
         $result = $handledStamps[0]->getResult();
         if (!$handledStamps || count($handledStamps) > 1 || !$result instanceof QueryResult) {
+            $this->logger->error('Something went wrong while handling action in query bus');
             return new QueryResult(
                 success: false,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR

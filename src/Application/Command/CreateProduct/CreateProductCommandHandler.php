@@ -4,7 +4,6 @@ namespace App\Application\Command\CreateProduct;
 
 use App\Application\BusResult\CommandResult;
 use App\Application\Command\CommandHandlerInterface;
-use App\Application\Command\CommandInterface;
 use App\Domain\Entity\Product;
 use App\Infrastructure\Doctrine\Repository\ProductRepository;
 use Psr\Log\LoggerInterface;
@@ -21,14 +20,14 @@ class CreateProductCommandHandler implements CommandHandlerInterface
     ) {
     }
 
-    public function __invoke(CommandInterface $command): CommandResult
+    public function __invoke(CreateProductCommand $command): CommandResult
     {
         try {
             $product = new Product(
                 name: $command->dto->name,
                 price: $command->dto->price
             );
-            $this->productRepository->save($product);
+            $this->productRepository->save($product, true);
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return new CommandResult(success: false, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);

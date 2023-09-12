@@ -6,7 +6,6 @@ namespace App\Application\Command\CreateOrder;
 
 use App\Application\BusResult\CommandResult;
 use App\Application\Command\CommandHandlerInterface;
-use App\Application\Command\CommandInterface;
 use App\Domain\Entity\Order;
 use App\Infrastructure\Doctrine\Repository\OrderRepository;
 use Psr\Log\LoggerInterface;
@@ -23,7 +22,7 @@ class CreateOrderCommandHandler implements CommandHandlerInterface
     ) {
     }
 
-    public function __invoke(CommandInterface $command): CommandResult
+    public function __invoke(CreateOrderCommand $command): CommandResult
     {
         try {
             $order = new Order(
