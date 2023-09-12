@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Domain\DTO;
 
-use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 abstract class BaseDTO
 {
-    private ConstraintViolationList $errors;
+    private ConstraintViolationListInterface $errors;
 
-    public function setErrors(ConstraintViolationList $errors): void
+    public function setErrors(ConstraintViolationListInterface $errors): void
     {
         $this->errors = $errors;
     }
@@ -20,6 +20,9 @@ abstract class BaseDTO
         return isset($this->errors) && count($this->errors) > 0;
     }
 
+    /**
+     * @return string[]
+     */
     public function getErrors(): array
     {
         $errors = [];

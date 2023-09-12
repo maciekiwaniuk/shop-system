@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Application\Constraint;
 
+use App\Application\Constraint\Validators\UniqueFieldInEntityValidator;
+use Attribute;
 use Symfony\Component\Validator\Constraint;
 
-#[\Attribute]
+#[Attribute]
 class UniqueFieldInEntity extends Constraint
 {
     public string $message = '{{ field }} {{ value }} is already in use.';

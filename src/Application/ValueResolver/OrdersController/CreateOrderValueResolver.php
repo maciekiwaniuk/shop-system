@@ -19,6 +19,9 @@ class CreateOrderValueResolver implements ValueResolverInterface
     ) {
     }
 
+    /**
+     * @return iterable<CreateOrderDTO>
+     */
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
         $data = $request->toArray();

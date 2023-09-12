@@ -21,11 +21,20 @@ class QueryBus implements QueryBusInterface
 
     public function handle(QueryInterface $query): QueryResult
     {
-        $envelope = $this->bus->dispatch($query);
-        $handledStamps = $envelope->all(HandledStamp::class);
+        $handledStamps = ($this->bus->dispatch($query))
+            ->all(HandledStamp::class);
 
-        $result = $handledStamps[0]->getResult();
-        if (!$handledStamps || count($handledStamps) > 1 || !$result instanceof QueryResult) {
+        $handledStamp = $handledStamps[0];
+        if (method_exists($handledStamp, 'getResult')) {
+            $queryResult = $handledStamp->getResult();
+        }
+
+        if (
+            !$handledStamps
+            || count($handledStamps) > 1
+            || !isset($queryResult)
+            || !$queryResult instanceof QueryResult
+        ) {
             $this->logger->error('Something went wrong while handling action in query bus');
             return new QueryResult(
                 success: false,
@@ -33,6 +42,6 @@ class QueryBus implements QueryBusInterface
             );
         }
 
-        return $result;
+        return $queryResult;
     }
 }

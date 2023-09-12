@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
+use App\Infrastructure\Doctrine\Repository\OrderRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\OrderRepository;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\HasLifecycleCallbacks]

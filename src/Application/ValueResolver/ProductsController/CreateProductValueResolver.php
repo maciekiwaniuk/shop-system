@@ -17,6 +17,9 @@ class CreateProductValueResolver implements ValueResolverInterface
     ) {
     }
 
+    /**
+     * @return iterable<CreateProductDTO>
+     */
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
         $data = $request->toArray();

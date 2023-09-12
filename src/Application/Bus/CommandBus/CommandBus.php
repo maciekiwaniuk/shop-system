@@ -21,11 +21,20 @@ class CommandBus implements CommandBusInterface
 
     public function handle(CommandInterface $command): CommandResult
     {
-        $envelope = $this->bus->dispatch($command);
-        $handledStamps = $envelope->all(HandledStamp::class);
+        $handledStamps = ($this->bus->dispatch($command))
+            ->all(HandledStamp::class);
 
-        $result = $handledStamps[0]->getResult();
-        if (!$handledStamps || count($handledStamps) > 1 || !$result instanceof CommandResult) {
+        $handledStamp = $handledStamps[0];
+        if (method_exists($handledStamp, 'getResult')) {
+            $commandResult = $handledStamp->getResult();
+        }
+
+        if (
+            !$handledStamps
+            || count($handledStamps) > 1
+            || !isset($commandResult)
+            || !$commandResult instanceof CommandResult
+        ) {
             $this->logger->error('Something went wrong while handling action in command bus');
             return new CommandResult(
                 success: false,
@@ -33,6 +42,6 @@ class CommandBus implements CommandBusInterface
             );
         }
 
-        return $result;
+        return $commandResult;
     }
 }

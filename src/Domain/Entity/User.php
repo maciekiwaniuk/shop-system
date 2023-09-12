@@ -23,6 +23,9 @@ class User
     #[ORM\Column(length: 200, unique: true)]
     private string $email;
 
+    /**
+     * @var string[]
+     */
     #[ORM\Column]
     private array $roles = [];
 
@@ -85,6 +88,9 @@ class User
         return $this->email;
     }
 
+    /**
+     * @return string[]
+     */
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -93,6 +99,9 @@ class User
         return array_unique($roles);
     }
 
+    /**
+     * @param string[] $roles
+     */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;

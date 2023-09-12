@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Constraint\Validators;
 
+use App\Application\Constraint\UniqueFieldInEntity;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -11,24 +12,26 @@ use Symfony\Component\Validator\ConstraintValidator;
 class UniqueFieldInEntityValidator extends ConstraintValidator
 {
     public function __construct(
-        private readonly ManagerRegistry $doctrine
+        protected readonly ManagerRegistry $doctrine
     ) {
     }
 
-    public function validate(mixed $value, Constraint $constraint)
+    /**
+     * @param mixed $value
+     * @param UniqueFieldInEntity $constraint
+     */
+    public function validate(mixed $value, Constraint $constraint): void
     {
-        $field = $constraint->field;
-        $entityClassName = $constraint->entityClassName;
-
-        $foundRecord = $this->doctrine->getRepository($entityClassName)
-            ->findOneBy([$field => $value]);
+        $foundRecord = $this->doctrine
+            ->getRepository($constraint->entityClassName)
+            ->findOneBy([$constraint->field => $value]);
 
         if (!$foundRecord) {
             return;
         }
 
         $this->context->buildViolation($constraint->message)
-            ->setParameter('{{ field }}', ucfirst($field))
+            ->setParameter('{{ field }}', ucfirst($constraint->field))
             ->setParameter('{{ value }}', $value)
             ->addViolation();
     }
