@@ -12,8 +12,6 @@ services:
     php:
         build:
             context: ./docker/php
-            args:
-                TIMEZONE: ${PHP_TIMEZONE}
         volumes:
             - ./:/var/www/symfony:cached
 
