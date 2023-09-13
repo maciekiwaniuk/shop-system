@@ -6,16 +6,16 @@ use App\Application\BusResult\QueryResult;
 use App\Application\Query\QueryHandlerInterface;
 use App\Application\Query\QueryInterface;
 use App\Infrastructure\Doctrine\Repository\ProductRepository;
+use App\Infrastructure\Serializer\JsonSerializer;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\SerializerInterface;
 use Throwable;
 
 class GetProductsQueryHandler implements QueryHandlerInterface
 {
     public function __construct(
         protected readonly ProductRepository $productRepository,
-        protected readonly SerializerInterface $serializer,
+        protected readonly JsonSerializer $serializer,
         protected readonly LoggerInterface $logger
     ) {
     }
@@ -35,7 +35,7 @@ class GetProductsQueryHandler implements QueryHandlerInterface
         return new QueryResult(
             success: true,
             statusCode: Response::HTTP_OK,
-            data: $this->serializer->serialize($products, 'json')
+            data: $this->serializer->serialize($products)
         );
     }
 }

@@ -7,6 +7,7 @@ namespace App\Domain\Entity;
 use App\Infrastructure\Doctrine\Repository\ProductRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -16,18 +17,23 @@ class Product
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['default'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 200)]
+    #[Groups(['default'])]
     private string $name;
 
     #[ORM\Column(length: 200)]
+    #[Groups(['default'])]
     private float $price;
 
     #[ORM\Column]
+    #[Groups(['default'])]
     private DateTimeImmutable $updatedAt;
 
     #[ORM\Column]
+    #[Groups(['default'])]
     private DateTimeImmutable $createdAt;
 
     public function __construct(

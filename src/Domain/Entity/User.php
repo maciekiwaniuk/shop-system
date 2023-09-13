@@ -8,6 +8,7 @@ use App\Infrastructure\Doctrine\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -18,39 +19,50 @@ class User
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['default'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 200, unique: true)]
+    #[Groups(['default'])]
     private string $email;
 
     /**
      * @var string[]
      */
     #[ORM\Column]
+    #[Groups(['default'])]
     private array $roles = [];
 
     #[ORM\Column]
+    #[Groups(['default'])]
     private string $password;
 
     #[ORM\Column(length: 100, unique: true)]
+    #[Groups(['default'])]
     private string $name;
 
     #[ORM\Column(length: 100, unique: true)]
+    #[Groups(['default'])]
     private string $surname;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['default'])]
     private ?string $lastLoginIp = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['default'])]
     private ?string $lastLoginTime = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['default'])]
     private ?string $lastLoginUserAgent = null;
 
     #[ORM\Column]
+    #[Groups(['default'])]
     private DateTimeImmutable $updatedAt;
 
     #[ORM\Column]
+    #[Groups(['default'])]
     private DateTimeImmutable $createdAt;
 
     public function __construct(

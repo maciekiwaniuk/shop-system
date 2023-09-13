@@ -7,6 +7,7 @@ namespace App\Domain\Entity;
 use App\Infrastructure\Doctrine\Repository\OrderRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -16,12 +17,15 @@ class Order
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['default'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['default'])]
     private string $name;
 
     #[ORM\Column]
+    #[Groups(['default'])]
     private ?DateTimeImmutable $createdAt;
 
     public function __construct(
