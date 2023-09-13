@@ -4,13 +4,14 @@ namespace App\Application\Query\GetProducts;
 
 use App\Application\BusResult\QueryResult;
 use App\Application\Query\QueryHandlerInterface;
-use App\Application\Query\QueryInterface;
 use App\Infrastructure\Doctrine\Repository\ProductRepository;
 use App\Infrastructure\Serializer\JsonSerializer;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 
+#[AsMessageHandler]
 class GetProductsQueryHandler implements QueryHandlerInterface
 {
     public function __construct(
@@ -20,7 +21,7 @@ class GetProductsQueryHandler implements QueryHandlerInterface
     ) {
     }
 
-    public function __invoke(QueryInterface $query): QueryResult
+    public function __invoke(GetProductsQuery $query): QueryResult
     {
         try {
             $products = $this->productRepository->findAll();
@@ -35,7 +36,7 @@ class GetProductsQueryHandler implements QueryHandlerInterface
         return new QueryResult(
             success: true,
             statusCode: Response::HTTP_OK,
-            data: $this->serializer->serialize($products)
+            data: json_decode($this->serializer->serialize($products), true)
         );
     }
 }

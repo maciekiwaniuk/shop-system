@@ -6,7 +6,6 @@ namespace App\Application\Query\GetOrders;
 
 use App\Application\BusResult\QueryResult;
 use App\Application\Query\QueryHandlerInterface;
-use App\Application\Query\QueryInterface;
 use App\Infrastructure\Doctrine\Repository\OrderRepository;
 use App\Infrastructure\Serializer\JsonSerializer;
 use Psr\Log\LoggerInterface;
@@ -24,7 +23,7 @@ class GetOrdersQueryHandler implements QueryHandlerInterface
     ) {
     }
 
-    public function __invoke(QueryInterface $query): QueryResult
+    public function __invoke(GetOrdersQuery $query): QueryResult
     {
         try {
             $orders = $this->orderRepository->findAll();
@@ -39,7 +38,7 @@ class GetOrdersQueryHandler implements QueryHandlerInterface
         return new QueryResult(
             success: true,
             statusCode: Response::HTTP_OK,
-            data: $this->serializer->serialize($orders)
+            data: json_decode($this->serializer->serialize($orders), true)
         );
     }
 }

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Serializer;
 
+use Doctrine\Common\Annotations\AnnotationReader;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -23,19 +26,28 @@ class JsonSerializer
                 DateTimeNormalizer::TIMEZONE_KEY => null
             ]);
 
+        $objectNormalizer = new ObjectNormalizer(
+            new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()))
+        );
+
         $this->serializer = new Serializer(
-            [$dateTimeNormalizer, new ObjectNormalizer()],
+            [$dateTimeNormalizer, $objectNormalizer],
             [new JsonEncoder()]
         );
     }
 
-    public function serialize(mixed $data, array $groups = ['default']): string
-    {
-        return $this->serializer->serialize($data, 'json', $groups);
+    public function serialize(
+        mixed $data,
+        array $context = ['groups' => ['default']]
+    ): string {
+        return $this->serializer->serialize($data, 'json', $context);
     }
 
-    public function deserialize(mixed $data, string $type, array $groups = ['default']): mixed
-    {
-        return $this->serializer->deserialize($data, $type, 'json', $groups);
+    public function deserialize(
+        mixed $data,
+        string $type,
+        array $context = ['groups' => ['default']])
+    : mixed {
+        return $this->serializer->deserialize($data, $type, 'json', $context);
     }
 }

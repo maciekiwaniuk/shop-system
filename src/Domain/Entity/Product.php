@@ -47,7 +47,7 @@ class Product
     }
 
     #[ORM\PreUpdate]
-    public function setUpdatedAtValue(): void
+    public function refreshUpdatedAtValue(): void
     {
         $this->updatedAt = new DateTimeImmutable();
     }
