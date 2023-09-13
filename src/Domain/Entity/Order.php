@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
-use App\Infrastructure\Doctrine\Repository\OrderRepository;
+use App\Domain\Repository\OrderRepositoryInterface;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ORM\Entity(repositoryClass: OrderRepository::class)]
+#[ORM\Entity(repositoryClass: OrderRepositoryInterface::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Table(name: '`order`')]
 class Order

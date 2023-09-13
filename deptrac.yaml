@@ -1,0 +1,51 @@
+parameters:
+    paths:
+        - ./src
+    exclude_files:
+        - '#.*test.*#'
+    layers:
+        - name: Domain
+          collectors:
+              - type: className
+                regex: ^App\\Domain\\.*
+        - name: Application
+          collectors:
+              - type: className
+                regex: ^App\\Application\\.*
+        - name: Infrastructure
+          collectors:
+              - type: className
+                regex: ^App\\Infrastructure\\.*
+        - name: UI
+          collectors:
+              - type: className
+                regex: ^App\\UI\\.*
+        - name: Vendor
+          collectors:
+              - type: bool
+                must:
+                    - type: className
+                      regex: .+\\.*
+                must_not:
+                    - type: className
+                      regex: ^App\\.*
+                    - type: className
+                      regex: Doctrine\\Common\\Collections\\.*
+    ruleset:
+        Domain:
+            - Vendor
+        Application:
+            - Domain
+            - Infrastructure
+            - Vendor
+        Infrastructure:
+            - Domain
+            - Application
+            - Vendor
+        UI:
+            - Application
+            - Infrastructure
+            - Domain
+            - Vendor
+
+
