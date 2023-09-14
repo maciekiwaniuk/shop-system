@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Command\CreateOrder;
 
 use App\Application\Command\CommandInterface;
-use App\Domain\DTO\Order\CreateOrderDTO;
+use App\Application\DTO\Order\CreateOrderDTO;
 
 class CreateOrderCommand implements CommandInterface
 {

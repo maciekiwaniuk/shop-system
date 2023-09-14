@@ -2,7 +2,7 @@
 
 namespace App\Application\ValueResolver\ProductsController;
 
-use App\Domain\DTO\Product\CreateProductDTO;
+use App\Application\DTO\Product\CreateProductDTO;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsTargetedValueResolver;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;

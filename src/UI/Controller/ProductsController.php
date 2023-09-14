@@ -6,11 +6,9 @@ namespace App\UI\Controller;
 
 use App\Application\Bus\CommandBus\CommandBusInterface;
 use App\Application\Bus\QueryBus\QueryBusInterface;
-use App\Application\Command\CreateOrder\CreateOrderCommand;
 use App\Application\Command\CreateProduct\CreateProductCommand;
+use App\Application\DTO\Product\CreateProductDTO;
 use App\Application\Query\GetProducts\GetProductsQuery;
-use App\Domain\DTO\Order\CreateOrderDTO;
-use App\Domain\DTO\Product\CreateProductDTO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;

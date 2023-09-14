@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\DTO;
+namespace App\Application\DTO;
 
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 

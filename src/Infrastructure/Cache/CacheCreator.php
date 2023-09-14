@@ -10,7 +10,7 @@ class CacheCreator
     protected readonly Redis $cache;
 
     public function __construct(
-        protected readonly string $connection = 'redis://redis',
+        protected readonly string $redisUrl = 'redis://redis',
         string $prefix = '',
         int $expiry = 0
     ) {
@@ -19,7 +19,7 @@ class CacheCreator
             $prefix,
             $expiry
         );
-        $this->cache = $redisAdapter::createConnection($connection);
+        $this->cache = $redisAdapter::createConnection($redisUrl);
     }
 
     public function getCache(): Redis

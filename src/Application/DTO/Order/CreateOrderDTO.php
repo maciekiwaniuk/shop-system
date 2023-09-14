@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\DTO\Product;
+namespace App\Application\DTO\Order;
 
-use App\Domain\DTO\BaseDTO;
+use App\Application\DTO\BaseDTO;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Positive;
 
-class CreateProductDTO extends BaseDTO
+class CreateOrderDTO extends BaseDTO
 {
     #[NotBlank()]
     #[Length([
@@ -20,17 +19,9 @@ class CreateProductDTO extends BaseDTO
     ])]
     public readonly string $name;
 
-    #[NotBlank()]
-    #[Positive([
-        'message' => 'Price must be valid number.'
-    ])]
-    public readonly float $price;
-
     public function __construct(
-        string $name,
-        float $price
+        string $name
     ) {
         $this->name = $name;
-        $this->price = $price;
     }
 }

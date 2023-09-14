@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\ValueResolver\OrdersController;
 
-use App\Domain\DTO\Order\CreateOrderDTO;
+use App\Application\DTO\Order\CreateOrderDTO;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsTargetedValueResolver;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
