@@ -20,6 +20,11 @@ RUN apt-get update && apt-get install -y \
     acl \
     && echo 'alias sf="php bin/console"' >> ~/.bashrc
 
+RUN apt-get update && apt-get install -y \
+    redis-server \
+    && pecl install redis \
+    && docker-php-ext-enable redis
+
 RUN docker-php-ext-configure gd --with-jpeg --with-freetype 
 
 RUN docker-php-ext-install \

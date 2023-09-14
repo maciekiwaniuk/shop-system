@@ -4,6 +4,7 @@ namespace App\Application\Query\GetProducts;
 
 use App\Application\BusResult\QueryResult;
 use App\Application\Query\QueryHandlerInterface;
+use App\Infrastructure\Cache\RedisCacheAdapter;
 use App\Infrastructure\Doctrine\Repository\ProductRepository;
 use App\Infrastructure\Serializer\JsonSerializer;
 use Psr\Log\LoggerInterface;
@@ -17,7 +18,8 @@ class GetProductsQueryHandler implements QueryHandlerInterface
     public function __construct(
         protected readonly ProductRepository $productRepository,
         protected readonly JsonSerializer $serializer,
-        protected readonly LoggerInterface $logger
+        protected readonly LoggerInterface $logger,
+        protected readonly RedisCacheAdapter $cache
     ) {
     }
 
