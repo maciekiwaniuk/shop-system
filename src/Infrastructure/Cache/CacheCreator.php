@@ -2,28 +2,24 @@
 
 namespace App\Infrastructure\Cache;
 
+use Psr\Log\LoggerInterface;
 use Redis;
 use Symfony\Component\Cache\Adapter\RedisAdapter;
 
 class CacheCreator
 {
-    protected readonly Redis $cache;
-
     public function __construct(
-        protected readonly string $redisUrl = 'redis://redis',
-        string $prefix = '',
-        int $expiry = 0
+        protected readonly LoggerInterface $logger,
+        protected readonly string $redisUrl = 'redis://redis'
     ) {
-        $redisAdapter = new RedisAdapter(
-            new Redis(),
-            $prefix,
-            $expiry
-        );
-        $this->cache = $redisAdapter::createConnection($redisUrl);
     }
 
-    public function getCache(): Redis
+    public function create(string $prefix = ''): CacheProxy
     {
-        return $this->cache;
+        return new CacheProxy(
+            (new RedisAdapter(new Redis()))::createConnection($this->redisUrl),
+            $this->logger,
+            $prefix
+        );
     }
 }

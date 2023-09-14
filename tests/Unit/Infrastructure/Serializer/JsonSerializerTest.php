@@ -24,9 +24,8 @@ class JsonSerializerTest extends AbstractUnitTestCase
             #[Groups('default')]
             public string $name;
 
-            public function __construct(
-                string $name
-            ) {
+            public function __construct(string $name)
+            {
                 $this->name = $name;
             }
         };
@@ -45,9 +44,8 @@ class JsonSerializerTest extends AbstractUnitTestCase
             #[Groups('example-group')]
             public string $name;
 
-            public function __construct(
-                string $name
-            ) {
+            public function __construct(string $name)
+            {
                 $this->name = $name;
             }
         };
@@ -66,9 +64,8 @@ class JsonSerializerTest extends AbstractUnitTestCase
             #[Groups('non-existing-group')]
             public string $name;
 
-            public function __construct(
-                string $name
-            ) {
+            public function __construct(string $name)
+            {
                 $this->name = $name;
             }
         };
@@ -87,9 +84,8 @@ class JsonSerializerTest extends AbstractUnitTestCase
             #[Groups(['default'])]
             public string $name;
 
-            public function __construct(
-                string $name
-            ) {
+            public function __construct(string $name)
+            {
                 $this->name = $name;
             }
         };
@@ -111,9 +107,8 @@ class JsonSerializerTest extends AbstractUnitTestCase
             #[Groups(['existing-group'])]
             public string $name;
 
-            public function __construct(
-                string $name
-            ) {
+            public function __construct(string $name)
+            {
                 $this->name = $name;
             }
         };
@@ -136,9 +131,8 @@ class JsonSerializerTest extends AbstractUnitTestCase
             #[Groups(['non-existing-group'])]
             public string $name;
 
-            public function __construct(
-                string $name
-            ) {
+            public function __construct(string $name)
+            {
                 $this->name = $name;
             }
         };
