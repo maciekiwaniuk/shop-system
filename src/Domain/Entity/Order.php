@@ -25,7 +25,7 @@ class Order
     private string $name;
 
     #[ORM\Column]
-    #[Groups(['test'])]
+    #[Groups(['default'])]
     private DateTimeImmutable $createdAt;
 
     public function __construct(
