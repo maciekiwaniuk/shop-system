@@ -8,5 +8,4 @@ use App\Application\DTO\BaseDTO;
 
 class CreateUserDTO extends BaseDTO
 {
-
 }

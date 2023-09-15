@@ -46,8 +46,8 @@ class JsonSerializer
     public function deserialize(
         mixed $data,
         string $type,
-        array $context = ['groups' => ['default']])
-    : mixed {
+        array $context = ['groups' => ['default']]
+    ): mixed {
         return $this->serializer->deserialize($data, $type, 'json', $context);
     }
 }

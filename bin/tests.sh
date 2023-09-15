@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo '######## Running codeSniffer tests ########'
+php vendor/bin/phpcs
+
 echo '######## Running deptrac tests ########'
 php vendor/bin/deptrac analyse
 

@@ -28,3 +28,7 @@ README.md.bak
 ###> qossmic/deptrac-shim ###
 /.deptrac.cache
 ###< qossmic/deptrac-shim ###
+
+###> squizlabs/php_codesniffer ###
+/.phpcs-cache
+###< squizlabs/php_codesniffer ###

@@ -33,5 +33,4 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
             $this->getEntityManager()->flush();
         }
     }
-
 }

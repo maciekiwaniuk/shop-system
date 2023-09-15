@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Application\ValueResolver\ProductsController;
 
 use App\Application\DTO\Product\CreateProductDTO;
