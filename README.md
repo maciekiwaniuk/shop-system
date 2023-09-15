@@ -14,4 +14,4 @@ Tests all in one using shell script
 
 Tests all using command
 
-    docker-compose exec php vendor/bin/deptrac analyse &&  docker-compose exec php vendor/bin/phpstan analyse && docker-compose exec php bin/phpunit
+    docker-compose exec php vendor/bin/phpcs && docker-compose exec php vendor/bin/deptrac analyse &&  docker-compose exec php vendor/bin/phpstan analyse && docker-compose exec php bin/phpunit
