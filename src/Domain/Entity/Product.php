@@ -8,6 +8,7 @@ use App\Domain\Repository\ProductRepositoryInterface;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ProductRepositoryInterface::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -15,10 +16,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Product
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups(['default'])]
-    private ?int $id = null;
+    private string $id;
 
     #[ORM\Column(length: 200)]
     #[Groups(['default'])]
@@ -40,6 +40,7 @@ class Product
         string $name,
         float $price
     ) {
+        $this->id = (string) Uuid::v4();
         $this->name = $name;
         $this->price = $price;
         $this->createdAt = new DateTimeImmutable();
@@ -52,7 +53,7 @@ class Product
         $this->updatedAt = new DateTimeImmutable();
     }
 
-    public function getId(): ?int
+    public function getId(): string
     {
         return $this->id;
     }

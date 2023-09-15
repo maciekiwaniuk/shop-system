@@ -47,7 +47,7 @@ class OrdersController extends AbstractController
             return $this->json([
                 'success' => false,
                 'errors' => $dto->getErrors()
-            ]);
+            ], Response::HTTP_BAD_REQUEST);
         }
 
         $commandResult = $this->commandBus->handle(new CreateOrderCommand($dto));

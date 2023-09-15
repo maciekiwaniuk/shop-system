@@ -9,6 +9,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserRepositoryInterface::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -17,10 +18,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class User
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups(['default'])]
-    private ?int $id = null;
+    private string $id;
 
     #[ORM\Column(length: 200, unique: true)]
     #[Groups(['default'])]
@@ -71,6 +71,7 @@ class User
         string $name,
         string $surname
     ) {
+        $this->id = (string) Uuid::v4();
         $this->email = $email;
         $this->password = $password;
         $this->name = $name;
@@ -85,7 +86,7 @@ class User
         $this->updatedAt = new DateTimeImmutable();
     }
 
-    public function getId(): ?int
+    public function getId(): string
     {
         return $this->id;
     }

@@ -8,6 +8,7 @@ use App\Domain\Repository\OrderRepositoryInterface;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: OrderRepositoryInterface::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -15,10 +16,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Order
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups(['default'])]
-    private ?int $id = null;
+    private string $id;
 
     #[ORM\Column]
     #[Groups(['default'])]
@@ -31,11 +31,12 @@ class Order
     public function __construct(
         string $name
     ) {
+        $this->id = (string) Uuid::v4();
         $this->name = $name;
         $this->createdAt = new DateTimeImmutable();
     }
 
-    public function getId(): ?int
+    public function getId(): string
     {
         return $this->id;
     }
