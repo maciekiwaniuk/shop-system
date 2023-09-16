@@ -10,5 +10,6 @@ class AbstractApplicationTestCase extends WebTestCase
 {
     protected function setUp(): void
     {
+        static::bootKernel();
     }
 }
