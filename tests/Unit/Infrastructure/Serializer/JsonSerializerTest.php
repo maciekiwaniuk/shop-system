@@ -35,7 +35,7 @@ class JsonSerializerTest extends AbstractUnitTestCase
         $serializedObject = $this->serializer->serialize($object);
 
         $this->assertEquals(
-            json_encode(['name' => 'exampleName'], true),
+            json_encode(['name' => 'exampleName']),
             $serializedObject
         );
     }
@@ -55,7 +55,7 @@ class JsonSerializerTest extends AbstractUnitTestCase
         $serializedObject = $this->serializer->serialize($object, ['groups' => ['example-group']]);
 
         $this->assertEquals(
-            json_encode(['name' => 'exampleName'], true),
+            json_encode(['name' => 'exampleName']),
             $serializedObject
         );
     }

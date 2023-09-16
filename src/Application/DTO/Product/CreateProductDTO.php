@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints\Positive;
 
 class CreateProductDTO extends BaseDTO
 {
-    #[NotBlank()]
+    #[NotBlank]
     #[Length([
         'min' => 2,
         'minMessage' => 'Name should be at least 2 characters long.',
@@ -20,7 +20,7 @@ class CreateProductDTO extends BaseDTO
     ])]
     public readonly string $name;
 
-    #[NotBlank()]
+    #[NotBlank]
     #[Positive([
         'message' => 'Price must be valid number.'
     ])]

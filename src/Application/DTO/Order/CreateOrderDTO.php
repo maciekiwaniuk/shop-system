@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class CreateOrderDTO extends BaseDTO
 {
-    #[NotBlank()]
+    #[NotBlank]
     #[Length([
         'min' => 2,
         'minMessage' => 'Name should be at least 2 characters long.',

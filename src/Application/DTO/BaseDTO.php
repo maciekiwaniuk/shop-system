@@ -29,7 +29,6 @@ abstract class BaseDTO
         foreach ($this->errors as $error) {
             $errors[$error->getPropertyPath()] = $error->getMessage();
         }
-
         return $errors;
     }
 }
