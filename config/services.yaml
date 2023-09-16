@@ -11,3 +11,10 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Domain/Entity'
             - '../src/Kernel.php'
+
+    App\Domain\Repository\OrderRepositoryInterface:
+        class: 'App\Infrastructure\Doctrine\Repository\OrderRepository'
+    App\Domain\Repository\ProductRepositoryInterface:
+        class: 'App\Infrastructure\Doctrine\Repository\ProductRepository'
+    App\Domain\Repository\UserRepositoryInterface:
+        class: 'App\Infrastructure\Doctrine\Repository\UserRepository'

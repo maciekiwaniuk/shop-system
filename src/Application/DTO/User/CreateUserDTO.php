@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Application\DTO\User;
 
+use App\Application\Constraint\UniqueFieldInEntity;
 use App\Application\DTO\BaseDTO;
+use App\Domain\Entity\User;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -19,6 +21,7 @@ class CreateUserDTO extends BaseDTO
         'max' => 100,
         'maxMessage' => 'Email can be up to 100 characters long.'
     ])]
+    #[UniqueFieldInEntity(field: 'email', entityClassName: User::class)]
     public readonly string $email;
 
     #[NotBlank(['message' => 'Password cannot be blank.'])]

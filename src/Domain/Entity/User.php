@@ -14,7 +14,7 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: UserRepositoryInterface::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Table(name: '`user`')]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email.')]
+#[UniqueEntity(fields: ['email'])]
 class User
 {
     #[ORM\Id]
@@ -31,7 +31,7 @@ class User
      */
     #[ORM\Column]
     #[Groups(['default'])]
-    private array $roles = [];
+    private array $roles;
 
     #[ORM\Column]
     #[Groups(['default'])]
@@ -47,15 +47,15 @@ class User
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['default'])]
-    private ?string $lastLoginIp = null;
+    private ?string $lastLoginIp;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['default'])]
-    private ?string $lastLoginTime = null;
+    private ?string $lastLoginTime;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['default'])]
-    private ?string $lastLoginUserAgent = null;
+    private ?string $lastLoginUserAgent;
 
     #[ORM\Column]
     #[Groups(['default'])]
@@ -64,6 +64,8 @@ class User
     #[ORM\Column]
     #[Groups(['default'])]
     private DateTimeImmutable $createdAt;
+
+    public const USER_ROLE = 'user';
 
     public function __construct(
         string $email,
@@ -76,6 +78,10 @@ class User
         $this->password = $password;
         $this->name = $name;
         $this->surname = $surname;
+        $this->roles = [self::USER_ROLE];
+        $this->lastLoginTime = null;
+        $this->lastLoginIp = null;
+        $this->lastLoginUserAgent = null;
         $this->createdAt = new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
     }

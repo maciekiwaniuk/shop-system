@@ -23,15 +23,15 @@ final class CreateUserCommand extends Command
 {
     public function __construct(
         protected readonly CommandBusInterface $commandBus,
-        protected readonly ValidatorInterface $validator,
-        string $name = null
+        protected readonly ValidatorInterface $validator
     ) {
-        parent::__construct($name);
+        parent::__construct();
     }
 
     protected function configure(): void
     {
         $this
+            ->setHelp('Creates user')
             ->addArgument('email', InputArgument::REQUIRED, 'Email')
             ->addArgument('password', InputArgument::REQUIRED, 'Password')
             ->addArgument('name', InputArgument::REQUIRED, 'Name')
