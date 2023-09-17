@@ -7,3 +7,6 @@ migrate:
 
 test:
 	docker-compose exec php bin/tests.sh
+
+fix_codesniffer:
+	docker-compose exec php vendor/bin/phpcbf

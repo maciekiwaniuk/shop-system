@@ -46,25 +46,20 @@ final class CreateUserCommand extends Command
             name: $input->getArgument('name'),
             surname: $input->getArgument('surname')
         );
-        var_dump('1');
 
         $errors = $this->validator->validate($createUserDTO);
         if (count($errors) > 0) {
             $output->writeln(
                 'There was a problem while creating user. Errors: ' . $this->validationErrorsToString($errors)
             );
-            var_dump($this->validationErrorsToString($errors));
-            var_dump('test');
             return Command::FAILURE;
         }
-        var_dump('2');
 
         $commandResult = $this->commandBus->handle(new CreateUserCommandEvent($createUserDTO));
         if ($commandResult->success) {
             $output->writeln('Successfully created user.');
             return Command::SUCCESS;
         }
-        var_dump('3');
 
         $output->writeln('There was a technical problem while creating user.');
         return Command::FAILURE;
