@@ -2,7 +2,16 @@
 
 > ### Project of the backend of shop
 
-# Docker configuration
+# General info
+
+- This is project of backend of basic shop system. 
+- App is structured using DDD architecture, based on CQRS.
+- There are used a few tools which help create valuable code: phpstan, deptrac, codesniffer.
+- Application is well-tested. Tests are divided into Application (E2E), Integration and Unit tests.
+- Validation of data is based on DTO-Constraints way.
+- There is implemented caching system based on Redis.
+
+# Commands
 
 Run application
 
