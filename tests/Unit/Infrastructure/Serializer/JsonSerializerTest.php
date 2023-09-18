@@ -16,8 +16,7 @@ class JsonSerializerTest extends AbstractUnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->serializer = static::getContainer()
-            ->get(JsonSerializer::class);
+        $this->serializer = static::getContainer()->get(JsonSerializer::class);
     }
 
     public function testSerializeWithDefaultGroup(): void
