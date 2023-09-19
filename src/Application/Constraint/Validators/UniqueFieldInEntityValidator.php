@@ -6,7 +6,6 @@ namespace App\Application\Constraint\Validators;
 
 use App\Application\Constraint\UniqueFieldInEntity;
 use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
