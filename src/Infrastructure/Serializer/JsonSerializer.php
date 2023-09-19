@@ -36,6 +36,9 @@ class JsonSerializer
         );
     }
 
+    /**
+     * @param array{groups: array<string>} $context
+     */
     public function serialize(
         mixed $data,
         array $context = ['groups' => ['default']]
@@ -43,6 +46,9 @@ class JsonSerializer
         return $this->serializer->serialize($data, 'json', $context);
     }
 
+    /**
+     * @param array{groups: array<string>} $context
+     */
     public function deserialize(
         mixed $data,
         string $type,

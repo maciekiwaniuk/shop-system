@@ -6,6 +6,7 @@ namespace App\Application\Constraint\Validators;
 
 use App\Application\Constraint\UniqueFieldInEntity;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -17,7 +18,6 @@ class UniqueFieldInEntityValidator extends ConstraintValidator
     }
 
     /**
-     * @param mixed $value
      * @param UniqueFieldInEntity $constraint
      */
     public function validate(mixed $value, Constraint $constraint): void

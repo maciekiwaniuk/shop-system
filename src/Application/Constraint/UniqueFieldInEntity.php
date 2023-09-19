@@ -13,6 +13,9 @@ class UniqueFieldInEntity extends Constraint
 {
     public string $message = '{{ field }} {{ value }} is already in use.';
     public string $field;
+    /**
+     * @var class-string $entityClassName
+     */
     public string $entityClassName;
 
     public function __construct(

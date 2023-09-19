@@ -2,7 +2,7 @@
 
 > ### Project of the backend of shop
 
-# General info
+## General info
 
 - This is project of backend of basic shop system. 
 - App is structured using DDD architecture, based on CQRS.
@@ -10,6 +10,12 @@
 - Application is well-tested. Tests are divided into Application (E2E), Integration and Unit tests.
 - Validation of data is based on DTO-Constraints way.
 - There is implemented caching system based on Redis.
+
+## Used design patterns
+
+- Proxy used for example in Caching, in CacheProxy
+- Builder used for example in setters of attributes in entities
+- 
 
 # Commands
 

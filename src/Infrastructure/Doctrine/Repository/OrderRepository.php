@@ -9,6 +9,9 @@ use App\Domain\Repository\OrderRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @extends ServiceEntityRepository<Order>
+ */
 class OrderRepository extends ServiceEntityRepository implements OrderRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
