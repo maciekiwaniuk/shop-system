@@ -18,3 +18,11 @@ services:
         class: 'App\Infrastructure\Doctrine\Repository\ProductRepository'
     App\Domain\Repository\UserRepositoryInterface:
         class: 'App\Infrastructure\Doctrine\Repository\UserRepository'
+
+    App\Application\EventSubscriber\AuthenticationSuccessSubscriber:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 255 }
+
+    App\Application\EventSubscriber\AuthenticationFailureSubscriber:
+        tags:
+            - { name: kernel.event_subscriber }
