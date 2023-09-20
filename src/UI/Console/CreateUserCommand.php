@@ -40,14 +40,14 @@ final class CreateUserCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $createUserDTO = new CreateUserDTO(
+        $dto = new CreateUserDTO(
             email: $input->getArgument('email'),
             password: $input->getArgument('password'),
             name: $input->getArgument('name'),
             surname: $input->getArgument('surname')
         );
 
-        $errors = $this->validator->validate($createUserDTO);
+        $errors = $this->validator->validate($dto);
         if (count($errors) > 0) {
             $output->writeln(
                 'There was a problem while creating user. Errors: ' . $this->validationErrorsToString($errors)
@@ -55,7 +55,7 @@ final class CreateUserCommand extends Command
             return Command::FAILURE;
         }
 
-        $commandResult = $this->commandBus->handle(new CreateUserCommandEvent($createUserDTO));
+        $commandResult = $this->commandBus->handle(new CreateUserCommandEvent($dto));
         if ($commandResult->success) {
             $output->writeln('Successfully created user.');
             return Command::SUCCESS;

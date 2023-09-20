@@ -6,7 +6,7 @@ namespace App\Application\Query\GetOrders;
 
 use App\Application\BusResult\QueryResult;
 use App\Application\Query\QueryHandlerInterface;
-use App\Infrastructure\Doctrine\Repository\OrderRepository;
+use App\Domain\Repository\OrderRepositoryInterface;
 use App\Infrastructure\Serializer\JsonSerializer;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +17,7 @@ use Throwable;
 class GetOrdersQueryHandler implements QueryHandlerInterface
 {
     public function __construct(
-        protected readonly OrderRepository $orderRepository,
+        protected readonly OrderRepositoryInterface $orderRepository,
         protected readonly JsonSerializer $serializer,
         protected readonly LoggerInterface $logger
     ) {
@@ -34,7 +34,6 @@ class GetOrdersQueryHandler implements QueryHandlerInterface
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
-
         return new QueryResult(
             success: true,
             statusCode: Response::HTTP_OK,

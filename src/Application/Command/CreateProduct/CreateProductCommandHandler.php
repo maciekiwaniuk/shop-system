@@ -34,7 +34,6 @@ class CreateProductCommandHandler implements CommandHandlerInterface
             $this->logger->error($throwable->getMessage());
             return new CommandResult(success: false, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
         return new CommandResult(success: true, statusCode: Response::HTTP_CREATED);
     }
 }

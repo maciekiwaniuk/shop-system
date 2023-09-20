@@ -9,6 +9,8 @@ use App\Domain\Repository\UserRepositoryInterface;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 
@@ -16,7 +18,7 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity(fields: ['email'])]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\Column]
@@ -103,6 +105,12 @@ class User
         return $this->email;
     }
 
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+        return $this;
+    }
+
     public function getPassword(): string
     {
         return $this->password;
@@ -134,11 +142,6 @@ class User
         $this->roles = $roles;
 
         return $this;
-    }
-
-    public function isAdmin(): bool
-    {
-        return in_array(UserRole::ADMIN, $this->roles);
     }
 
     public function getLastLoginIp(): ?string
@@ -182,5 +185,9 @@ class User
     public function getUpdatedAt(): DateTimeImmutable
     {
         return $this->updatedAt;
+    }
+
+    public function eraseCredentials()
+    {
     }
 }

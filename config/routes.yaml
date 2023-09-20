@@ -1,5 +1,16 @@
 controllers:
-    resource:
-        path: ../src/UI/Controller
-        namespace: App\UI\Controller
+    resource: ../src/UI/Controller
     type: attribute
+
+kernel:
+    resource: ../src/Kernel.php
+    type: attribute
+
+api_login_check:
+    path: /api/v1/login-check
+
+#app_catch_all:
+#    path: /{path}
+#    controller: App\Controller\EntryController::index
+#    requirements:
+#        path: .*
