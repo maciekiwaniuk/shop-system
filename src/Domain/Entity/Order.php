@@ -20,19 +20,24 @@ class Order
     #[Groups(['default'])]
     private string $id;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'transactions')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['default'])]
+    private User $user;
+
     #[ORM\Column]
     #[Groups(['default'])]
-    private string $name;
+    private ?DateTimeImmutable $completedAt;
 
     #[ORM\Column]
     #[Groups(['default'])]
     private DateTimeImmutable $createdAt;
 
     public function __construct(
-        string $name
+        User $user
     ) {
         $this->id = (string) Uuid::v4();
-        $this->name = $name;
+        $this->user = $user;
         $this->createdAt = new DateTimeImmutable();
     }
 
@@ -41,12 +46,29 @@ class Order
         return $this->id;
     }
 
-    public function getName(): string
+    public function setUser(User $user): self
     {
-        return $this->name;
+        $this->user = $user;
+        return $this;
     }
 
-    public function getCreatedAt(): ?DateTimeImmutable
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    public function setCompletedAt(DateTimeImmutable $completedAt): self
+    {
+        $this->completedAt = $completedAt;
+        return $this;
+    }
+
+    public function getCompletedAt(): ?DateTimeImmutable
+    {
+        return $this->completedAt;
+    }
+
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }

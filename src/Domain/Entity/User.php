@@ -4,13 +4,21 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
+use AllowDynamicProperties;
 use App\Domain\Repository\UserRepositoryInterface;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\InverseJoinColumn;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\JoinTable;
+use Doctrine\ORM\Mapping\ManyToMany;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 
+#[AllowDynamicProperties]
 #[ORM\Entity(repositoryClass: UserRepositoryInterface::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Table(name: '`user`')]
@@ -26,13 +34,6 @@ class User
     #[Groups(['default'])]
     private string $email;
 
-    /**
-     * @var string[]
-     */
-    #[ORM\Column]
-    #[Groups(['default'])]
-    private array $roles;
-
     #[ORM\Column]
     #[Groups(['default'])]
     private string $password;
@@ -45,13 +46,30 @@ class User
     #[Groups(['default'])]
     private string $surname;
 
+    /**
+     * @var string[]
+     */
+    #[ORM\Column]
+    #[Groups(['default'])]
+    private array $roles;
+
+    /**
+     * Many Users have Many Orders.
+     * @var Collection<int, Order>
+     */
+    #[JoinTable(name: 'users_orders')]
+    #[JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[InverseJoinColumn(name: 'order_id', referencedColumnName: 'id')]
+    #[ManyToMany(targetEntity: Order::class)]
+    private Collection $orders;
+
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['default'])]
     private ?string $lastLoginIp;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['default'])]
-    private ?string $lastLoginTime;
+    private ?DateTimeImmutable $lastLoginTime;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['default'])]
@@ -65,7 +83,8 @@ class User
     #[Groups(['default'])]
     private DateTimeImmutable $createdAt;
 
-    public const USER_ROLE = 'user';
+    public const ROLE_USER = 'ROLE_USER';
+    public const ROLE_ADMIN = 'ROLE_ADMIN';
 
     public function __construct(
         string $email,
@@ -78,10 +97,8 @@ class User
         $this->password = $password;
         $this->name = $name;
         $this->surname = $surname;
-        $this->roles = [self::USER_ROLE];
-        $this->lastLoginTime = null;
-        $this->lastLoginIp = null;
-        $this->lastLoginUserAgent = null;
+        $this->roles = [self::ROLE_USER];
+        $this->orders = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
     }
@@ -107,6 +124,21 @@ class User
         return $this->email;
     }
 
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function getSurname(): ?string
+    {
+        return $this->surname;
+    }
+
     /**
      * @return string[]
      */
@@ -130,25 +162,24 @@ class User
 
     public function isAdmin(): bool
     {
-        if (in_array('ROLE_ADMIN', $this->roles)) {
-            return true;
+        return in_array(self::ROLE_ADMIN, $this->roles);
+    }
+
+    public function addOrder(Order $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+            $order->setUser($this);
         }
-        return false;
+        return $this;
     }
 
-    public function getPassword(): string
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
     {
-        return $this->password;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function getSurname(): ?string
-    {
-        return $this->surname;
+        return $this->orders;
     }
 
     public function getLastLoginIp(): ?string
@@ -159,7 +190,6 @@ class User
     public function setLastLoginIp(?string $lastLoginIp): self
     {
         $this->lastLoginIp = $lastLoginIp;
-
         return $this;
     }
 
@@ -168,10 +198,9 @@ class User
         return $this->lastLoginTime;
     }
 
-    public function setLastLoginTime(string $lastLoginTime): self
+    public function setLastLoginTime(DateTimeImmutable $lastLoginTime): self
     {
         $this->lastLoginTime = $lastLoginTime;
-
         return $this;
     }
 
@@ -183,16 +212,15 @@ class User
     public function setLastLoginUserAgent(string $lastLoginUserAgent): self
     {
         $this->lastLoginUserAgent = $lastLoginUserAgent;
-
         return $this;
     }
 
-    public function getCreatedAt(): ?DateTimeImmutable
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): ?DateTimeImmutable
+    public function getUpdatedAt(): DateTimeImmutable
     {
         return $this->updatedAt;
     }
