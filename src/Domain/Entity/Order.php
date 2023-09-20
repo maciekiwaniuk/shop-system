@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
+use App\Domain\Enum\OrderStatus;
 use App\Domain\Repository\OrderRepositoryInterface;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -35,6 +36,14 @@ class Order
     #[Groups(['default'])]
     private readonly Collection $ordersProducts;
 
+    /**
+     * @var Collection<int, OrderStatusUpdate>
+     */
+    #[ORM\OneToMany(mappedBy: 'ordersStatusUpdates', targetEntity: OrderStatusUpdate::class)]
+    #[ORM\JoinColumn(name: 'id', referencedColumnName: 'order_id', nullable: false)]
+    #[Groups(['default'])]
+    private readonly Collection $ordersStatusUpdates;
+
     #[ORM\Column]
     #[Groups(['default'])]
     private ?DateTimeImmutable $completedAt;
@@ -49,6 +58,8 @@ class Order
         $this->id = (string) Uuid::v4();
         $this->user = $user;
         $this->ordersProducts = new ArrayCollection();
+        $this->ordersStatusUpdates = (new ArrayCollection());
+        $this->ordersStatusUpdates->add(new OrderStatusUpdate($this));
         $this->createdAt = new DateTimeImmutable();
     }
 
@@ -70,17 +81,38 @@ class Order
         return $this->ordersProducts;
     }
 
+    /**
+     * @return Collection<int, OrderStatusUpdate>
+     */
+    public function getOrdersStatusUpdates(): Collection
+    {
+        return $this->ordersStatusUpdates;
+    }
+
     public function createAndAddOrderProduct(
         Product $product,
         int $productQuantity,
         float $productPricePerPiece
     ): self {
-        $this->ordersProducts->add(new OrderProduct(
-            order: $this,
-            product: $product,
-            productQuantity: $productQuantity,
-            productPricePerPiece: $productPricePerPiece
-        ));
+        $this->ordersProducts->add(
+            new OrderProduct(
+                order: $this,
+                product: $product,
+                productQuantity: $productQuantity,
+                productPricePerPiece: $productPricePerPiece
+            )
+        );
+        return $this;
+    }
+
+    public function updateStatus(OrderStatus $orderStatusUpdate): self
+    {
+        $this->ordersStatusUpdates->add(
+            new OrderStatusUpdate(
+                order: $this,
+                status: $orderStatusUpdate
+            )
+        );
         return $this;
     }
 

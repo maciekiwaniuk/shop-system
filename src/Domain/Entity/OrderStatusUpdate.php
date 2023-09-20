@@ -35,7 +35,7 @@ class OrderStatusUpdate
 
     public function __construct(
         Order $order,
-        OrderStatus $status
+        OrderStatus $status = OrderStatus::WAITING_FOR_PAYMENT
     ) {
         $this->id = (string) Uuid::v4();
         $this->order = $order;
