@@ -4,21 +4,14 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
-use AllowDynamicProperties;
+use App\Domain\Enum\UserRole;
 use App\Domain\Repository\UserRepositoryInterface;
 use DateTimeImmutable;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\InverseJoinColumn;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\JoinTable;
-use Doctrine\ORM\Mapping\ManyToMany;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 
-#[AllowDynamicProperties]
 #[ORM\Entity(repositoryClass: UserRepositoryInterface::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Table(name: '`user`')]
@@ -28,7 +21,7 @@ class User
     #[ORM\Id]
     #[ORM\Column]
     #[Groups(['default'])]
-    private string $id;
+    private readonly string $id;
 
     #[ORM\Column(length: 200, unique: true)]
     #[Groups(['default'])]
@@ -53,16 +46,6 @@ class User
     #[Groups(['default'])]
     private array $roles;
 
-    /**
-     * Many Users have Many Orders.
-     * @var Collection<int, Order>
-     */
-    #[JoinTable(name: 'users_orders')]
-    #[JoinColumn(name: 'user_id', referencedColumnName: 'id')]
-    #[InverseJoinColumn(name: 'order_id', referencedColumnName: 'id')]
-    #[ManyToMany(targetEntity: Order::class)]
-    private Collection $orders;
-
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['default'])]
     private ?string $lastLoginIp;
@@ -81,10 +64,7 @@ class User
 
     #[ORM\Column]
     #[Groups(['default'])]
-    private DateTimeImmutable $createdAt;
-
-    public const ROLE_USER = 'ROLE_USER';
-    public const ROLE_ADMIN = 'ROLE_ADMIN';
+    private readonly DateTimeImmutable $createdAt;
 
     public function __construct(
         string $email,
@@ -97,8 +77,7 @@ class User
         $this->password = $password;
         $this->name = $name;
         $this->surname = $surname;
-        $this->roles = [self::ROLE_USER];
-        $this->orders = new ArrayCollection();
+        $this->roles = [UserRole::USER];
         $this->createdAt = new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
     }
@@ -144,10 +123,7 @@ class User
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
+        return $this->roles;
     }
 
     /**
@@ -162,24 +138,7 @@ class User
 
     public function isAdmin(): bool
     {
-        return in_array(self::ROLE_ADMIN, $this->roles);
-    }
-
-    public function addOrder(Order $order): self
-    {
-        if (!$this->orders->contains($order)) {
-            $this->orders->add($order);
-            $order->setUser($this);
-        }
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Order>
-     */
-    public function getOrders(): Collection
-    {
-        return $this->orders;
+        return in_array(UserRole::ADMIN, $this->roles);
     }
 
     public function getLastLoginIp(): ?string

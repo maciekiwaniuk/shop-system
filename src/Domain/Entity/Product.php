@@ -18,7 +18,7 @@ class Product
     #[ORM\Id]
     #[ORM\Column]
     #[Groups(['default'])]
-    private string $id;
+    private readonly string $id;
 
     #[ORM\Column(length: 200)]
     #[Groups(['default'])]
@@ -34,7 +34,7 @@ class Product
 
     #[ORM\Column]
     #[Groups(['default'])]
-    private DateTimeImmutable $createdAt;
+    private readonly DateTimeImmutable $createdAt;
 
     public function __construct(
         string $name,

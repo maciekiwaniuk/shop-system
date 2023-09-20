@@ -6,6 +6,8 @@ namespace App\Domain\Entity;
 
 use App\Domain\Repository\OrderRepositoryInterface;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
@@ -18,12 +20,20 @@ class Order
     #[ORM\Id]
     #[ORM\Column]
     #[Groups(['default'])]
-    private string $id;
+    private readonly string $id;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'transactions')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
     #[Groups(['default'])]
-    private User $user;
+    private readonly User $user;
+
+    /**
+     * @var Collection<int, OrderProduct>
+     */
+    #[ORM\OneToMany(mappedBy: 'ordersProducts', targetEntity: OrderProduct::class)]
+    #[ORM\JoinColumn(name: 'id', referencedColumnName: 'order_id', nullable: false)]
+    #[Groups(['default'])]
+    private readonly Collection $ordersProducts;
 
     #[ORM\Column]
     #[Groups(['default'])]
@@ -31,13 +41,14 @@ class Order
 
     #[ORM\Column]
     #[Groups(['default'])]
-    private DateTimeImmutable $createdAt;
+    private readonly DateTimeImmutable $createdAt;
 
     public function __construct(
         User $user
     ) {
         $this->id = (string) Uuid::v4();
         $this->user = $user;
+        $this->ordersProducts = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable();
     }
 
@@ -46,15 +57,31 @@ class Order
         return $this->id;
     }
 
-    public function setUser(User $user): self
-    {
-        $this->user = $user;
-        return $this;
-    }
-
     public function getUser(): User
     {
         return $this->user;
+    }
+
+    /**
+     * @return Collection<int, OrderProduct>
+     */
+    public function getOrdersProducts(): Collection
+    {
+        return $this->ordersProducts;
+    }
+
+    public function createAndAddOrderProduct(
+        Product $product,
+        int $productQuantity,
+        float $productPricePerPiece
+    ): self {
+        $this->ordersProducts->add(new OrderProduct(
+            order: $this,
+            product: $product,
+            productQuantity: $productQuantity,
+            productPricePerPiece: $productPricePerPiece
+        ));
+        return $this;
     }
 
     public function setCompletedAt(DateTimeImmutable $completedAt): self
