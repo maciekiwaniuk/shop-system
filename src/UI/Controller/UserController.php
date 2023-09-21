@@ -34,7 +34,7 @@ class UserController extends AbstractController
         if ($dto->hasErrors()) {
             return $this->json([
                 'success' => false,
-                'errors' => $dto->getErrors()
+                'errors' => $dto-> getErrors()
             ], Response::HTTP_BAD_REQUEST);
         }
 

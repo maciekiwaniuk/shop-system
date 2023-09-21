@@ -9,10 +9,12 @@ use App\Application\Bus\QueryBus\QueryBusInterface;
 use App\Application\Command\CreateOrder\CreateOrderCommand;
 use App\Application\DTO\Order\CreateOrderDTO;
 use App\Application\Query\GetOrders\GetOrdersQuery;
+use App\Application\Voter\OrdersVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/v1/orders', name: 'orders.')]
 class OrdersController extends AbstractController
@@ -24,6 +26,7 @@ class OrdersController extends AbstractController
     }
 
     #[Route('/get-all', name: 'get-all', methods: ['GET'])]
+    #[IsGranted(OrdersVoter::GET_ALL)]
     public function getAll(): Response
     {
         $queryResult = $this->queryBus->handle(new GetOrdersQuery());
@@ -41,6 +44,7 @@ class OrdersController extends AbstractController
     }
 
     #[Route('/new', name: 'new', methods: ['POST'])]
+    #[IsGranted(OrdersVoter::NEW)]
     public function new(#[ValueResolver('create_order_dto')] CreateOrderDTO $dto): Response
     {
         if ($dto->hasErrors()) {

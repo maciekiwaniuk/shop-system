@@ -19,3 +19,6 @@ test:
 
 fix_codesniffer:
 	docker-compose exec php vendor/bin/phpcbf
+
+cache_clear:
+	docker-compose exec php bin/console cache:clear

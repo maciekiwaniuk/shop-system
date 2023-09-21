@@ -144,6 +144,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function isAdmin(): bool
+    {
+        return in_array(UserRole::ADMIN->value, $this->roles);
+    }
+
     public function getLastLoginIp(): ?string
     {
         return $this->lastLoginIp;
