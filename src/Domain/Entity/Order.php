@@ -31,18 +31,18 @@ class Order
     /**
      * @var Collection<int, OrderProduct>
      */
-    #[ORM\OneToMany(mappedBy: 'ordersProducts', targetEntity: OrderProduct::class)]
+    #[ORM\OneToMany(mappedBy: 'ordersProducts', targetEntity: OrderProduct::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'id', referencedColumnName: 'order_id', nullable: false)]
     #[Groups(['default'])]
-    private readonly Collection $ordersProducts;
+    private Collection $ordersProducts;
 
     /**
      * @var Collection<int, OrderStatusUpdate>
      */
-    #[ORM\OneToMany(mappedBy: 'ordersStatusUpdates', targetEntity: OrderStatusUpdate::class)]
+    #[ORM\OneToMany(mappedBy: 'ordersStatusUpdates', targetEntity: OrderStatusUpdate::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'id', referencedColumnName: 'order_id', nullable: false)]
     #[Groups(['default'])]
-    private readonly Collection $ordersStatusUpdates;
+    private Collection $ordersStatusUpdates;
 
     #[ORM\Column]
     #[Groups(['default'])]
@@ -60,6 +60,7 @@ class Order
         $this->ordersProducts = new ArrayCollection();
         $this->ordersStatusUpdates = (new ArrayCollection());
         $this->ordersStatusUpdates->add(new OrderStatusUpdate($this));
+        $this->completedAt = new DateTimeImmutable();
         $this->createdAt = new DateTimeImmutable();
     }
 

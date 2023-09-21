@@ -7,8 +7,10 @@ namespace App\Application\Command\CreateOrder;
 use App\Application\BusResult\CommandResult;
 use App\Application\Command\CommandHandlerInterface;
 use App\Domain\Entity\Order;
+use App\Domain\Entity\Product;
 use App\Domain\Entity\User;
 use App\Infrastructure\Doctrine\Repository\OrderRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -20,6 +22,7 @@ class CreateOrderCommandHandler implements CommandHandlerInterface
 {
     public function __construct(
         protected readonly OrderRepository $orderRepository,
+        protected readonly EntityManagerInterface $entityManager,
         protected readonly LoggerInterface $logger,
         protected readonly TokenStorageInterface $tokenStorage
     ) {
@@ -33,7 +36,14 @@ class CreateOrderCommandHandler implements CommandHandlerInterface
             $order = new Order(
                 user: $user
             );
-            $this->orderRepository->save($order);
+            foreach ($command->dto->products as $product) {
+                $order->createAndAddOrderProduct(
+                    $this->entityManager->getReference(Product::class, $product['id']),
+                    $product['quantity'],
+                    $product['pricePerPiece']
+                );
+            }
+            $this->orderRepository->save($order, true);
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return new CommandResult(success: false, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
