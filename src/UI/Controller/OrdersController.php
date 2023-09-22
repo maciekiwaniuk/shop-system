@@ -10,11 +10,15 @@ use App\Application\Command\CreateOrder\CreateOrderCommand;
 use App\Application\DTO\Order\CreateOrderDTO;
 use App\Application\Query\GetOrders\GetOrdersQuery;
 use App\Application\Voter\OrdersVoter;
+use App\Domain\Entity\Order;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use OpenApi\Attributes as OA;
 
 #[Route('/api/v1/orders', name: 'orders.')]
 class OrdersController extends AbstractController
@@ -25,6 +29,20 @@ class OrdersController extends AbstractController
     ) {
     }
 
+    #[OA\Response(
+        response: Response::HTTP_OK,
+        description: 'Returns all orders',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'success', type: 'bool'),
+                new OA\Property(
+                    property: 'data',
+                    type: 'array',
+                    items: new OA\Items(ref: new Model(type: Order::class, groups: ['default']))
+                )
+            ]
+        )
+    )]
     #[Route('/get-all', name: 'get-all', methods: ['GET'])]
     #[IsGranted(OrdersVoter::GET_ALL)]
     public function getAll(): Response
@@ -43,6 +61,8 @@ class OrdersController extends AbstractController
         return $this->json($result, $queryResult->statusCode);
     }
 
+    // TODO:
+    #[OA\RequestBody(content: new Model(type: CreateOrderDTO::class, groups: ['default']))]
     #[Route('/new', name: 'new', methods: ['POST'])]
     #[IsGranted(OrdersVoter::NEW)]
     public function new(#[ValueResolver('create_order_dto')] CreateOrderDTO $dto): Response

@@ -9,6 +9,11 @@ kernel:
 api_login_check:
     path: /api/v1/login-check
 
+app.swagger_ui:
+    path: /api/doc
+    methods: GET
+    defaults: { _controller: nelmio_api_doc.controller.swagger_ui }
+
 #app_catch_all:
 #    path: /{path}
 #    controller: App\Controller\EntryController::index
