@@ -9,6 +9,7 @@ use App\Application\Bus\QueryBus\QueryBusInterface;
 use App\Application\Command\CreateUser\CreateUserCommand as CreateUserCommandEvent;
 use App\Application\DTO\User\CreateUserDTO;
 use App\Application\Query\FindUserByEmail\FindUserByEmailQuery;
+use App\Application\Voter\UserVoter;
 use App\Domain\Entity\User;
 use App\Infrastructure\Serializer\JsonSerializer;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
@@ -16,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/v1')]
 class UserController extends AbstractController
@@ -29,6 +31,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/register', name: 'register', methods: ['POST'])]
+    #[IsGranted(UserVoter::REGISTER)]
     public function register(#[ValueResolver('create_user_dto')] CreateUserDTO $dto): Response
     {
         if ($dto->hasErrors()) {

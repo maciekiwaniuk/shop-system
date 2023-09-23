@@ -9,10 +9,12 @@ use App\Application\Bus\QueryBus\QueryBusInterface;
 use App\Application\Command\CreateProduct\CreateProductCommand;
 use App\Application\DTO\Product\CreateProductDTO;
 use App\Application\Query\GetProducts\GetProductsQuery;
+use App\Application\Voter\ProductsVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/v1/products', name: 'products.')]
 class ProductsController extends AbstractController
@@ -24,6 +26,7 @@ class ProductsController extends AbstractController
     }
 
     #[Route('/get-all', name: 'get-all', methods: ['GET'])]
+    #[IsGranted(ProductsVoter::GET_ALL)]
     public function getAll(): Response
     {
         $queryResult = $this->queryBus->handle(new GetProductsQuery());
@@ -41,6 +44,7 @@ class ProductsController extends AbstractController
     }
 
     #[Route('/new', name: 'new', methods: ['POST'])]
+    #[IsGranted(ProductsVoter::NEW)]
     public function new(#[ValueResolver('create_product_dto')] CreateProductDTO $dto): Response
     {
         if ($dto->hasErrors()) {
