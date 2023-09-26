@@ -14,7 +14,6 @@
 ## Used design patterns
 
 - Proxy used for example in Caching, in CacheProxy
-- Builder used for example in setters of attributes in entities
 - 
 
 # Commands
