@@ -14,7 +14,6 @@
 ## Used design patterns
 
 - Proxy used for example in Caching, in CacheProxy
-- 
 
 # Commands
 
