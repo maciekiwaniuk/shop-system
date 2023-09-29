@@ -56,7 +56,7 @@ class UserController extends AbstractController
             ],
             default => [
                 'success' => false,
-                'message' => 'Something went wrong while registering.'
+                'message' => 'Something went wrong while registeringg.'
             ]
         };
 
