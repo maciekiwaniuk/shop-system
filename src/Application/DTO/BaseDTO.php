@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Application\DTO;
 
+use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 abstract class BaseDTO
 {
+    #[Ignore]
     private ConstraintViolationListInterface $errors;
 
     public function setErrors(ConstraintViolationListInterface $errors): void

@@ -11,6 +11,7 @@ use App\Application\DTO\User\CreateUserDTO;
 use App\Application\Query\FindUserByEmail\FindUserByEmailQuery;
 use App\Application\Voter\UserVoter;
 use App\Domain\Entity\User;
+use Nelmio\ApiDocBundle\Annotation\Model;
 use App\Infrastructure\Serializer\JsonSerializer;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use OpenApi\Attributes as OA;
 
 #[Route('/api/v1')]
 class UserController extends AbstractController
@@ -30,6 +32,22 @@ class UserController extends AbstractController
     ) {
     }
 
+    #[OA\Response(
+        response: Response::HTTP_OK,
+        description: 'Returns all orders',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'success', type: 'bool'),
+                new OA\Property(property: 'message', type: 'string'),
+                new OA\Property(
+                    property: 'data',
+                    properties: [new OA\Property(property: 'token', type: 'string')],
+                    type: 'object'
+                )
+            ]
+        )
+    )]
+    #[OA\RequestBody(content: new Model(type: CreateUserDTO::class))]
     #[Route('/register', name: 'register', methods: ['POST'])]
     #[IsGranted(UserVoter::REGISTER)]
     public function register(#[ValueResolver('create_user_dto')] CreateUserDTO $dto): Response
@@ -56,7 +74,7 @@ class UserController extends AbstractController
             ],
             default => [
                 'success' => false,
-                'message' => 'Something went wrong while registeringg.'
+                'message' => 'Something went wrong while registering.'
             ]
         };
 

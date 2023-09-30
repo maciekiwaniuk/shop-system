@@ -12,7 +12,6 @@ use App\Application\Query\GetOrders\GetOrdersQuery;
 use App\Application\Voter\OrdersVoter;
 use App\Domain\Entity\Order;
 use Nelmio\ApiDocBundle\Annotation\Model;
-use Nelmio\ApiDocBundle\Annotation\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
