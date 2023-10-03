@@ -1,4 +1,5 @@
 parameters:
+    redis_url: '%env(REDIS_URL)%'
 
 services:
     _defaults:
@@ -26,3 +27,7 @@ services:
     App\Application\EventSubscriber\AuthenticationFailureSubscriber:
         tags:
             - { name: kernel.event_subscriber }
+
+    App\Infrastructure\Cache\CacheCreator:
+        arguments:
+            $redisUrl: '%redis_url%'

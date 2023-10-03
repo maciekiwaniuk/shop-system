@@ -12,7 +12,7 @@ class CacheCreator
 {
     public function __construct(
         protected readonly LoggerInterface $logger,
-        protected readonly string $redisUrl = 'redis://redis'
+        protected readonly string $redisUrl
     ) {
     }
 
