@@ -36,4 +36,14 @@ class OrderRepository extends ServiceEntityRepository implements OrderRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    public function findByUuid(string $uuid): Order
+    {
+        return $this->createQueryBuilder('o')
+            ->select('o')
+            ->where('o.id = :uuid')
+            ->setParameter('uuid', $uuid)
+            ->getQuery()
+            ->getSingleResult();
+    }
 }

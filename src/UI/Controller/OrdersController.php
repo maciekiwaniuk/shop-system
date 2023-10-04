@@ -8,6 +8,7 @@ use App\Application\Bus\CommandBus\CommandBusInterface;
 use App\Application\Bus\QueryBus\QueryBusInterface;
 use App\Application\Command\CreateOrder\CreateOrderCommand;
 use App\Application\DTO\Order\CreateOrderDTO;
+use App\Application\Query\FindOrderByUuid\FindOrderByUuidQuery;
 use App\Application\Query\GetOrders\GetOrdersQuery;
 use App\Application\Voter\OrdersVoter;
 use App\Domain\Entity\Order;
@@ -47,6 +48,23 @@ class OrdersController extends AbstractController
     public function getAll(): Response
     {
         $queryResult = $this->queryBus->handle(new GetOrdersQuery());
+
+        $result = match (true) {
+            $queryResult->success => [
+                'success' => true,
+                'data' => $queryResult->data
+            ],
+            default => [
+                'success' => false
+            ]
+        };
+        return $this->json($result, $queryResult->statusCode);
+    }
+
+    #[Route('/show/{uuid}', methods: ['GET'])]
+    public function show(string $uuid): Response
+    {
+        $queryResult = $this->queryBus->handle(new FindOrderByUuidQuery($uuid));
 
         $result = match (true) {
             $queryResult->success => [

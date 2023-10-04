@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Query\FindUserByEmail;
+namespace App\Application\Query\FindOrderByUuid;
 
 use App\Application\BusResult\QueryResult;
 use App\Application\Query\QueryHandlerInterface;
-use App\Domain\Repository\UserRepositoryInterface;
+use App\Domain\Repository\OrderRepositoryInterface;
 use App\Infrastructure\Serializer\JsonSerializer;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,19 +14,19 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 
 #[AsMessageHandler]
-class FindUserByEmailQueryHandler implements QueryHandlerInterface
+class FindOrderByUuidQueryHandler implements QueryHandlerInterface
 {
     public function __construct(
-        protected readonly UserRepositoryInterface $userRepository,
+        protected readonly OrderRepositoryInterface $orderRepository,
         protected readonly JsonSerializer $serializer,
         protected readonly LoggerInterface $logger
     ) {
     }
-
-    public function __invoke(FindUserByEmailQuery $query): QueryResult
+    
+    public function __invoke(FindOrderByUuidQuery $query): QueryResult
     {
         try {
-            $user = $this->userRepository->findUserByEmail($query->email);
+            $order = $this->orderRepository->findByUuid($query->email);
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return new QueryResult(
@@ -37,7 +37,7 @@ class FindUserByEmailQueryHandler implements QueryHandlerInterface
         return new QueryResult(
             success: true,
             statusCode: Response::HTTP_OK,
-            data: json_decode($this->serializer->serialize($user), true)
+            data: json_decode($this->serializer->serialize($order), true)
         );
     }
 }
