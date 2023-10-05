@@ -48,7 +48,7 @@ class UserController extends AbstractController
         )
     )]
     #[OA\RequestBody(content: new Model(type: CreateUserDTO::class))]
-    #[Route('/register', name: 'register', methods: ['POST'])]
+    #[Route('/register', methods: ['POST'])]
     #[IsGranted(UserVoter::REGISTER)]
     public function register(#[ValueResolver('create_user_dto')] CreateUserDTO $dto): Response
     {

@@ -6,7 +6,9 @@ namespace App\UI\Controller;
 
 use App\Application\Bus\CommandBus\CommandBusInterface;
 use App\Application\Bus\QueryBus\QueryBusInterface;
+use App\Application\Command\ChangeOrderStatus\ChangeOrderStatusCommand;
 use App\Application\Command\CreateOrder\CreateOrderCommand;
+use App\Application\DTO\Order\ChangeOrderStatusDTO;
 use App\Application\DTO\Order\CreateOrderDTO;
 use App\Application\Query\FindOrderByUuid\FindOrderByUuidQuery;
 use App\Application\Query\GetOrders\GetOrdersQuery;
@@ -43,7 +45,7 @@ class OrdersController extends AbstractController
             ]
         )
     )]
-    #[Route('/get-all', name: 'get-all', methods: ['GET'])]
+    #[Route('/get-all', methods: ['GET'])]
     #[IsGranted(OrdersVoter::GET_ALL)]
     public function getAll(): Response
     {
@@ -80,7 +82,7 @@ class OrdersController extends AbstractController
 
     // TODO:
     #[OA\RequestBody(content: new Model(type: CreateOrderDTO::class, groups: ['default']))]
-    #[Route('/new', name: 'new', methods: ['POST'])]
+    #[Route('/new', methods: ['POST'])]
     #[IsGranted(OrdersVoter::NEW)]
     public function new(#[ValueResolver('create_order_dto')] CreateOrderDTO $dto): Response
     {
@@ -101,6 +103,34 @@ class OrdersController extends AbstractController
             default => [
                 'success' => false,
                 'message' => 'Something went wrong while creating order.'
+            ]
+        };
+        return $this->json($result, $commandResult->statusCode);
+    }
+
+    #[Route('/change-status/{uuid}', methods: ['POST'])]
+    #[IsGranted(OrdersVoter::UPDATE_STATUS)]
+    public function changeStatus(
+        #[ValueResolver('change_order_status_dto')] ChangeOrderStatusDTO $dto,
+        string $uuid
+    ): Response {
+        if ($dto->hasErrors()) {
+            return $this->json([
+                'success' => false,
+                'errors' => $dto->getErrors()
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $commandResult = $this->commandBus->handle(new ChangeOrderStatusCommand($dto, $uuid));
+
+        $result = match (true) {
+            $commandResult->success => [
+                'success' => true,
+                'message' => 'Successfully updated status of order.'
+            ],
+            default => [
+                'success' => false,
+                'message' => 'Something went wrong while updating status of order.'
             ]
         };
         return $this->json($result, $commandResult->statusCode);

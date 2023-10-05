@@ -25,7 +25,7 @@ class ProductsController extends AbstractController
     ) {
     }
 
-    #[Route('/get-all', name: 'get-all', methods: ['GET'])]
+    #[Route('/get-all', methods: ['GET'])]
     #[IsGranted(ProductsVoter::GET_ALL)]
     public function getAll(): Response
     {
@@ -43,7 +43,7 @@ class ProductsController extends AbstractController
         return $this->json($result, $queryResult->statusCode);
     }
 
-    #[Route('/new', name: 'new', methods: ['POST'])]
+    #[Route('/new', methods: ['POST'])]
     #[IsGranted(ProductsVoter::NEW)]
     public function new(#[ValueResolver('create_product_dto')] CreateProductDTO $dto): Response
     {

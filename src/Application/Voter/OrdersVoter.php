@@ -16,10 +16,11 @@ class OrdersVoter extends Voter
     public const GET_ALL = 'GET_ALL_ORDERS';
     public const SHOW = 'SHOW_ORDER';
     public const NEW = 'NEW_ORDER';
+    public const UPDATE_STATUS = 'UPDATE_STATUS_ORDER';
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return in_array($attribute, [self::GET_ALL, self::SHOW, self::NEW])
+        return in_array($attribute, [self::GET_ALL, self::SHOW, self::NEW, self::UPDATE_STATUS])
             && ($subject instanceof Order || $subject === null);
     }
 
@@ -38,6 +39,7 @@ class OrdersVoter extends Voter
             self::GET_ALL => $this->canGetAll($user),
             self::SHOW => $this->canShow($subject, $user),
             self::NEW => $this->canNew(),
+            self::UPDATE_STATUS => $this->canUpdateStatus($user),
             default => throw new Exception('Invalid attribute.')
         };
     }
@@ -56,5 +58,10 @@ class OrdersVoter extends Voter
     private function canNew(): bool
     {
         return true;
+    }
+
+    private function canUpdateStatus(User $user): bool
+    {
+        return $user->isAdmin();
     }
 }
