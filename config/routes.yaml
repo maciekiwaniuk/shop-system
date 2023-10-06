@@ -7,7 +7,7 @@ kernel:
     type: attribute
 
 api_login_check:
-    path: /api/v1/login-check
+    path: /api/v1/login
 
 app.swagger_ui:
     path: /api/doc
