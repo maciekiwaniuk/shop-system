@@ -74,7 +74,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         string $name,
         string $surname
     ) {
-        $this->id = (string) Uuid::v4();
+        $this->id = (string) Uuid::v1();
         $this->email = $email;
         $this->password = $password;
         $this->name = $name;

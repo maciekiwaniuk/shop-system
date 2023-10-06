@@ -37,7 +37,7 @@ class OrderStatusUpdate
         Order $order,
         OrderStatus $status = OrderStatus::WAITING_FOR_PAYMENT
     ) {
-        $this->id = (string) Uuid::v4();
+        $this->id = (string) Uuid::v1();
         $this->order = $order;
         $this->status = $status;
         $this->createdAt = new DateTimeImmutable();

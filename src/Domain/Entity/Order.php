@@ -55,7 +55,7 @@ class Order
     public function __construct(
         User $user
     ) {
-        $this->id = (string) Uuid::v4();
+        $this->id = (string) Uuid::v1();
         $this->user = $user;
         $this->ordersProducts = new ArrayCollection();
         $this->ordersStatusUpdates = (new ArrayCollection());

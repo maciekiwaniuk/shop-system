@@ -40,7 +40,7 @@ class Product
         string $name,
         float $price
     ) {
-        $this->id = (string) Uuid::v4();
+        $this->id = (string) Uuid::v1();
         $this->name = $name;
         $this->price = $price;
         $this->createdAt = new DateTimeImmutable();
