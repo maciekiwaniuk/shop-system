@@ -11,4 +11,6 @@ interface ProductRepositoryInterface
     public function save(Product $product, bool $flush = false): void;
 
     public function remove(Product $product, bool $flush = false): void;
+
+    public function findBySlug(string $slug): Product;
 }

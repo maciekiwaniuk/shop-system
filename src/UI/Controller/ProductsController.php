@@ -8,6 +8,7 @@ use App\Application\Bus\CommandBus\CommandBusInterface;
 use App\Application\Bus\QueryBus\QueryBusInterface;
 use App\Application\Command\CreateProduct\CreateProductCommand;
 use App\Application\DTO\Product\CreateProductDTO;
+use App\Application\Query\FindProductBySlug\FindProductBySlugQuery;
 use App\Application\Query\GetProducts\GetProductsQuery;
 use App\Application\Voter\ProductsVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -67,5 +68,23 @@ class ProductsController extends AbstractController
             ]
         };
         return $this->json($result, $commandResult->statusCode);
+    }
+
+    #[Route('/show/{slug}', methods: ['GET'])]
+    #[IsGranted(ProductsVoter::SHOW)]
+    public function show(string $slug): Response
+    {
+        $queryResult = $this->queryBus->handle(new FindProductBySlugQuery($slug));
+
+        $result = match (true) {
+            $queryResult->success => [
+                'success' => true,
+                'data' => $queryResult->data
+            ],
+            default => [
+                'success' => false
+            ]
+        };
+        return $this->json($result, $queryResult->statusCode);
     }
 }

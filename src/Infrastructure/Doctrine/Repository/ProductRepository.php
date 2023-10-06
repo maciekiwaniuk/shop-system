@@ -36,4 +36,14 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
             $this->getEntityManager()->flush();
         }
     }
+
+    public function findBySlug(string $slug): Product
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p')
+            ->where('p.slug = :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getSingleResult();
+    }
 }
