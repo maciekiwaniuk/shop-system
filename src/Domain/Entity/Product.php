@@ -8,7 +8,9 @@ use App\Domain\Repository\ProductRepositoryInterface;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Uid\UuidV1;
 
 #[ORM\Entity(repositoryClass: ProductRepositoryInterface::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -26,6 +28,10 @@ class Product
 
     #[ORM\Column(length: 200)]
     #[Groups(['default'])]
+    private string $slug;
+
+    #[ORM\Column(length: 200)]
+    #[Groups(['default'])]
     private float $price;
 
     #[ORM\Column]
@@ -40,8 +46,10 @@ class Product
         string $name,
         float $price
     ) {
-        $this->id = (string) Uuid::v1();
+        $uuid = Uuid::v1();
+        $this->id = (string) $uuid;
         $this->name = $name;
+        $this->slug = (new AsciiSlugger())->slug($this->name) . '-' . $this->getFirstSegmentFromUuid($uuid);
         $this->price = $price;
         $this->createdAt = new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
@@ -58,9 +66,19 @@ class Product
         return $this->id;
     }
 
+    private function getFirstSegmentFromUuid(UuidV1 $uuid): string
+    {
+        return substr((string) $uuid, 0, 8);
+    }
+
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
     }
 
     public function getPrice(): float

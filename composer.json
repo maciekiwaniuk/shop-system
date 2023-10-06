@@ -27,6 +27,7 @@
         "symfony/property-access": "^6.3",
         "symfony/runtime": "^6.3",
         "symfony/serializer": "^6.3",
+        "symfony/string": "^6.3",
         "symfony/twig-bundle": "^6.3",
         "symfony/uid": "^6.3",
         "symfony/validator": "^6.3",
