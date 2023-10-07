@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use OpenApi\Attributes as OA;
 
-#[Route('/api/v1/orders', name: 'orders.')]
+#[Route('/api/v1/orders')]
 class OrdersController extends AbstractController
 {
     public function __construct(

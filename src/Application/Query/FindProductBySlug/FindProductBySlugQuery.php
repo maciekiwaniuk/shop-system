@@ -9,7 +9,7 @@ use App\Application\Query\QueryInterface;
 class FindProductBySlugQuery implements QueryInterface
 {
     public function __construct(
-        public readonly string $uuid
+        public readonly string $slug
     ) {
     }
 }
