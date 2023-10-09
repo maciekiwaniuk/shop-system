@@ -7,10 +7,13 @@ namespace App\UI\Controller;
 use App\Application\Bus\CommandBus\CommandBusInterface;
 use App\Application\Bus\QueryBus\QueryBusInterface;
 use App\Application\Command\CreateProduct\CreateProductCommand;
+use App\Application\Command\UpdateProduct\UpdateProductCommand;
 use App\Application\DTO\Product\CreateProductDTO;
+use App\Application\DTO\Product\UpdateProductDTO;
 use App\Application\Query\FindProductBySlug\FindProductBySlugQuery;
 use App\Application\Query\GetProducts\GetProductsQuery;
 use App\Application\Voter\ProductsVoter;
+use App\Domain\Entity\Product;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
@@ -85,5 +88,35 @@ class ProductsController extends AbstractController
             ]
         };
         return $this->json($result, $queryResult->statusCode);
+    }
+
+    #[Route('/update/{slug}', methods: ['PUT'])]
+    #[IsGranted(ProductsVoter::UPDATE)]
+    public function update(
+        #[ValueResolver('update_product_dto')] UpdateProductDTO $dto,
+        string $slug
+    ): Response {
+        if ($dto->hasErrors()) {
+            return $this->json([
+                'success' => false,
+                'errors' => $dto->getErrors()
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $queryResult = $this->queryBus->handle(new FindProductBySlugQuery($slug));
+
+        $commandResult = $this->commandBus->handle(new UpdateProductCommand($queryResult->data, $dto));
+
+        $result = match (true) {
+            $commandResult->success => [
+                'success' => true,
+                'message' => 'Successfully updated product.'
+            ],
+            default => [
+                'success' => false,
+                'message' => 'Something went wrong while updating product.'
+            ]
+        };
+        return $this->json($result, $commandResult->statusCode);
     }
 }

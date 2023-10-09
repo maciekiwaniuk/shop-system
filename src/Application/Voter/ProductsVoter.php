@@ -16,10 +16,11 @@ class ProductsVoter extends Voter
     public const GET_ALL = 'GET_ALL_PRODUCTS';
     public const NEW = 'NEW_PRODUCT';
     public const SHOW = 'SHOW_PRODUCT';
+    public const UPDATE = 'UPDATE_PRODUCT';
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return in_array($attribute, [self::GET_ALL, self::NEW, self::SHOW])
+        return in_array($attribute, [self::GET_ALL, self::NEW, self::SHOW, self::UPDATE])
             && ($subject instanceof Product || $subject === null);
     }
 
@@ -38,6 +39,7 @@ class ProductsVoter extends Voter
             self::GET_ALL => $this->canGetAll(),
             self::NEW => $this->canNew($user),
             self::SHOW => $this->canShow(),
+            self::UPDATE => $this->canUpdate($user),
             default => throw new Exception('Invalid attribute.')
         };
     }
@@ -55,5 +57,10 @@ class ProductsVoter extends Voter
     private function canShow(): bool
     {
         return true;
+    }
+
+    private function canUpdate(User $user): bool
+    {
+        return $user->isAdmin();
     }
 }

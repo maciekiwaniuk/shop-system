@@ -49,7 +49,7 @@ class Product
         $uuid = Uuid::v1();
         $this->id = (string) $uuid;
         $this->name = $name;
-        $this->slug = (new AsciiSlugger())->slug($this->name) . '-' . $this->getFirstSegmentFromUuid($uuid);
+        $this->slug = $this->generateSlug($name, $uuid);
         $this->price = $price;
         $this->createdAt = new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
@@ -58,6 +58,10 @@ class Product
     #[ORM\PreUpdate]
     public function refreshUpdatedAtValue(): void
     {
+        $this->slug = $this->generateSlug(
+            $this->name,
+            UuidV1::fromString($this->id)
+        );
         $this->updatedAt = new DateTimeImmutable();
     }
 
@@ -66,9 +70,9 @@ class Product
         return $this->id;
     }
 
-    private function getFirstSegmentFromUuid(UuidV1 $uuid): string
+    private function generateSlug(string $name, UuidV1 $uuid): string
     {
-        return substr((string) $uuid, 0, 8);
+        return (new AsciiSlugger())->slug($name) . '-' . substr((string) $uuid, 0, 8);
     }
 
     public function getName(): string
@@ -94,5 +98,17 @@ class Product
     public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    public function setPrice(float $price): self
+    {
+        $this->price = $price;
+        return $this;
     }
 }

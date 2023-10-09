@@ -11,8 +11,8 @@ use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-#[AsTargetedValueResolver('create_product_dto')]
-class CreateProductValueResolver implements ValueResolverInterface
+#[AsTargetedValueResolver('update_product_dto')]
+class UpdateProductValueResolver implements ValueResolverInterface
 {
     public function __construct(
         protected readonly ValidatorInterface $validator
