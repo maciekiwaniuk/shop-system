@@ -47,4 +47,28 @@ class CacheProxy
             return false;
         }
     }
+
+    public function keysByPrefix(): array
+    {
+        try {
+            return $this->cache->keys($this->prefix);
+        } catch (Throwable $throwable) {
+            $this->logger->error($throwable->getMessage());
+            return [];
+        }
+    }
+
+    public function del(array $keys): bool
+    {
+        try {
+            $this->cache->del(array_map(
+                fn($key) => $this->prefix . $key,
+                $keys
+            ));
+            return true;
+        } catch (Throwable $throwable) {
+            $this->logger->error($throwable->getMessage());
+            return false;
+        }
+    }
 }
