@@ -28,15 +28,6 @@ class OrderRepository extends ServiceEntityRepository implements OrderRepository
         }
     }
 
-    public function remove(Order $order, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($order);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
     public function findByUuid(string $uuid): Order
     {
         return $this->createQueryBuilder('o')

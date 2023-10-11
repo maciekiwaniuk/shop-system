@@ -7,10 +7,12 @@ namespace App\UI\Controller;
 use App\Application\Bus\CommandBus\CommandBusInterface;
 use App\Application\Bus\QueryBus\QueryBusInterface;
 use App\Application\Command\CreateProduct\CreateProductCommand;
+use App\Application\Command\DeleteProduct\DeleteProductCommand;
 use App\Application\Command\UpdateProduct\UpdateProductCommand;
 use App\Application\DTO\Product\CreateProductDTO;
 use App\Application\DTO\Product\UpdateProductDTO;
 use App\Application\Query\FindProductBySlug\FindProductBySlugQuery;
+use App\Application\Query\FindProductByUuid\FindProductByUuidQuery;
 use App\Application\Query\GetProducts\GetProductsQuery;
 use App\Application\Voter\ProductsVoter;
 use App\Domain\Entity\Product;
@@ -90,11 +92,11 @@ class ProductsController extends AbstractController
         return $this->json($result, $queryResult->statusCode);
     }
 
-    #[Route('/update/{slug}', methods: ['PUT'])]
+    #[Route('/update/{uuid}', methods: ['PUT'])]
     #[IsGranted(ProductsVoter::UPDATE)]
     public function update(
         #[ValueResolver('update_product_dto')] UpdateProductDTO $dto,
-        string $slug
+        string $uuid
     ): Response {
         if ($dto->hasErrors()) {
             return $this->json([
@@ -103,8 +105,7 @@ class ProductsController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $queryResult = $this->queryBus->handle(new FindProductBySlugQuery($slug));
-
+        $queryResult = $this->queryBus->handle(new FindProductByUuidQuery($uuid));
         $commandResult = $this->commandBus->handle(new UpdateProductCommand($queryResult->data, $dto));
 
         $result = match (true) {
@@ -115,6 +116,26 @@ class ProductsController extends AbstractController
             default => [
                 'success' => false,
                 'message' => 'Something went wrong while updating product.'
+            ]
+        };
+        return $this->json($result, $commandResult->statusCode);
+    }
+
+    #[Route('/delete/{uuid}', methods: ['DELETE'])]
+    #[IsGranted(ProductsVoter::DELETE)]
+    public function delete(string $uuid): Response
+    {
+        $queryResult = $this->queryBus->handle(new FindProductByUuidQuery($uuid));
+        $commandResult = $this->commandBus->handle(new DeleteProductCommand($queryResult->data));
+
+        $result = match (true) {
+            $commandResult->success => [
+                'success' => true,
+                'message' => 'Successfully deleted product.'
+            ],
+            default => [
+                'success' => false,
+                'message' => 'Something went wrong while deleting product.'
             ]
         };
         return $this->json($result, $commandResult->statusCode);

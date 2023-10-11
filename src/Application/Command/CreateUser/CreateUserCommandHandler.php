@@ -38,7 +38,6 @@ class CreateUserCommandHandler implements CommandHandlerInterface
             );
             $this->userRepository->save($user, true);
         } catch (Throwable $throwable) {
-            var_dump($throwable->getMessage());
             $this->logger->error($throwable->getMessage());
             return new CommandResult(success: false, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
         }

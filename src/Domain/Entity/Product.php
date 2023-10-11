@@ -36,6 +36,10 @@ class Product
 
     #[ORM\Column]
     #[Groups(['default'])]
+    private ?DateTimeImmutable $deletedAt;
+
+    #[ORM\Column]
+    #[Groups(['default'])]
     private DateTimeImmutable $updatedAt;
 
     #[ORM\Column]
@@ -51,6 +55,7 @@ class Product
         $this->name = $name;
         $this->slug = $this->generateSlug($name, $uuid);
         $this->price = $price;
+        $this->deletedAt = null;
         $this->createdAt = new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
     }
@@ -90,12 +95,17 @@ class Product
         return $this->price;
     }
 
-    public function getCreatedAt(): ?DateTimeImmutable
+    public function getDeletedAt(): ?DateTimeImmutable
+    {
+        return $this->deletedAt;
+    }
+
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): ?DateTimeImmutable
+    public function getUpdatedAt(): DateTimeImmutable
     {
         return $this->updatedAt;
     }

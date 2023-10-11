@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Command\UpdateProduct;
+namespace App\Application\Command\DeleteProduct;
 
 use App\Application\BusResult\CommandResult;
-use App\Application\Command\CommandInterface;
+use App\Application\Command\CommandHandlerInterface;
 use App\Infrastructure\Cache\CacheCreator;
 use App\Infrastructure\Cache\CacheProxy;
 use App\Infrastructure\Doctrine\Repository\ProductRepository;
@@ -15,7 +15,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 
 #[AsMessageHandler]
-class UpdateProductCommandHandler implements CommandInterface
+class DeleteProductCommandHandler implements CommandHandlerInterface
 {
     protected readonly CacheProxy $cache;
 
@@ -27,19 +27,16 @@ class UpdateProductCommandHandler implements CommandInterface
         $this->cache = $cacheCreator->create('query.products.findProductBySlugQuery.');
     }
 
-    public function __invoke(UpdateProductCommand $command): CommandResult
+    public function __invoke(DeleteProductCommand $command): CommandResult
     {
         try {
             $this->cache->del([$command->product->getSlug()]);
 
-            $command->product
-                ->setName($command->dto->name)
-                ->setPrice($command->dto->price);
-            $this->productRepository->save($command->product, true);
+            $this->productRepository->softDelete($command->product);
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return new CommandResult(success: false, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-        return new CommandResult(success: true, statusCode: Response::HTTP_OK);
+        return new CommandResult(success: true, statusCode: Response::HTTP_NO_CONTENT);
     }
 }

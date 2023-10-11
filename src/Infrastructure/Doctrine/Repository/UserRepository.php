@@ -28,15 +28,6 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
         }
     }
 
-    public function remove(User $user, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($user);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
     public function findUserByEmail(string $email): ?User
     {
         /** @var User $user */
