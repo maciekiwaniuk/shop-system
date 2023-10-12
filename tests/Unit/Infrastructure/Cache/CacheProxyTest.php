@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Infrastructure\Cache;
 
-use App\Infrastructure\Cache\CacheProxy;
+use App\Shared\Infrastructure\Cache\CacheProxy;
 use App\Tests\Unit\AbstractUnitTestCase;
 use Exception;
 use Psr\Log\LoggerInterface;

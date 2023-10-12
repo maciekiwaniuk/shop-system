@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Infrastructure\Serializer;
 
-use App\Infrastructure\Serializer\JsonSerializer;
+use App\Shared\Infrastructure\Serializer\JsonSerializer;
 use App\Tests\Unit\AbstractUnitTestCase;
 use Exception;
 use Symfony\Component\Serializer\Annotation\Groups;

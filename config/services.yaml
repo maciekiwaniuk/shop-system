@@ -10,24 +10,26 @@ services:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
-            - '../src/Domain/Entity'
+            - '../src/Module/Order/Domain/Entity'
+            - '../src/Module/Product/Domain/Entity'
+            - '../src/Module/User/Domain/Entity'
             - '../src/Kernel.php'
 
-    App\Domain\Repository\OrderRepositoryInterface:
-        class: 'App\Infrastructure\Doctrine\Repository\OrderRepository'
-    App\Domain\Repository\ProductRepositoryInterface:
-        class: 'App\Infrastructure\Doctrine\Repository\ProductRepository'
-    App\Domain\Repository\UserRepositoryInterface:
-        class: 'App\Infrastructure\Doctrine\Repository\UserRepository'
+    App\Module\Order\Domain\Repository\OrderRepositoryInterface:
+        class: 'App\Module\Order\Infrastructure\Doctrine\Repository\OrderRepository'
+    App\Module\Product\Domain\Repository\ProductRepositoryInterface:
+        class: 'App\Module\Product\Infrastructure\Doctrine\Repository\ProductRepository'
+    App\Module\User\Domain\Repository\UserRepositoryInterface:
+        class: 'App\Module\User\Infrastructure\Doctrine\Repository\UserRepository'
 
-    App\Application\EventSubscriber\AuthenticationSuccessSubscriber:
+    App\Module\User\Application\EventSubscriber\AuthenticationSuccessSubscriber:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 255 }
 
-    App\Application\EventSubscriber\AuthenticationFailureSubscriber:
+    App\Module\User\Application\EventSubscriber\AuthenticationFailureSubscriber:
         tags:
             - { name: kernel.event_subscriber }
 
-    App\Infrastructure\Cache\CacheCreator:
+    App\Shared\Infrastructure\Cache\CacheCreator:
         arguments:
             $redisUrl: '%redis_url%'

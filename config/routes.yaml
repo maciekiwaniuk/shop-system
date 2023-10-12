@@ -1,5 +1,13 @@
-controllers:
-    resource: ../src/UI/Controller
+controllers_order:
+    resource: ../src/Module/User/UI/Controller
+    type: attribute
+
+controllers_product:
+    resource: ../src/Module/User/UI/Controller
+    type: attribute
+
+controllers_user:
+    resource: ../src/Module/User/UI/Controller
     type: attribute
 
 kernel:

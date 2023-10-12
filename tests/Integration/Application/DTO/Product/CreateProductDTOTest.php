@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Application\DTO\Product;
 
-use App\Application\DTO\Product\UpdateProductDTO;
+use App\Modules\Product\Application\DTO\UpdateProductDTO;
 use App\Tests\Integration\AbstractIntegrationTestCase;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Application\UI\Console;
 
-use App\Application\Bus\CommandBus\CommandBusInterface;
+use App\Modules\User\UI\Console\CreateUserCommand;
+use App\Shared\Application\Bus\CommandBus\CommandBusInterface;
 use App\Tests\Application\AbstractApplicationTestCase;
-use App\UI\Console\CreateUserCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
