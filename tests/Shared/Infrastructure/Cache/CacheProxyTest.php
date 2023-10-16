@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Infrastructure\Cache;
+namespace App\Tests\Shared\Infrastructure\Cache;
 
 use App\Shared\Infrastructure\Cache\CacheProxy;
 use App\Tests\AbstractUnitTestCase;

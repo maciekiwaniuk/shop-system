@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Application\Bus\CommandBus;
+namespace App\Tests\Shared\Application\Bus\CommandBus;
 
 class CommandBusTest
 {

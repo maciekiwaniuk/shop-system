@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Infrastructure\Serializer;
+namespace App\Tests\Shared\Infrastructure\Serializer;
 
 use App\Shared\Infrastructure\Serializer\JsonSerializer;
 use App\Tests\AbstractUnitTestCase;
