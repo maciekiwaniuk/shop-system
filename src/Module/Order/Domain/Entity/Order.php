@@ -60,9 +60,9 @@ class Order
         $this->id = (string) Uuid::v1();
         $this->user = $user;
         $this->ordersProducts = new ArrayCollection();
-        $this->ordersStatusUpdates = (new ArrayCollection());
+        $this->ordersStatusUpdates = new ArrayCollection();
         $this->ordersStatusUpdates->add(new OrderStatusUpdate($this));
-        $this->completedAt = new DateTimeImmutable();
+        $this->completedAt = null;
         $this->createdAt = new DateTimeImmutable();
     }
 
