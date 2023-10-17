@@ -6,6 +6,7 @@ namespace App\Tests\Module\Product\Domain\Entity;
 
 use App\Module\Product\Domain\Entity\Product;
 use App\Tests\AbstractUnitTestCase;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class ProductTest extends AbstractUnitTestCase
 {
@@ -23,5 +24,17 @@ class ProductTest extends AbstractUnitTestCase
         $this->assertNotNull($product->getCreatedAt());
         $this->assertNotNull($product->getUpdatedAt());
         $this->assertNull($product->getDeletedAt());
+    }
+
+    public function testGenerateSlug(): void
+    {
+        $product = new Product(
+            'exampleName',
+            3.21
+        );
+
+        $slug = (new AsciiSlugger())->slug($product->getName()) . '-' . substr($product->getId(), 0, 8);
+
+        $this->assertEquals($slug, $product->getSlug());
     }
 }
