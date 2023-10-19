@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Module\User\Application\UI;
+namespace App\Tests\Module\User\UI;
 
-use App\Shared\Application\Bus\CommandBus\CommandBusInterface;
 use App\Module\User\UI\Console\CreateUserCommand;
+use App\Shared\Application\Bus\CommandBus\CommandBusInterface;
 use App\Tests\AbstractApplicationTestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -17,11 +17,17 @@ class CreateUserCommandTest extends AbstractApplicationTestCase
     {
         $container = static::getContainer();
 
+        /** @var CommandBusInterface $commandBus */
+        $commandBus = $container->get(CommandBusInterface::class);
+
+        /** @var ValidatorInterface $validator */
+        $validator = $container->get(ValidatorInterface::class);
+
         $application = new Application();
         $application->add(
             new CreateUserCommand(
-                commandBus: $container->get(CommandBusInterface::class),
-                validator: $container->get(ValidatorInterface::class)
+                commandBus: $commandBus,
+                validator: $validator
             )
         );
 

@@ -48,6 +48,9 @@ class CacheProxy
         }
     }
 
+    /**
+     * @return array<string>
+     */
     public function keysByPrefix(): array
     {
         try {
