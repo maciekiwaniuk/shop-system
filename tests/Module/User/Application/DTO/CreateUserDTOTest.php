@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\Module\User\Application\DTO;
 
 use App\Module\User\Application\DTO\CreateUserDTO;
-use App\Tests\AbstractUnitTestCase;
+use App\Tests\AbstractApplicationTestCase;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class CreateUserDTOTest extends AbstractUnitTestCase
+class CreateUserDTOTest extends AbstractApplicationTestCase
 {
     protected object $validator;
     protected string $exampleValidEmail = 'example@email.com';
@@ -43,6 +43,9 @@ class CreateUserDTOTest extends AbstractUnitTestCase
         yield [str_repeat('o', 101) . '@example.com'];
     }
 
+    /**
+     * @dataProvider invalidEmailProvider
+     */
     public function testInvalidEmail(string $email): void
     {
         $dto = new CreateUserDTO(
@@ -64,6 +67,9 @@ class CreateUserDTOTest extends AbstractUnitTestCase
         yield [str_repeat('o', 101)];
     }
 
+    /**
+     * @dataProvider invalidPasswordProvider
+     */
     public function testInvalidPassword(string $password): void
     {
         $dto = new CreateUserDTO(
@@ -85,6 +91,9 @@ class CreateUserDTOTest extends AbstractUnitTestCase
         yield [str_repeat('o', 101)];
     }
 
+    /**
+     * @dataProvider invalidNameProvider
+     */
     public function testInvalidName(string $name): void
     {
         $dto = new CreateUserDTO(
@@ -106,6 +115,9 @@ class CreateUserDTOTest extends AbstractUnitTestCase
         yield [str_repeat('o', 101)];
     }
 
+    /**
+     * @dataProvider invalidSurnameProvider
+     */
     public function testInvalidSurname(string $surname): void
     {
         $dto = new CreateUserDTO(

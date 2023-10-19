@@ -6,10 +6,13 @@ namespace App\Module\Order\Application\DTO;
 
 use App\Shared\Application\DTO\BaseDTO;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Sequentially;
 
 class CreateOrderDTO extends BaseDTO
 {
-    #[NotBlank]
+    #[Sequentially([
+        new NotBlank
+    ])]
     public readonly array $products;
 
     public function __construct(
