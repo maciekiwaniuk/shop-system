@@ -19,16 +19,8 @@
     </php>
 
     <testsuites>
-        <testsuite name="Application">
-            <directory>tests/Application</directory>
-        </testsuite>
-
-        <testsuite name="Integration">
-            <directory>tests/Integration</directory>
-        </testsuite>
-
-        <testsuite name="Unit">
-            <directory>tests/Unit</directory>
+        <testsuite name="tests">
+            <directory>tests</directory>
         </testsuite>
     </testsuites>
 
