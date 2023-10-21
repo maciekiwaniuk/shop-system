@@ -7,35 +7,59 @@ namespace App\Tests;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use LogicException;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class AbstractApplicationTestCase extends WebTestCase
 {
+    protected ?KernelBrowser $client;
     protected EntityManagerInterface $entityManager;
 
     protected function setUp(): void
     {
-        $kernel = self::bootKernel();
+        self::ensureKernelShutdown();
+        $this->client = self::createClient();
 
-        if ('test' !== $kernel->getEnvironment()) {
-            throw new LogicException('Execution possible only in testing environment');
-        }
-        $this->initDatabase($kernel);
+        $kernel = self::bootKernel();
 
         $this->entityManager = $kernel->getContainer()
             ->get('doctrine')
             ->getManager();
+
+        if ('test' !== $kernel->getEnvironment()) {
+            throw new LogicException('Execution possible only in testing environment');
+        }
+
+        $schemaTool = new SchemaTool($this->entityManager);
+        $schemaTool->updateSchema(
+            $this->entityManager->getMetadataFactory()->getAllMetadata()
+        );
+
+        $this->entityManager->beginTransaction();
+
+
     }
 
-    private function initDatabase(KernelInterface $kernel): void
+    public function tearDown(): void
     {
-        $entityManager = $kernel->getContainer()->get('doctrine.orm.entity_manager');
-        $metaData = $entityManager->getMetadataFactory()->getAllMetadata();
+        $this->entityManager->rollback();
 
-        if ($entityManager instanceof EntityManagerInterface) {
-            $schemaTool = new SchemaTool($entityManager);
-            $schemaTool->updateSchema($metaData);
-        }
+        parent::tearDown();
+    }
+
+    public function getGuestClient(): KernelBrowser
+    {
+        return $this->client;
+    }
+
+    public function getUserClient(): KernelBrowser
+    {
+        return $this->client;
+    }
+
+    public function getAdminClient(): KernelBrowser
+    {
+        return $this->client;
     }
 }
