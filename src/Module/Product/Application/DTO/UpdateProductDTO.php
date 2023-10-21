@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints\Sequentially;
 class UpdateProductDTO extends BaseDTO
 {
     #[Sequentially([
-        new NotBlank,
+        new NotBlank(['message' => 'Name cannot be blank.']),
         new Length([
             'min' => 2,
             'minMessage' => 'Name should be at least 2 characters long.',
@@ -24,7 +24,7 @@ class UpdateProductDTO extends BaseDTO
     public readonly string $name;
 
     #[Sequentially([
-        new NotBlank,
+        new NotBlank(['message' => 'Price cannot be blank.']),
         new Positive([
             'message' => 'Price must be valid number.'
         ])

@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints\Sequentially;
 class ChangeOrderStatusDTO extends BaseDTO
 {
     #[Sequentially([
-        new NotBlank
+        new NotBlank(['message' => 'Order status cannot be blank.'])
     ])]
     public readonly OrderStatus $status;
 

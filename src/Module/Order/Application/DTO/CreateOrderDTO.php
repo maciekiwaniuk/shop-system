@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints\Sequentially;
 class CreateOrderDTO extends BaseDTO
 {
     #[Sequentially([
-        new NotBlank
+        new NotBlank(['message' => 'Order must have products.'])
     ])]
     public readonly array $products;
 
