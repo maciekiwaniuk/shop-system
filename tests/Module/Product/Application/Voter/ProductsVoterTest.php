@@ -8,29 +8,26 @@ use App\Module\Product\Application\Voter\ProductsVoter;
 use App\Module\User\Domain\Entity\User;
 use App\Tests\AbstractUnitTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class ProductsVoterTest extends AbstractUnitTestCase
 {
     protected ProductsVoter $voter;
     protected TokenInterface $token;
-    protected UserInterface $user;
-    protected UserInterface $admin;
+    protected User $user;
+    protected User $admin;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->voter = new ProductsVoter();
         $this->token = $this->createMock(TokenInterface::class);
-        $this->user = $this->getMockBuilder(UserInterface::class)
-            ->addMethods(['isAdmin'])
-            ->getMock();
+
+        $this->user = $this->createMock(User::class);
         $this->user
             ->method('isAdmin')
             ->willReturn(false);
-        $this->admin = $this->getMockBuilder(UserInterface::class)
-            ->addMethods(['isAdmin'])
-            ->getMock();
+
+        $this->admin = $this->createMock(User::class);
         $this->admin
             ->method('isAdmin')
             ->willReturn(true);
@@ -38,6 +35,10 @@ class ProductsVoterTest extends AbstractUnitTestCase
 
     public function testUserCanGetAll(): void
     {
+        $this->token
+            ->method('getUser')
+            ->willReturn($this->user);
+
         $this->assertTrue(
             $this->useMethod(
                 object: $this->voter,
@@ -45,44 +46,142 @@ class ProductsVoterTest extends AbstractUnitTestCase
                 args: [
                     ProductsVoter::GET_ALL,
                     null,
-                    $this->user
+                    $this->token
                 ]
             )
         );
     }
 
-//    public function testUserCantNew(): void
-//    {
-//
-//    }
-//
-//    public function testAdminCanNew(): void
-//    {
-//
-//    }
-//
-//    public function testUserCanShow(): void
-//    {
-//
-//    }
-//
-//    public function testUserCantUpdate(): void
-//    {
-//
-//    }
-//
-//    public function testAdminCanUpdate(): void
-//    {
-//
-//    }
-//
-//    public function testUserCantDelete(): void
-//    {
-//
-//    }
-//
-//    public function testAdminCanDelete(): void
-//    {
-//
-//    }
+    public function testUserCantNew(): void
+    {
+        $this->token
+            ->method('getUser')
+            ->willReturn($this->user);
+
+        $this->assertFalse(
+            $this->useMethod(
+                object: $this->voter,
+                method: 'voteOnAttribute',
+                args: [
+                    ProductsVoter::NEW,
+                    null,
+                    $this->token
+                ]
+            )
+        );
+    }
+
+    public function testAdminCanNew(): void
+    {
+        $this->token
+            ->method('getUser')
+            ->willReturn($this->admin);
+
+        $this->assertTrue(
+            $this->useMethod(
+                object: $this->voter,
+                method: 'voteOnAttribute',
+                args: [
+                    ProductsVoter::NEW,
+                    null,
+                    $this->token
+                ]
+            )
+        );
+    }
+
+    public function testUserCanShow(): void
+    {
+        $this->token
+            ->method('getUser')
+            ->willReturn($this->user);
+
+        $this->assertTrue(
+            $this->useMethod(
+                object: $this->voter,
+                method: 'voteOnAttribute',
+                args: [
+                    ProductsVoter::SHOW,
+                    null,
+                    $this->token
+                ]
+            )
+        );
+    }
+
+    public function testUserCantUpdate(): void
+    {
+        $this->token
+            ->method('getUser')
+            ->willReturn($this->user);
+
+        $this->assertFalse(
+            $this->useMethod(
+                object: $this->voter,
+                method: 'voteOnAttribute',
+                args: [
+                    ProductsVoter::UPDATE,
+                    null,
+                    $this->token
+                ]
+            )
+        );
+    }
+
+    public function testAdminCanUpdate(): void
+    {
+        $this->token
+            ->method('getUser')
+            ->willReturn($this->admin);
+
+        $this->assertTrue(
+            $this->useMethod(
+                object: $this->voter,
+                method: 'voteOnAttribute',
+                args: [
+                    ProductsVoter::UPDATE,
+                    null,
+                    $this->token
+                ]
+            )
+        );
+    }
+
+    public function testUserCantDelete(): void
+    {
+        $this->token
+            ->method('getUser')
+            ->willReturn($this->user);
+
+        $this->assertFalse(
+            $this->useMethod(
+                object: $this->voter,
+                method: 'voteOnAttribute',
+                args: [
+                    ProductsVoter::DELETE,
+                    null,
+                    $this->token
+                ]
+            )
+        );
+    }
+
+    public function testAdminCanDelete(): void
+    {
+        $this->token
+            ->method('getUser')
+            ->willReturn($this->admin);
+
+        $this->assertTrue(
+            $this->useMethod(
+                object: $this->voter,
+                method: 'voteOnAttribute',
+                args: [
+                    ProductsVoter::DELETE,
+                    null,
+                    $this->token
+                ]
+            )
+        );
+    }
 }
