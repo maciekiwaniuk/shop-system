@@ -16,6 +16,10 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserRepositoryInterface::class)]
 #[ORM\HasLifecycleCallbacks]
+#[ORM\Index(
+    columns: ['email'],
+    name: 'search_idx'
+)]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity(fields: ['email'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface

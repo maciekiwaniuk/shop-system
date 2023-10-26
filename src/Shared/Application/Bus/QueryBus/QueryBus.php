@@ -24,7 +24,6 @@ class QueryBus implements QueryBusInterface
         $handledStamps = ($this->bus->dispatch($query))
             ->all(HandledStamp::class);
 
-        var_dump($handledStamps);
         $handledStamp = $handledStamps[0];
         if (method_exists($handledStamp, 'getResult')) {
             $queryResult = $handledStamp->getResult();

@@ -14,6 +14,10 @@ use Symfony\Component\Uid\UuidV1;
 
 #[ORM\Entity(repositoryClass: ProductRepositoryInterface::class)]
 #[ORM\HasLifecycleCallbacks]
+#[ORM\Index(
+    columns: ['slug'],
+    name: 'search_idx'
+)]
 #[ORM\Table(name: '`product`')]
 class Product
 {

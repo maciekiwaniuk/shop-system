@@ -1,0 +1,213 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Tests\Module\Order\Application\Voter;
+
+use App\Module\Order\Application\Voter\OrdersVoter;
+use App\Module\Order\Domain\Entity\Order;
+use App\Module\User\Domain\Entity\User;
+use App\Tests\AbstractUnitTestCase;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+
+class OrdersVoterTest extends AbstractUnitTestCase
+{
+    protected OrdersVoter $voter;
+    protected TokenInterface $token;
+    protected User $user;
+    protected User $admin;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->voter = new OrdersVoter();
+        $this->token = $this->createMock(TokenInterface::class);
+
+        $this->user = $this->createMock(User::class);
+        $this->user
+            ->method('isAdmin')
+            ->willReturn(false);
+
+        $this->admin = $this->createMock(User::class);
+        $this->admin
+            ->method('isAdmin')
+            ->willReturn(true);
+    }
+
+    public function testUserCantGetAll(): void
+    {
+        $this->token
+            ->method('getUser')
+            ->willReturn($this->user);
+
+        $this->assertFalse(
+            $this->useMethod(
+                object: $this->voter,
+                method: 'voteOnAttribute',
+                args: [
+                    OrdersVoter::GET_ALL,
+                    null,
+                    $this->token
+                ]
+            )
+        );
+    }
+
+    public function testAdminCanGetAll(): void
+    {
+        $this->token
+            ->method('getUser')
+            ->willReturn($this->admin);
+
+        $this->assertTrue(
+            $this->useMethod(
+                object: $this->voter,
+                method: 'voteOnAttribute',
+                args: [
+                    OrdersVoter::GET_ALL,
+                    null,
+                    $this->token
+                ]
+            )
+        );
+    }
+
+    public function testUserNotOwningOrderCantShow(): void
+    {
+        $order = $this->createMock(Order::class);
+        $order
+            ->method('getUser')
+            ->willReturn($this->admin);
+
+        $this->token
+            ->method('getUser')
+            ->willReturn($this->user);
+
+        $this->assertFalse(
+            $this->useMethod(
+                object: $this->voter,
+                method: 'voteOnAttribute',
+                args: [
+                    OrdersVoter::SHOW,
+                    $order,
+                    $this->token
+                ]
+            )
+        );
+    }
+
+    public function testUserOwningOrderCanShow(): void
+    {
+        $order = $this->createMock(Order::class);
+        $order
+            ->method('getUser')
+            ->willReturn($this->user);
+
+        $this->token
+            ->method('getUser')
+            ->willReturn($this->user);
+
+        $this->assertTrue(
+            $this->useMethod(
+                object: $this->voter,
+                method: 'voteOnAttribute',
+                args: [
+                    OrdersVoter::SHOW,
+                    $order,
+                    $this->token
+                ]
+            )
+        );
+    }
+
+    public function testAdminShow(): void
+    {
+        $order = $this->createMock(Order::class);
+        $order
+            ->method('getUser')
+            ->willReturn($this->user);
+
+        $this->token
+            ->method('getUser')
+            ->willReturn($this->admin);
+
+        $this->assertTrue(
+            $this->useMethod(
+                object: $this->voter,
+                method: 'voteOnAttribute',
+                args: [
+                    OrdersVoter::SHOW,
+                    $order,
+                    $this->token
+                ]
+            )
+        );
+    }
+
+    public function testUserCanNew(): void
+    {
+        $this->token
+            ->method('getUser')
+            ->willReturn($this->user);
+
+        $this->assertTrue(
+            $this->useMethod(
+                object: $this->voter,
+                method: 'voteOnAttribute',
+                args: [
+                    OrdersVoter::NEW,
+                    null,
+                    $this->token
+                ]
+            )
+        );
+    }
+
+    public function testUserCantUpdateStatus(): void
+    {
+        $order = $this->createMock(Order::class);
+        $order
+            ->method('getUser')
+            ->willReturn($this->user);
+
+        $this->token
+            ->method('getUser')
+            ->willReturn($this->user);
+
+        $this->assertFalse(
+            $this->useMethod(
+                object: $this->voter,
+                method: 'voteOnAttribute',
+                args: [
+                    OrdersVoter::UPDATE_STATUS,
+                    $order,
+                    $this->token
+                ]
+            )
+        );
+    }
+
+    public function testAdminCanUpdateStatus(): void
+    {
+        $order = $this->createMock(Order::class);
+        $order
+            ->method('getUser')
+            ->willReturn($this->user);
+
+        $this->token
+            ->method('getUser')
+            ->willReturn($this->admin);
+
+        $this->assertTrue(
+            $this->useMethod(
+                object: $this->voter,
+                method: 'voteOnAttribute',
+                args: [
+                    OrdersVoter::UPDATE_STATUS,
+                    $order,
+                    $this->token
+                ]
+            )
+        );
+    }
+}
