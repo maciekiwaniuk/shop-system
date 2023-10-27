@@ -144,7 +144,7 @@ class OrdersVoterTest extends AbstractUnitTestCase
         );
     }
 
-    public function testUserCanNew(): void
+    public function testUsercanCreate(): void
     {
         $this->token
             ->method('getUser')
@@ -155,7 +155,7 @@ class OrdersVoterTest extends AbstractUnitTestCase
                 object: $this->voter,
                 method: 'voteOnAttribute',
                 args: [
-                    OrdersVoter::NEW,
+                    OrdersVoter::CREATE,
                     null,
                     $this->token
                 ]

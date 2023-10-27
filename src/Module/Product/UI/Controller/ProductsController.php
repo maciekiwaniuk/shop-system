@@ -48,9 +48,9 @@ class ProductsController extends AbstractController
         return $this->json($result, $queryResult->statusCode);
     }
 
-    #[Route('/new', methods: ['POST'])]
-    #[IsGranted(ProductsVoter::NEW)]
-    public function new(#[ValueResolver('create_product_dto')] CreateProductDTO $dto): Response
+    #[Route('/create', methods: ['POST'])]
+    #[IsGranted(ProductsVoter::CREATE)]
+    public function create(#[ValueResolver('create_product_dto')] CreateProductDTO $dto): Response
     {
         if ($dto->hasErrors()) {
             return $this->json([

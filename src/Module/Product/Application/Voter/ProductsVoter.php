@@ -14,14 +14,14 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class ProductsVoter extends Voter
 {
     public const GET_ALL = 'GET_ALL';
-    public const NEW = 'NEW';
+    public const CREATE = 'CREATE';
     public const SHOW = 'SHOW';
     public const UPDATE = 'UPDATE';
     public const DELETE = 'DELETE';
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return in_array($attribute, [self::GET_ALL, self::NEW, self::SHOW, self::UPDATE, self::DELETE])
+        return in_array($attribute, [self::GET_ALL, self::CREATE, self::SHOW, self::UPDATE, self::DELETE])
             && ($subject instanceof Product || $subject === null);
     }
 
@@ -38,7 +38,7 @@ class ProductsVoter extends Voter
 
         return match ($attribute) {
             self::GET_ALL => $this->canGetAll(),
-            self::NEW => $this->canNew($user),
+            self::CREATE => $this->canCreate($user),
             self::SHOW => $this->canShow(),
             self::UPDATE => $this->canUpdate($user),
             self::DELETE => $this->canDelete($user),
@@ -51,7 +51,7 @@ class ProductsVoter extends Voter
         return true;
     }
 
-    private function canNew(User $user): bool
+    private function canCreate(User $user): bool
     {
         return $user->isAdmin();
     }

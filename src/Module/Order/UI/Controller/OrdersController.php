@@ -82,9 +82,9 @@ class OrdersController extends AbstractController
 
     // TODO:
     #[OA\RequestBody(content: new Model(type: CreateOrderDTO::class, groups: ['default']))]
-    #[Route('/new', methods: ['POST'])]
-    #[IsGranted(OrdersVoter::NEW)]
-    public function new(#[ValueResolver('create_order_dto')] CreateOrderDTO $dto): Response
+    #[Route('/create', methods: ['POST'])]
+    #[IsGranted(OrdersVoter::CREATE)]
+    public function create(#[ValueResolver('create_order_dto')] CreateOrderDTO $dto): Response
     {
         if ($dto->hasErrors()) {
             return $this->json([

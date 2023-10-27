@@ -63,7 +63,7 @@ class ProductsVoterTest extends AbstractUnitTestCase
                 object: $this->voter,
                 method: 'voteOnAttribute',
                 args: [
-                    ProductsVoter::NEW,
+                    ProductsVoter::CREATE,
                     null,
                     $this->token
                 ]
@@ -71,7 +71,7 @@ class ProductsVoterTest extends AbstractUnitTestCase
         );
     }
 
-    public function testAdminCanNew(): void
+    public function testAdmincanCreate(): void
     {
         $this->token
             ->method('getUser')
@@ -82,7 +82,7 @@ class ProductsVoterTest extends AbstractUnitTestCase
                 object: $this->voter,
                 method: 'voteOnAttribute',
                 args: [
-                    ProductsVoter::NEW,
+                    ProductsVoter::CREATE,
                     null,
                     $this->token
                 ]
