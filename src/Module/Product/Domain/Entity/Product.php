@@ -16,7 +16,7 @@ use Symfony\Component\Uid\UuidV1;
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Index(
     columns: ['slug'],
-    name: 'search_idx'
+    name: 'product_search_idx'
 )]
 #[ORM\Table(name: '`product`')]
 class Product

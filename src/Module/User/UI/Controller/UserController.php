@@ -52,7 +52,7 @@ class UserController extends AbstractController
         if ($dto->hasErrors()) {
             return $this->json([
                 'success' => false,
-                'errors' => $dto-> getErrors()
+                'errors' => $dto->getErrors()
             ], Response::HTTP_BAD_REQUEST);
         }
 
@@ -76,5 +76,11 @@ class UserController extends AbstractController
         };
 
         return $this->json($result, $commandResult->statusCode);
+    }
+
+    #[Route('/test', methods: ['GET'])]
+    public function test(): Response
+    {
+        return $this->json(['test']);
     }
 }

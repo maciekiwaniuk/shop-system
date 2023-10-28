@@ -19,7 +19,7 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Index(
     columns: ['id'],
-    name: 'search_idx'
+    name: 'order_search_idx'
 )]
 #[ORM\Table(name: '`order`')]
 class Order

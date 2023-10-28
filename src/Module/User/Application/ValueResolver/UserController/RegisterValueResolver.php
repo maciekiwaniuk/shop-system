@@ -24,10 +24,10 @@ class RegisterValueResolver implements ValueResolverInterface
         $data = $request->toArray();
 
         $dto = new CreateUserDTO(
-            email: $data['email'],
-            password: $data['password'],
-            name: $data['name'],
-            surname: $data['surname']
+            email: $data['email'] ?? null,
+            password: $data['password'] ?? null,
+            name: $data['name'] ?? null,
+            surname: $data['surname'] ?? null
         );
 
         $errors = $this->validator->validate($dto);

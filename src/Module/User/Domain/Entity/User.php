@@ -18,7 +18,7 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Index(
     columns: ['email'],
-    name: 'search_idx'
+    name: 'user_search_idx'
 )]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity(fields: ['email'])]

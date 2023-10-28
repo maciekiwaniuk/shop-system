@@ -25,10 +25,10 @@ class CreateUserDTO extends BaseDTO
         ]),
         new UniqueFieldInEntity(field: 'email', entityClassName: User::class)
     ])]
-    public readonly string $email;
+    public readonly ?string $email;
 
     #[Sequentially([
-        new NotBlank(['message' => 'Password cannot be blank.']),
+        new NotBlank(['message' => 'Name cannot be blank.']),
         new Length([
             'min' => 2,
             'minMessage' => 'Name should be at least 2 characters long.',
@@ -36,7 +36,7 @@ class CreateUserDTO extends BaseDTO
             'maxMessage' => 'Name can be up to 100 characters long.'
         ])
     ])]
-    public readonly string $name;
+    public readonly ?string $name;
 
     #[Sequentially([
         new NotBlank(['message' => 'Password cannot be blank.']),
@@ -47,7 +47,7 @@ class CreateUserDTO extends BaseDTO
             'maxMessage' => 'Password can be up to 100 characters long.'
         ])
     ])]
-    public readonly string $password;
+    public readonly ?string $password;
 
     #[Sequentially([
         new NotBlank(['message' => 'Surname cannot be blank.']),
@@ -58,13 +58,13 @@ class CreateUserDTO extends BaseDTO
             'maxMessage' => 'Surname can be up to 100 characters long.'
         ])
     ])]
-    public readonly string $surname;
+    public readonly ?string $surname;
 
     public function __construct(
-        string $email,
-        string $password,
-        string $name,
-        string $surname
+        ?string $email,
+        ?string $password,
+        ?string $name,
+        ?string $surname
     ) {
         $this->email = $email;
         $this->password = $password;
