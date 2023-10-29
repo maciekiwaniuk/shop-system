@@ -16,6 +16,7 @@ use App\Module\Product\Application\Voter\ProductsVoter;
 use App\Shared\Application\Bus\CommandBus\CommandBusInterface;
 use App\Shared\Application\Bus\QueryBus\QueryBusInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,7 +31,7 @@ class ProductsController extends AbstractController
     ) {
     }
 
-    #[Route('/get-all', methods: ['GET'])]
+    #[Route('/get-all', methods: [Request::METHOD_GET])]
     #[IsGranted(ProductsVoter::GET_ALL)]
     public function getAll(): Response
     {
@@ -48,7 +49,7 @@ class ProductsController extends AbstractController
         return $this->json($result, $queryResult->statusCode);
     }
 
-    #[Route('/create', methods: ['POST'])]
+    #[Route('/create', methods: [Request::METHOD_POST])]
     #[IsGranted(ProductsVoter::CREATE)]
     public function create(#[ValueResolver('create_product_dto')] CreateProductDTO $dto): Response
     {
@@ -74,7 +75,7 @@ class ProductsController extends AbstractController
         return $this->json($result, $commandResult->statusCode);
     }
 
-    #[Route('/show/{slug}', methods: ['GET'])]
+    #[Route('/show/{slug}', methods: [Request::METHOD_GET])]
     public function show(string $slug): Response
     {
         $queryResult = $this->queryBus->handle(new FindProductBySlugQuery($slug));
@@ -91,7 +92,7 @@ class ProductsController extends AbstractController
         return $this->json($result, $queryResult->statusCode);
     }
 
-    #[Route('/update/{uuid}', methods: ['PUT'])]
+    #[Route('/update/{uuid}', methods: [Request::METHOD_PUT])]
     #[IsGranted(ProductsVoter::UPDATE)]
     public function update(
         #[ValueResolver('update_product_dto')] UpdateProductDTO $dto,
@@ -120,7 +121,7 @@ class ProductsController extends AbstractController
         return $this->json($result, $commandResult->statusCode);
     }
 
-    #[Route('/delete/{uuid}', methods: ['DELETE'])]
+    #[Route('/delete/{uuid}', methods: [Request::METHOD_DELETE])]
     #[IsGranted(ProductsVoter::DELETE)]
     public function delete(string $uuid): Response
     {

@@ -17,6 +17,7 @@ use App\Shared\Application\Bus\QueryBus\QueryBusInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\Routing\Annotation\Route;
@@ -45,7 +46,7 @@ class OrdersController extends AbstractController
             ]
         )
     )]
-    #[Route('/get-all', methods: ['GET'])]
+    #[Route('/get-all', methods: [Request::METHOD_GET])]
     #[IsGranted(OrdersVoter::GET_ALL)]
     public function getAll(): Response
     {
@@ -63,7 +64,7 @@ class OrdersController extends AbstractController
         return $this->json($result, $queryResult->statusCode);
     }
 
-    #[Route('/show/{uuid}', methods: ['GET'])]
+    #[Route('/show/{uuid}', methods: [Request::METHOD_GET])]
     public function show(string $uuid): Response
     {
         $queryResult = $this->queryBus->handle(new FindOrderByUuidQuery($uuid));
@@ -82,7 +83,7 @@ class OrdersController extends AbstractController
 
     // TODO:
     #[OA\RequestBody(content: new Model(type: CreateOrderDTO::class, groups: ['default']))]
-    #[Route('/create', methods: ['POST'])]
+    #[Route('/create', methods: [Request::METHOD_POST])]
     #[IsGranted(OrdersVoter::CREATE)]
     public function create(#[ValueResolver('create_order_dto')] CreateOrderDTO $dto): Response
     {
@@ -108,7 +109,7 @@ class OrdersController extends AbstractController
         return $this->json($result, $commandResult->statusCode);
     }
 
-    #[Route('/change-status/{uuid}', methods: ['POST'])]
+    #[Route('/change-status/{uuid}', methods: [Request::METHOD_POST])]
     #[IsGranted(OrdersVoter::UPDATE_STATUS)]
     public function changeStatus(
         #[ValueResolver('change_order_status_dto')] ChangeOrderStatusDTO $dto,

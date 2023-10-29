@@ -15,6 +15,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\Routing\Annotation\Route;
@@ -46,7 +47,7 @@ class UserController extends AbstractController
         )
     )]
     #[OA\RequestBody(content: new Model(type: CreateUserDTO::class))]
-    #[Route('/register', methods: ['POST'])]
+    #[Route('/register', methods: [Request::METHOD_POST])]
     public function register(#[ValueResolver('create_user_dto')] CreateUserDTO $dto): Response
     {
         if ($dto->hasErrors()) {

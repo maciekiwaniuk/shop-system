@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Module\Product\Application\UI;
 
 use App\Tests\AbstractApplicationTestCase;
+use Symfony\Component\HttpFoundation\Request;
 
 class ProductsControllerTest extends AbstractApplicationTestCase
 {
@@ -12,7 +13,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
     {
         $guestClient = $this->getGuestClient();
 
-        $guestClient->request('GET', '/api/v1/products/get-all');
+        $guestClient->request(Request::METHOD_GET, '/api/v1/products/get-all');
 
         $response = $guestClient->getResponse();
         $data = json_decode($response->getContent(), true);

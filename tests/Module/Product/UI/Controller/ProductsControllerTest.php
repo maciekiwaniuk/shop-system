@@ -15,7 +15,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         $client = $this->getUserClient();
 
 //        $client->request('GET', $this->url . '/get-all');
-        $client->request('GET', '/api/v1/test');
+        $client->request(Request, '/api/v1/test');
 
         var_dump("\n\n\nFINAL NIZEJ:");
         var_dump($client->getResponse()->getStatusCode());
