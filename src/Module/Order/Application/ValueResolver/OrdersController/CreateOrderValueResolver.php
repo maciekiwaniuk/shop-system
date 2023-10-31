@@ -27,7 +27,7 @@ class CreateOrderValueResolver implements ValueResolverInterface
         $data = $request->toArray();
 
         $dto = new CreateOrderDTO(
-            products: $data['products']
+            products: $data['products'] ?? null
         );
 
         $errors = $this->validator->validate($dto);

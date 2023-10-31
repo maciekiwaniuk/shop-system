@@ -14,10 +14,10 @@ class ChangeOrderStatusDTO extends BaseDTO
     #[Sequentially([
         new NotBlank(['message' => 'Order status cannot be blank.'])
     ])]
-    public readonly OrderStatus $status;
+    public readonly ?OrderStatus $status;
 
     public function __construct(
-        OrderStatus $status
+        ?OrderStatus $status
     ) {
         $this->status = $status;
     }

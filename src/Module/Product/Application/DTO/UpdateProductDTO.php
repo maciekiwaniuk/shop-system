@@ -21,7 +21,7 @@ class UpdateProductDTO extends BaseDTO
             'maxMessage' => 'Name can be up to 100 characters long.'
         ])
     ])]
-    public readonly string $name;
+    public readonly ?string $name;
 
     #[Sequentially([
         new NotBlank(['message' => 'Price cannot be blank.']),
@@ -29,11 +29,11 @@ class UpdateProductDTO extends BaseDTO
             'message' => 'Price must be valid number.'
         ])
     ])]
-    public readonly float $price;
+    public readonly ?float $price;
 
     public function __construct(
-        string $name,
-        float $price
+        ?string $name,
+        ?float $price
     ) {
         $this->name = $name;
         $this->price = $price;

@@ -27,7 +27,7 @@ class ChangeOrderStatusValueResolver implements ValueResolverInterface
         $data = $request->toArray();
 
         $dto = new ChangeOrderStatusDTO(
-            status: $data['status']
+            status: $data['status'] ?? null
         );
 
         $errors = $this->validator->validate($dto);

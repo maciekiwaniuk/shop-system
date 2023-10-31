@@ -13,10 +13,10 @@ class CreateOrderDTO extends BaseDTO
     #[Sequentially([
         new NotBlank(['message' => 'Order must have products.'])
     ])]
-    public readonly array $products;
+    public readonly ?array $products;
 
     public function __construct(
-        array $products
+        ?array $products
     ) {
         $this->products = $products;
     }
