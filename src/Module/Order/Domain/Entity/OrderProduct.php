@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity]
-#[ORM\Table(name: '`orders_products`')]
+#[ORM\Table(name: '`order_product`')]
 class OrderProduct
 {
     #[ORM\Id]

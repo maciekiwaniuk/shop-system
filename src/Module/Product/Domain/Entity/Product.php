@@ -38,7 +38,7 @@ class Product
     #[Groups(['default'])]
     private float $price;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['default'])]
     private ?DateTimeImmutable $deletedAt;
 

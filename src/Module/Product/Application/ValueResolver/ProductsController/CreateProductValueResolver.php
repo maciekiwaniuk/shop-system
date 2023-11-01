@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\Product\Application\ValueResolver\ProductsController;
 
-use App\Module\Product\Application\DTO\UpdateProductDTO;
+use App\Module\Product\Application\DTO\CreateProductDTO;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsTargetedValueResolver;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
@@ -20,13 +20,13 @@ class CreateProductValueResolver implements ValueResolverInterface
     }
 
     /**
-     * @return iterable<UpdateProductDTO>
+     * @return iterable<CreateProductDTO>
      */
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
         $data = $request->toArray();
 
-        $dto = new UpdateProductDTO(
+        $dto = new CreateProductDTO(
             name: $data['name'] ?? null,
             price: (float) $data['price'] ?? null
         );

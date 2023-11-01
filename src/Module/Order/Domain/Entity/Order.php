@@ -50,7 +50,7 @@ class Order
     #[Groups(['default'])]
     private Collection $ordersStatusUpdates;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     #[Groups(['default'])]
     private ?DateTimeImmutable $completedAt;
 
