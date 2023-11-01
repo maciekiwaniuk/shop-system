@@ -34,7 +34,7 @@ doctrine:
 when@test:
     doctrine:
         dbal:
-            url: "sqlite:///:memory:"
+            url: "sqlite:///%kernel.project_dir%/var/app.db"
 
 when@prod:
     doctrine:

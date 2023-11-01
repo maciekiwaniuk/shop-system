@@ -83,7 +83,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
         $this->name = $name;
         $this->surname = $surname;
-        $this->roles = [UserRole::USER];
+        $this->roles = [UserRole::USER->value];
         $this->createdAt = new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
     }
