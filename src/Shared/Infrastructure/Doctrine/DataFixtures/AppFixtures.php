@@ -13,27 +13,30 @@ use Doctrine\Persistence\ObjectManager;
 
 class AppFixtures extends Fixture
 {
-    public function __construct(
-        protected readonly UserGenerator $userGenerator,
-        protected readonly ProductGenerator $productGenerator,
-        protected readonly OrderGenerator $orderGenerator
-    ) {
-    }
+    public static string $userEmail = 'fixture@email.com';
+    public static string $productOneName = 'Apple';
+    public static string $productTwoName = 'Ball';
 
     public function load(ObjectManager $manager): void
     {
-        $user = $this->userGenerator->generate();
+        $userGenerator = new UserGenerator();
+        $productGenerator = new ProductGenerator();
+        $orderGenerator = new OrderGenerator();
+        
+        $user = $userGenerator->generate(
+            email: self::$userEmail
+        );
 
-        $productApple = $this->productGenerator->generate(
-            name: 'Apple',
+        $productApple = $productGenerator->generate(
+            name: self::$productOneName,
             price: 0.99
         );
-        $productBall = $this->productGenerator->generate(
-            name: 'Ball',
+        $productBall = $productGenerator->generate(
+            name: self::$productTwoName,
             price: 30.99
         );
 
-        $order = $this->orderGenerator->generate(
+        $order = $orderGenerator->generate(
             user: $user,
             products: new ArrayCollection([
                 $productApple, $productBall

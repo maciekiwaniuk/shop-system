@@ -37,11 +37,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['default'])]
     private string $password;
 
-    #[ORM\Column(length: 100, unique: true)]
+    #[ORM\Column(length: 100)]
     #[Groups(['default'])]
     private string $name;
 
-    #[ORM\Column(length: 100, unique: true)]
+    #[ORM\Column(length: 100)]
     #[Groups(['default'])]
     private string $surname;
 

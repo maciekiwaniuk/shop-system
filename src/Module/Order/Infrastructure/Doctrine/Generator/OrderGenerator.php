@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Module\Order\Infrastructure\Doctrine\Generator;
 
 use App\Module\Order\Domain\Entity\Order;
-use App\Module\Product\Domain\Entity\Product;
 use App\Module\User\Domain\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 

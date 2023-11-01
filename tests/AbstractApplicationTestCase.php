@@ -7,6 +7,9 @@ namespace App\Tests;
 use App\Module\User\Domain\Entity\User;
 use App\Module\User\Domain\Enum\UserRole;
 use App\Module\User\Infrastructure\Doctrine\Repository\UserRepository;
+use App\Shared\Infrastructure\Doctrine\DataFixtures\AppFixtures;
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -34,10 +37,11 @@ class AbstractApplicationTestCase extends WebTestCase
             ->get('doctrine')
             ->getManager();
 
-        // Run the schema update tool using our entity metadata
         $this->metaData = $this->entityManager->getMetadataFactory()->getAllMetadata();
         $this->schemaTool = new SchemaTool($this->entityManager);
         $this->schemaTool->updateSchema($this->metaData);
+
+        $this->addFixture(AppFixtures::class);
     }
 
     public function tearDown(): void
@@ -47,6 +51,16 @@ class AbstractApplicationTestCase extends WebTestCase
         $purger = new ORMPurger($this->entityManager);
         $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);
         $purger->purge();
+    }
+
+    public function addFixture(string $className): void
+    {
+        $loader = new Loader();
+        $loader->addFixture(new $className);
+
+        $purger = new ORMPurger($this->entityManager);
+        $executor = new ORMExecutor($this->entityManager, $purger);
+        $executor->execute($loader->getFixtures());
     }
 
     public function getGuestClient(): KernelBrowser
