@@ -76,6 +76,7 @@ class ProductsController extends AbstractController
     }
 
     #[Route('/show/{slug}', methods: [Request::METHOD_GET])]
+    #[IsGranted(ProductsVoter::SHOW)]
     public function show(string $slug): Response
     {
         $queryResult = $this->queryBus->handle(new FindProductBySlugQuery($slug));

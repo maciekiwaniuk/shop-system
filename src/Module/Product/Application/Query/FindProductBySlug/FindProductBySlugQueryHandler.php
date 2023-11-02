@@ -53,11 +53,11 @@ class FindProductBySlugQueryHandler implements QueryHandlerInterface
         );
     }
 
-    protected function findBySlugReturnAndCache(string $uuid): Product
+    protected function findBySlugReturnAndCache(string $slug): Product
     {
-        $product = $this->productRepository->findBySlug($uuid);
+        $product = $this->productRepository->findBySlug($slug);
 
-        $this->cache->set($uuid, $this->serializer->serialize($product));
+        $this->cache->set($slug, $this->serializer->serialize($product));
 
         return $product;
     }

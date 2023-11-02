@@ -34,7 +34,7 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
         return $this->createQueryBuilder('p')
             ->select('p')
             ->where('p.slug = :slug')
-            ->where('p.deletedAt = NULL')
+            ->andWhere('p.deletedAt IS NULL')
             ->setParameter('slug', $slug)
             ->getQuery()
             ->getSingleResult();
@@ -45,7 +45,7 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
         return $this->createQueryBuilder('p')
             ->select('p')
             ->where('p.id = :id')
-            ->where('p.deletedAt = NULL')
+            ->andWhere('p.deletedAt IS NULL')
             ->setParameter('id', $uuid)
             ->getQuery()
             ->getSingleResult();

@@ -4,27 +4,76 @@ declare(strict_types=1);
 
 namespace Module\Product\UI\Controller;
 
-use App\Shared\Infrastructure\Doctrine\DataFixtures\AppFixtures;
+use App\Module\Product\Infrastructure\Doctrine\Generator\ProductGenerator;
+use App\Module\Product\Infrastructure\Doctrine\Repository\ProductRepository;
 use App\Tests\AbstractApplicationTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 class ProductsControllerTest extends AbstractApplicationTestCase
 {
     protected string $url = '/api/v1/products';
+    protected ProductRepository $productRepository;
 
-    public function testGetAll(): void
+    protected function setUp(): void
     {
-        $client = $this->getUserClient();
+        parent::setUp();
+        $this->productRepository = self::getContainer()->get(ProductRepository::class);
+    }
 
+    public function testGetAllAsUser(): void
+    {
+        $products = $this->productRepository->findAll();
+
+        $client = $this->getUserClient();
         $client->request(
             method: Request::METHOD_GET,
             uri: $this->url . '/get-all'
         );
-
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
-        $this->assertEquals(AppFixtures::$productOneName, $responseData['data'][0]['name']);
+        $this->assertEquals($products[0]->getName(), $responseData['data'][0]['name']);
     }
+
+    public function testCreateAsAdmin(): void
+    {
+        $productsCountBeforeAction = count($this->productRepository->findAll());
+
+        $client = $this->getAdminClient();
+        $client->request(
+            method: Request::METHOD_POST,
+            uri: $this->url . '/create',
+            content: json_encode([
+                'name' => 'exampleProductName',
+                'price' => 1999.99
+            ])
+        );
+        $responseData = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertTrue($responseData['success']);
+        $this->assertCount(
+            $productsCountBeforeAction + 1,
+            $this->productRepository->findAll()
+        );
+    }
+
+    // TODO: MAKE REDIS DIFFERENT IN TEST ENVIRONMENT
+//    public function testShowAsUser(): void
+//    {
+//        $product = (new ProductGenerator())->generate();
+//        $this->productRepository->save($product, true);
+//
+//        $client = $this->getUserClient();
+//        $client->request(
+//            method: Request::METHOD_GET,
+//            uri: $this->url . '/show/' . $product->getSlug()
+//        );
+//        $responseData = json_decode($client->getResponse()->getContent(), true);
+//
+//        $this->assertResponseIsSuccessful();
+//        $this->assertTrue($responseData['success']);
+//        $this->assertEquals($product->getName(), $responseData['data']['name']);
+//    }
 }

@@ -13,10 +13,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class OrdersVoter extends Voter
 {
-    public const GET_ALL = 'GET_ALL';
-    public const SHOW = 'SHOW';
-    public const CREATE = 'CREATE';
-    public const UPDATE_STATUS = 'UPDATE_STATUS';
+    public const GET_ALL = 'GET_ALL_ORDERS';
+    public const SHOW = 'SHOW_ORDER';
+    public const CREATE = 'CREATE_ORDER';
+    public const UPDATE_STATUS = 'UPDATE_STATUS_ORDER';
 
     protected function supports(string $attribute, mixed $subject): bool
     {
