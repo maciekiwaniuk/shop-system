@@ -59,21 +59,20 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         );
     }
 
-    // TODO: MAKE REDIS DIFFERENT IN TEST ENVIRONMENT
-//    public function testShowAsUser(): void
-//    {
-//        $product = (new ProductGenerator())->generate();
-//        $this->productRepository->save($product, true);
-//
-//        $client = $this->getUserClient();
-//        $client->request(
-//            method: Request::METHOD_GET,
-//            uri: $this->url . '/show/' . $product->getSlug()
-//        );
-//        $responseData = json_decode($client->getResponse()->getContent(), true);
-//
-//        $this->assertResponseIsSuccessful();
-//        $this->assertTrue($responseData['success']);
-//        $this->assertEquals($product->getName(), $responseData['data']['name']);
-//    }
+    public function testShowAsUser(): void
+    {
+        $product = (new ProductGenerator())->generate();
+        $this->productRepository->save($product, true);
+
+        $client = $this->getUserClient();
+        $client->request(
+            method: Request::METHOD_GET,
+            uri: $this->url . '/show/' . $product->getSlug()
+        );
+        $responseData = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertTrue($responseData['success']);
+        $this->assertEquals($product->getName(), $responseData['data']['name']);
+    }
 }
