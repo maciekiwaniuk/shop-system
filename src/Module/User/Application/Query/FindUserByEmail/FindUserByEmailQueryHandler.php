@@ -27,6 +27,12 @@ class FindUserByEmailQueryHandler implements QueryHandlerInterface
     {
         try {
             $user = $this->userRepository->findUserByEmail($query->email);
+            if ($user === null) {
+                return new QueryResult(
+                    success: false,
+                    statusCode: Response::HTTP_NOT_FOUND
+                );
+            }
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return new QueryResult(

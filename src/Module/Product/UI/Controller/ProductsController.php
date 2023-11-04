@@ -110,11 +110,17 @@ class ProductsController extends AbstractController
         }
 
         $queryResult = $this->queryBus->handle(new FindProductByUuidQuery($uuid));
-        $product = $this->serializer->deserialize(json_encode($queryResult->data), Product::class);
-        $commandResult = $this->commandBus->handle(new UpdateProductCommand($product, $dto));
+        if ($queryResult->data !== null) {
+            $product = $this->serializer->deserialize(json_encode($queryResult->data), Product::class);
+            $commandResult = $this->commandBus->handle(new UpdateProductCommand($product, $dto));
+        }
 
         $result = match (true) {
-            $commandResult->success => [
+            $queryResult->data === null => [
+                'success' => false,
+                'message' => 'Update failed. Could not find product with given id.'
+            ],
+            isset($commandResult) && $commandResult->success => [
                 'success' => true,
                 'message' => 'Successfully updated product.'
             ],
@@ -123,7 +129,7 @@ class ProductsController extends AbstractController
                 'message' => 'Something went wrong while updating product.'
             ]
         };
-        return $this->json($result, $commandResult->statusCode);
+        return $this->json($result, isset($commandResult) ? $commandResult->statusCode : $queryResult->statusCode);
     }
 
     #[Route('/delete/{uuid}', methods: [Request::METHOD_DELETE])]

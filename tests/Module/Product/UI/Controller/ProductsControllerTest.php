@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Module\Product\UI\Controller;
 
+use App\Module\Product\Domain\Repository\ProductRepositoryInterface;
 use App\Module\Product\Infrastructure\Doctrine\Generator\ProductGenerator;
-use App\Module\Product\Infrastructure\Doctrine\Repository\ProductRepository;
 use App\Tests\AbstractApplicationTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 class ProductsControllerTest extends AbstractApplicationTestCase
 {
     protected string $url = '/api/v1/products';
-    protected readonly ProductRepository $productRepository;
+    protected readonly ProductRepositoryInterface $productRepository;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->productRepository = self::getContainer()->get(ProductRepository::class);
+        $this->productRepository = self::getContainer()->get(ProductRepositoryInterface::class);
     }
 
     public function testGetAllAsUser(): void

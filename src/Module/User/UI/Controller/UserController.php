@@ -58,12 +58,13 @@ class UserController extends AbstractController
         }
 
         $commandResult = $this->commandBus->handle(new CreateUserCommandEvent($dto));
-
         $queryResult = $this->queryBus->handle(new FindUserByEmailQuery($dto->email));
-        $user = $this->serializer->deserialize(json_encode($queryResult->data), User::class);
+        if ($queryResult->data !== null) {
+            $user = $this->serializer->deserialize(json_encode($queryResult->data), User::class);
+        }
 
         $result = match (true) {
-            $commandResult->success && $queryResult->success => [
+            $commandResult->success && $queryResult->success && isset($user) => [
                 'success' => true,
                 'message' => 'Successfully registered.',
                 'data' => [
@@ -77,11 +78,5 @@ class UserController extends AbstractController
         };
 
         return $this->json($result, $commandResult->statusCode);
-    }
-
-    #[Route('/test', methods: ['GET'])]
-    public function test(): Response
-    {
-        return $this->json(['test']);
     }
 }

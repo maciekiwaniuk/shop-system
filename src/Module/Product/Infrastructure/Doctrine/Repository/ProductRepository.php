@@ -29,7 +29,7 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
         }
     }
 
-    public function findBySlug(string $slug): Product
+    public function findBySlug(string $slug): ?Product
     {
         return $this->createQueryBuilder('p')
             ->select('p')
@@ -37,7 +37,7 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
             ->andWhere('p.deletedAt IS NULL')
             ->setParameter('slug', $slug)
             ->getQuery()
-            ->getSingleResult();
+            ->getOneOrNullResult();
     }
 
     public function findByUuid(string $uuid): ?Product

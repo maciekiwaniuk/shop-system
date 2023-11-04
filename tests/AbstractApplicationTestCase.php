@@ -37,9 +37,10 @@ class AbstractApplicationTestCase extends WebTestCase
             ->get('doctrine')
             ->getManager();
 
-        $this->metaData = $this->entityManager->getMetadataFactory()->getAllMetadata();
-        $this->schemaTool = new SchemaTool($this->entityManager);
-        $this->schemaTool->updateSchema($this->metaData);
+        $schemaTool = new SchemaTool($this->entityManager);
+        $schemaTool->updateSchema(
+            $this->entityManager->getMetadataFactory()->getAllMetadata()
+        );
 
         $this->addFixture(AppFixtures::class);
     }

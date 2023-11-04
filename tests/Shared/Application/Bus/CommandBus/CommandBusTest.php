@@ -19,7 +19,7 @@ class CommandBusTest extends AbstractUnitTestCase
 {
     protected MessageBusInterface $bus;
     protected LoggerInterface $logger;
-    protected CommandBusInterface $queryBus;
+    protected CommandBusInterface $commandBus;
 
     protected function setUp(): void
     {

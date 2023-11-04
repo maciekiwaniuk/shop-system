@@ -27,6 +27,12 @@ class FindOrderByUuidQueryHandler implements QueryHandlerInterface
     {
         try {
             $order = $this->orderRepository->findByUuid($query->email);
+            if ($order === null) {
+                return new QueryResult(
+                    success: false,
+                    statusCode: Response::HTTP_NOT_FOUND
+                );
+            }
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return new QueryResult(

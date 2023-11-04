@@ -12,7 +12,7 @@ class ChangeOrderStatusCommand implements CommandInterface
 {
     public function __construct(
         public readonly ChangeOrderStatusDTO $dto,
-        public readonly OrderStatus $uuid
+        public readonly string $uuid
     ) {
     }
 }

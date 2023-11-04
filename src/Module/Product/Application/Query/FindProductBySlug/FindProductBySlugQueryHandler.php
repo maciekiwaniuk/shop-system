@@ -37,6 +37,12 @@ class FindProductBySlugQueryHandler implements QueryHandlerInterface
                 $this->cache->exists($query->slug) => $this->cache->get($query->slug),
                 default => $this->findBySlugReturnAndCache($query->slug)
             };
+            if ($product === null) {
+                return new QueryResult(
+                    success: false,
+                    statusCode: Response::HTTP_NOT_FOUND
+                );
+            }
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return new QueryResult(
@@ -53,11 +59,13 @@ class FindProductBySlugQueryHandler implements QueryHandlerInterface
         );
     }
 
-    protected function findBySlugReturnAndCache(string $slug): Product
+    protected function findBySlugReturnAndCache(string $slug): ?Product
     {
         $product = $this->productRepository->findBySlug($slug);
 
-        $this->cache->set($slug, $this->serializer->serialize($product));
+        if ($product !== null) {
+            $this->cache->set($slug, $this->serializer->serialize($product));
+        }
 
         return $product;
     }
