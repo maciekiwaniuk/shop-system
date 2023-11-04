@@ -32,10 +32,14 @@ class UpdateProductCommandHandler implements CommandInterface
         try {
             $this->cache->del([$command->product->getSlug()]);
 
-            $command->product
-                ->setName($command->dto->name)
-                ->setPrice($command->dto->price);
-            $this->productRepository->save($command->product, true);
+            $updated = $this->productRepository->update(
+                product: $command->product,
+                name: $command->dto->name,
+                price: $command->dto->price
+            );
+            if (!$updated) {
+                return new CommandResult(success: false, statusCode: Response::HTTP_NOT_FOUND);
+            }
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return new CommandResult(success: false, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);

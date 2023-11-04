@@ -32,11 +32,13 @@ class DeleteProductCommandHandler implements CommandHandlerInterface
         try {
             $this->cache->del([$command->product->getSlug()]);
 
-            $this->productRepository->softDelete($command->product);
+            if (!$this->productRepository->softDelete($command->product)) {
+                return new CommandResult(success: false, statusCode: Response::HTTP_NOT_FOUND);
+            }
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return new CommandResult(success: false, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-        return new CommandResult(success: true, statusCode: Response::HTTP_NO_CONTENT);
+        return new CommandResult(success: true, statusCode: Response::HTTP_ACCEPTED);
     }
 }

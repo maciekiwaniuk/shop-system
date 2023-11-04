@@ -30,6 +30,12 @@ class FindProductByUuidQueryHandler implements QueryHandlerInterface
     {
         try {
             $product = $this->productRepository->findByUuid($query->uuid);
+            if ($product === null) {
+                return new QueryResult(
+                    success: false,
+                    statusCode: Response::HTTP_NOT_FOUND
+                );
+            }
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return new QueryResult(

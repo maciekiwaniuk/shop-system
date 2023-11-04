@@ -13,8 +13,10 @@ use App\Module\Product\Application\Query\FindProductBySlug\FindProductBySlugQuer
 use App\Module\Product\Application\Query\FindProductByUuid\FindProductByUuidQuery;
 use App\Module\Product\Application\Query\GetProducts\GetProductsQuery;
 use App\Module\Product\Application\Voter\ProductsVoter;
+use App\Module\Product\Domain\Entity\Product;
 use App\Shared\Application\Bus\CommandBus\CommandBusInterface;
 use App\Shared\Application\Bus\QueryBus\QueryBusInterface;
+use App\Shared\Infrastructure\Serializer\JsonSerializer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +29,8 @@ class ProductsController extends AbstractController
 {
     public function __construct(
         protected readonly CommandBusInterface $commandBus,
-        protected readonly QueryBusInterface $queryBus
+        protected readonly QueryBusInterface $queryBus,
+        protected readonly JsonSerializer $serializer
     ) {
     }
 
@@ -107,7 +110,8 @@ class ProductsController extends AbstractController
         }
 
         $queryResult = $this->queryBus->handle(new FindProductByUuidQuery($uuid));
-        $commandResult = $this->commandBus->handle(new UpdateProductCommand($queryResult->data, $dto));
+        $product = $this->serializer->deserialize(json_encode($queryResult->data), Product::class);
+        $commandResult = $this->commandBus->handle(new UpdateProductCommand($product, $dto));
 
         $result = match (true) {
             $commandResult->success => [
@@ -127,10 +131,17 @@ class ProductsController extends AbstractController
     public function delete(string $uuid): Response
     {
         $queryResult = $this->queryBus->handle(new FindProductByUuidQuery($uuid));
-        $commandResult = $this->commandBus->handle(new DeleteProductCommand($queryResult->data));
+        if ($queryResult->data !== null) {
+            $product = $this->serializer->deserialize(json_encode($queryResult->data), Product::class);
+            $commandResult = $this->commandBus->handle(new DeleteProductCommand($product));
+        }
 
         $result = match (true) {
-            $commandResult->success => [
+            $queryResult->data === null => [
+                'success' => false,
+                'message' => 'Deletion failed. Could not find product with given id.'
+            ],
+            isset($commandResult) && $commandResult->success => [
                 'success' => true,
                 'message' => 'Successfully deleted product.'
             ],
@@ -139,6 +150,6 @@ class ProductsController extends AbstractController
                 'message' => 'Something went wrong while deleting product.'
             ]
         };
-        return $this->json($result, $commandResult->statusCode);
+        return $this->json($result, isset($commandResult) ? $commandResult->statusCode : $queryResult->statusCode);
     }
 }

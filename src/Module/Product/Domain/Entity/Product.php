@@ -24,7 +24,7 @@ class Product
     #[ORM\Id]
     #[ORM\Column]
     #[Groups(['default'])]
-    private readonly string $id;
+    private string $id;
 
     #[ORM\Column(length: 200)]
     #[Groups(['default'])]
@@ -72,6 +72,12 @@ class Product
             UuidV1::fromString($this->id)
         );
         $this->updatedAt = new DateTimeImmutable();
+    }
+
+    public function setId(string $id): self
+    {
+        $this->id = $id;
+        return $this;
     }
 
     public function getId(): string

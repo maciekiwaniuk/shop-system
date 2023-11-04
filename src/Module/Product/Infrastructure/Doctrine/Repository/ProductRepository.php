@@ -40,7 +40,7 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
             ->getSingleResult();
     }
 
-    public function findByUuid(string $uuid): Product
+    public function findByUuid(string $uuid): ?Product
     {
         return $this->createQueryBuilder('p')
             ->select('p')
@@ -48,14 +48,33 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
             ->andWhere('p.deletedAt IS NULL')
             ->setParameter('id', $uuid)
             ->getQuery()
-            ->getSingleResult();
+            ->getOneOrNullResult();
     }
 
-    public function softDelete(Product $product): void
+    public function softDelete(Product $product): bool
     {
-        $this->createQueryBuilder('p')
-            ->set('p.deletedAt', new DateTimeImmutable())
-            ->where('id = :id')
+        return (bool) $this->createQueryBuilder('p')
+            ->update()
+            ->set('p.deletedAt', ':deletedAt')
+            ->where('p.id = :id')
+            ->setParameter('deletedAt', new DateTimeImmutable())
+            ->setParameter('id', $product->getId())
+            ->getQuery()
+            ->execute();
+    }
+
+    public function update(
+        Product $product,
+        string $name,
+        float $price
+    ): bool {
+        return (bool) $this->createQueryBuilder('p')
+            ->update()
+            ->set('p.name', ':name')
+            ->set('p.price', ':price')
+            ->where('p.id = :id')
+            ->setParameter('name', $name)
+            ->setParameter('price', $price)
             ->setParameter('id', $product->getId())
             ->getQuery()
             ->execute();

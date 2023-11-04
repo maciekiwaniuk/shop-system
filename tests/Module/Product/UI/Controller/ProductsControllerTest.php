@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ProductsControllerTest extends AbstractApplicationTestCase
 {
     protected string $url = '/api/v1/products';
-    protected ProductRepository $productRepository;
+    protected readonly ProductRepository $productRepository;
 
     protected function setUp(): void
     {
@@ -74,5 +74,48 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
         $this->assertEquals($product->getName(), $responseData['data']['name']);
+    }
+    
+    public function testUpdateAsAdmin(): void
+    {
+        $product = (new ProductGenerator())->generate();
+        $this->productRepository->save($product, true);
+
+        $client = $this->getAdminClient();
+        $client->request(
+            method: Request::METHOD_PUT,
+            uri: $this->url . '/update/' . $product->getId(),
+            content: json_encode([
+                'name' => 'newExampleName',
+                'price' => 102.00
+            ])
+        );
+        $responseData = json_decode($client->getResponse()->getContent(), true);
+
+        $updatedProduct = $this->productRepository->findByUuid($product->getId());
+
+        $this->assertResponseIsSuccessful();
+        $this->assertTrue($responseData['success']);
+        $this->assertEquals('newExampleName', $updatedProduct->getName());
+        $this->assertEquals(102.00, $updatedProduct->getPrice());
+    }
+
+    public function testDeleteAsAdmin(): void
+    {
+        $product = (new ProductGenerator())->generate();
+        $this->productRepository->save($product, true);
+
+        $client = $this->getAdminClient();
+        $client->request(
+            method: Request::METHOD_DELETE,
+            uri: $this->url . '/delete/' . $product->getId()
+        );
+        $responseData = json_decode($client->getResponse()->getContent(), true);
+
+        $deletedProduct = $this->productRepository->findByUuid($product->getId());
+
+        $this->assertResponseIsSuccessful();
+        $this->assertTrue($responseData['success']);
+        $this->assertNull($deletedProduct);
     }
 }
