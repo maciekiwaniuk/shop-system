@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Module\User\UI;
+namespace App\Tests\Module\User\UI\Console;
 
 use App\Module\User\UI\Console\CreateUserCommand;
 use App\Shared\Application\Bus\CommandBus\CommandBusInterface;
