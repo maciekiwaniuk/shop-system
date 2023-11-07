@@ -82,7 +82,8 @@ class CommandBusTest extends AbstractUnitTestCase
             ->willReturn($envelope);
 
         $commandResult = $this->commandBus->handle(
-            new class implements CommandInterface { }
+            new class implements CommandInterface {
+            }
         );
 
         $this->assertFalse($commandResult->success);
@@ -92,7 +93,8 @@ class CommandBusTest extends AbstractUnitTestCase
     public function testHandleWhenCommandResultIsNotProperType(): void
     {
         $stamp = new HandledStamp(
-            result: new class { },
+            result: new class {
+            },
             handlerName: 'exampleHandlerName'
         );
 
@@ -107,7 +109,8 @@ class CommandBusTest extends AbstractUnitTestCase
             ->willReturn($envelope);
 
         $commandResult = $this->commandBus->handle(
-            new class implements CommandInterface { }
+            new class implements CommandInterface {
+            }
         );
 
         $this->assertFalse($commandResult->success);

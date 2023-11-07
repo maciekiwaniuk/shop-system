@@ -19,6 +19,9 @@ class RegisterValueResolver implements ValueResolverInterface
     ) {
     }
 
+    /**
+     * @return iterable<CreateUserDTO>
+     */
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
         $data = $request->toArray();

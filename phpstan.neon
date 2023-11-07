@@ -5,3 +5,4 @@ parameters:
         - config/
         - public/
         - src/
+    checkGenericClassInNonGenericObjectType: false

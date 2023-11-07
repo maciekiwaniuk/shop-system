@@ -53,7 +53,8 @@ class QueryBusTest extends AbstractUnitTestCase
             ->willReturn($envelope);
 
         $queryResult = $this->queryBus->handle(
-            new class implements QueryInterface { }
+            new class implements QueryInterface {
+            }
         );
 
         $this->assertTrue($queryResult->success);
@@ -81,7 +82,8 @@ class QueryBusTest extends AbstractUnitTestCase
             ->willReturn($envelope);
 
         $queryResult = $this->queryBus->handle(
-            new class implements QueryInterface { }
+            new class implements QueryInterface {
+            }
         );
 
         $this->assertFalse($queryResult->success);
@@ -91,7 +93,8 @@ class QueryBusTest extends AbstractUnitTestCase
     public function testHandleWhenQueryResultIsNotProperType(): void
     {
         $stamp = new HandledStamp(
-            result: new class { },
+            result: new class {
+            },
             handlerName: 'exampleHandlerName'
         );
 
@@ -106,7 +109,8 @@ class QueryBusTest extends AbstractUnitTestCase
             ->willReturn($envelope);
 
         $queryResult = $this->queryBus->handle(
-            new class implements QueryInterface { }
+            new class implements QueryInterface {
+            }
         );
 
         $this->assertFalse($queryResult->success);

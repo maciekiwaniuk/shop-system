@@ -15,14 +15,11 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $userGenerator = new UserGenerator();
-        $productGenerator = new ProductGenerator();
-        $orderGenerator = new OrderGenerator();
-        
-        $user = $userGenerator->generate(
+        $user = (new UserGenerator())->generate(
             email: 'fixture@email.com'
         );
 
+        $productGenerator = new ProductGenerator();
         $productApple = $productGenerator->generate(
             name: 'Apple',
             price: 0.99
@@ -32,7 +29,7 @@ class AppFixtures extends Fixture
             price: 30.99
         );
 
-        $order = $orderGenerator->generate(
+        $order = (new OrderGenerator())->generate(
             user: $user,
             products: new ArrayCollection([
                 $productApple, $productBall

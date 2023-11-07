@@ -15,7 +15,7 @@ class CreateUserCommandTest extends AbstractApplicationTestCase
 {
     public function testExecute(): void
     {
-        $container = static::getContainer();
+        $container = self::getContainer();
 
         /** @var CommandBusInterface $commandBus */
         $commandBus = $container->get(CommandBusInterface::class);

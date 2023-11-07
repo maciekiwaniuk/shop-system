@@ -10,6 +10,6 @@ class AbstractIntegrationTestCase extends KernelTestCase
 {
     protected function setUp(): void
     {
-        static::bootKernel();
+        self::bootKernel();
     }
 }

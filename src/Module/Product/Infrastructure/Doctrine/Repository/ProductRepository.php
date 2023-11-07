@@ -8,6 +8,7 @@ use App\Module\Product\Domain\Entity\Product;
 use App\Module\Product\Domain\Repository\ProductRepositoryInterface;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -27,6 +28,18 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @return ArrayCollection<Product>
+     */
+    public function getAll(): ArrayCollection
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p')
+            ->andWhere('p.deletedAt IS NULL')
+            ->getQuery()
+            ->getResult();
     }
 
     public function findBySlug(string $slug): ?Product

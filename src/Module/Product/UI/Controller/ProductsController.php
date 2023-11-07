@@ -120,7 +120,7 @@ class ProductsController extends AbstractController
                 'success' => false,
                 'message' => 'Update failed. Could not find product with given id.'
             ],
-            isset($commandResult) && $commandResult->success => [
+            $commandResult->success => [
                 'success' => true,
                 'message' => 'Successfully updated product.'
             ],
@@ -147,7 +147,7 @@ class ProductsController extends AbstractController
                 'success' => false,
                 'message' => 'Deletion failed. Could not find product with given id.'
             ],
-            isset($commandResult) && $commandResult->success => [
+            $commandResult->success => [
                 'success' => true,
                 'message' => 'Successfully deleted product.'
             ],

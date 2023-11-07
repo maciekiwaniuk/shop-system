@@ -30,7 +30,7 @@ class DeleteProductCommandHandler implements CommandHandlerInterface
     public function __invoke(DeleteProductCommand $command): CommandResult
     {
         try {
-            $this->cache->del([$command->product->getSlug()]);
+            $this->cache->delByKeys([$command->product->getSlug()]);
 
             if (!$this->productRepository->softDelete($command->product)) {
                 return new CommandResult(success: false, statusCode: Response::HTTP_NOT_FOUND);

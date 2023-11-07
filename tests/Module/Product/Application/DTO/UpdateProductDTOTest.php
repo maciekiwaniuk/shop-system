@@ -17,7 +17,7 @@ class UpdateProductDTOTest extends AbstractApplicationTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->validator = static::getContainer()->get(ValidatorInterface::class);
+        $this->validator = self::getContainer()->get(ValidatorInterface::class);
     }
 
     public function testValidData(): void

@@ -15,7 +15,7 @@ class OrderProduct
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private readonly int $id;
+    private int $id;
 
     #[ORM\ManyToOne(targetEntity: Order::class)]
     #[ORM\JoinColumn(name: 'order_id', referencedColumnName: 'id', nullable: false)]

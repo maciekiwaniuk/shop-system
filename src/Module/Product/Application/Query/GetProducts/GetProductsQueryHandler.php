@@ -26,7 +26,7 @@ class GetProductsQueryHandler implements QueryHandlerInterface
     public function __invoke(GetProductsQuery $query): QueryResult
     {
         try {
-            $products = $this->productRepository->findAll();
+            $products = $this->productRepository->getAll();
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return new QueryResult(

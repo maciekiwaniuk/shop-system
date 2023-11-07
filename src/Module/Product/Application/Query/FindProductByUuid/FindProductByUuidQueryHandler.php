@@ -7,7 +7,6 @@ namespace App\Module\Product\Application\Query\FindProductByUuid;
 use App\Module\Product\Infrastructure\Doctrine\Repository\ProductRepository;
 use App\Shared\Application\BusResult\QueryResult;
 use App\Shared\Application\Query\QueryHandlerInterface;
-use App\Shared\Infrastructure\Cache\CacheProxy;
 use App\Shared\Infrastructure\Serializer\JsonSerializer;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,8 +16,6 @@ use Throwable;
 #[AsMessageHandler]
 class FindProductByUuidQueryHandler implements QueryHandlerInterface
 {
-    protected readonly CacheProxy $cache;
-
     public function __construct(
         protected readonly ProductRepository $productRepository,
         protected readonly JsonSerializer $serializer,

@@ -28,7 +28,7 @@ class CreateProductValueResolver implements ValueResolverInterface
 
         $dto = new CreateProductDTO(
             name: $data['name'] ?? null,
-            price: (float) $data['price'] ?? null
+            price: $data['price'] ? (float) $data['price'] : null
         );
 
         $errors = $this->validator->validate($dto);

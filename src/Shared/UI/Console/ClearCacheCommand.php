@@ -33,7 +33,7 @@ final class ClearCacheCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->cache->del(
+        $this->cache->delByKeys(
             $this->cache->keysByPrefix()
         );
         return Command::SUCCESS;

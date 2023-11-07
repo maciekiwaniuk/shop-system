@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\Order\Application\Command\ChangeOrderStatus;
 
+use App\Module\Order\Domain\Entity\Order;
 use App\Module\Order\Domain\Entity\OrderStatusUpdate;
 use App\Module\Order\Domain\Repository\OrderStatusUpdateRepositoryInterface;
-use App\Module\Product\Domain\Entity\Product;
 use App\Shared\Application\BusResult\CommandResult;
 use App\Shared\Application\Command\CommandHandlerInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,7 +27,7 @@ class ChangeOrderStatusCommandHandler implements CommandHandlerInterface
     {
         try {
             $changeOrderStatus = new OrderStatusUpdate(
-                order: $this->entityManager->getReference(Product::class, $command->uuid),
+                order: $this->entityManager->getReference(Order::class, $command->uuid),
                 status: $command->dto->status
             );
             $this->orderStatusUpdateRepository->save($changeOrderStatus, true);

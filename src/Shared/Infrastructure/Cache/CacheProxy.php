@@ -61,7 +61,10 @@ class CacheProxy
         }
     }
 
-    public function del(array $keys): bool
+    /**
+     * @param array<string> $keys
+     */
+    public function delByKeys(array $keys): bool
     {
         try {
             $this->cache->del(array_map(

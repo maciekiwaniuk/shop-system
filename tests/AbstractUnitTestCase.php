@@ -11,7 +11,7 @@ class AbstractUnitTestCase extends KernelTestCase
 {
     protected function setUp(): void
     {
-        static::bootKernel();
+        self::bootKernel();
     }
 
     protected function useMethod(mixed $object, string $method, array $args = []): mixed

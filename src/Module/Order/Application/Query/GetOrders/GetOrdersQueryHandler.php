@@ -26,7 +26,7 @@ class GetOrdersQueryHandler implements QueryHandlerInterface
     public function __invoke(GetOrdersQuery $query): QueryResult
     {
         try {
-            $orders = $this->orderRepository->findAll();
+            $orders = $this->orderRepository->getAll();
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return new QueryResult(

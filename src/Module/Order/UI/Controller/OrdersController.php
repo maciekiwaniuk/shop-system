@@ -81,7 +81,6 @@ class OrdersController extends AbstractController
         return $this->json($result, $queryResult->statusCode);
     }
 
-    // TODO:
     #[OA\RequestBody(content: new Model(type: CreateOrderDTO::class, groups: ['default']))]
     #[Route('/create', methods: [Request::METHOD_POST])]
     #[IsGranted(OrdersVoter::CREATE)]

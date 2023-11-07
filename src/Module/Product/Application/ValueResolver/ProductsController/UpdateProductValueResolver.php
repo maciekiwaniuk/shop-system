@@ -28,7 +28,7 @@ class UpdateProductValueResolver implements ValueResolverInterface
 
         $dto = new UpdateProductDTO(
             name: $data['name'] ?? null,
-            price: (float) $data['price'] ?? null
+            price: $data['price'] ? (float) $data['price'] : null
         );
 
         $errors = $this->validator->validate($dto);

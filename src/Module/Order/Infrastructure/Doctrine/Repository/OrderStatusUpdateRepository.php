@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Module\Order\Infrastructure\Doctrine\Repository;
 
-use App\Module\Order\Domain\Entity\Order;
 use App\Module\Order\Domain\Entity\OrderStatusUpdate;
 use App\Module\Order\Domain\Repository\OrderStatusUpdateRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -17,7 +16,7 @@ class OrderStatusUpdateRepository extends ServiceEntityRepository implements Ord
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Order::class);
+        parent::__construct($registry, OrderStatusUpdate::class);
     }
 
     public function save(OrderStatusUpdate $orderStatusUpdate, bool $flush = false): void

@@ -30,7 +30,7 @@ class UpdateProductCommandHandler implements CommandInterface
     public function __invoke(UpdateProductCommand $command): CommandResult
     {
         try {
-            $this->cache->del([$command->product->getSlug()]);
+            $this->cache->delByKeys([$command->product->getSlug()]);
 
             $updated = $this->productRepository->update(
                 product: $command->product,

@@ -7,6 +7,7 @@ namespace App\Module\Order\Infrastructure\Doctrine\Repository;
 use App\Module\Order\Domain\Entity\Order;
 use App\Module\Order\Domain\Repository\OrderRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -26,6 +27,14 @@ class OrderRepository extends ServiceEntityRepository implements OrderRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function getAll(): ArrayCollection
+    {
+        return $this->createQueryBuilder('o')
+            ->select('o')
+            ->getQuery()
+            ->getResult();
     }
 
     public function findByUuid(string $uuid): ?Order

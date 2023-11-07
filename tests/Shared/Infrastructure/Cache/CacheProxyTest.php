@@ -14,7 +14,6 @@ class CacheProxyTest extends AbstractUnitTestCase
 {
     protected Redis $cache;
     protected LoggerInterface $logger;
-    protected CacheProxy $cacheProxy;
 
     protected function setUp(): void
     {
@@ -37,13 +36,13 @@ class CacheProxyTest extends AbstractUnitTestCase
             ->expects($this->never())
             ->method('error');
 
-        $this->cacheProxy = new CacheProxy(
+        $cacheProxy = new CacheProxy(
             $this->cache,
             $this->logger,
             'examplePrefix.'
         );
 
-        $exists = $this->cacheProxy->exists('key');
+        $exists = $cacheProxy->exists('key');
 
         $this->assertEquals(
             true,
@@ -61,13 +60,13 @@ class CacheProxyTest extends AbstractUnitTestCase
             ->expects($this->once())
             ->method('error');
 
-        $this->cacheProxy = new CacheProxy(
+        $cacheProxy = new CacheProxy(
             $this->cache,
             $this->logger,
             'prefix.'
         );
 
-        $exists = $this->cacheProxy->exists('key');
+        $exists = $cacheProxy->exists('key');
 
         $this->assertEquals(
             false,
