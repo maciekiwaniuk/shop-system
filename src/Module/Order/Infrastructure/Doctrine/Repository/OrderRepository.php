@@ -29,7 +29,10 @@ class OrderRepository extends ServiceEntityRepository implements OrderRepository
         }
     }
 
-    public function getAll(): ArrayCollection
+    /**
+     * @return array<Order>
+     */
+    public function getAll(): array
     {
         return $this->createQueryBuilder('o')
             ->select('o')

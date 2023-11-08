@@ -20,7 +20,7 @@ class OrdersControllerTest extends AbstractApplicationTestCase
 
 //    public function testGetAllAsAdmin(): void
 //    {
-//        $orders = $this->orderRepository->findAll();
+//        $orders = $this->orderRepository->getAll();
 //
 //        $client = $this->getAdminClient();
 //        $client->request(

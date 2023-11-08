@@ -17,4 +17,4 @@ if ($_SERVER['APP_DEBUG']) {
 }
 
 $_ENV['APP_ENV'] = 'test';
-(new Symfony\Component\Dotenv\Dotenv())->bootEnv(dirname(__DIR__).'/.env');
+(new Symfony\Component\Dotenv\Dotenv())->bootEnv(dirname(__DIR__) . '/.env');

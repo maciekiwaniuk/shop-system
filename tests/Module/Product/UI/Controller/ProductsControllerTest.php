@@ -22,7 +22,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
 
     public function testGetAllAsUser(): void
     {
-        $products = $this->productRepository->findAll();
+        $products = $this->productRepository->getAll();
 
         $client = $this->getUserClient();
         $client->request(
@@ -38,7 +38,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
 
     public function testCreateAsAdmin(): void
     {
-        $productsCountBeforeAction = count($this->productRepository->findAll());
+        $productsCountBeforeAction = count($this->productRepository->getAll());
 
         $client = $this->getAdminClient();
         $client->request(
@@ -55,7 +55,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         $this->assertTrue($responseData['success']);
         $this->assertCount(
             $productsCountBeforeAction + 1,
-            $this->productRepository->findAll()
+            $this->productRepository->getAll()
         );
     }
 
@@ -75,7 +75,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         $this->assertTrue($responseData['success']);
         $this->assertEquals($product->getName(), $responseData['data']['name']);
     }
-    
+
     public function testUpdateAsAdmin(): void
     {
         $product = (new ProductGenerator())->generate();

@@ -57,7 +57,7 @@ class AbstractApplicationTestCase extends WebTestCase
     public function addFixture(string $className): void
     {
         $loader = new Loader();
-        $loader->addFixture(new $className);
+        $loader->addFixture(new $className());
 
         $purger = new ORMPurger($this->entityManager);
         $executor = new ORMExecutor($this->entityManager, $purger);
@@ -100,7 +100,8 @@ class AbstractApplicationTestCase extends WebTestCase
         $data = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->client->setServerParameter(
-            'HTTP_Authorization', sprintf('Bearer %s', $data['data']['token'])
+            'HTTP_Authorization',
+            sprintf('Bearer %s', $data['data']['token'])
         );
         return $this->client;
     }
@@ -139,7 +140,8 @@ class AbstractApplicationTestCase extends WebTestCase
         $data = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->client->setServerParameter(
-            'HTTP_Authorization', sprintf('Bearer %s', $data['data']['token'])
+            'HTTP_Authorization',
+            sprintf('Bearer %s', $data['data']['token'])
         );
         return $this->client;
     }

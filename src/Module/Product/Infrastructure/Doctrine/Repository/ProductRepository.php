@@ -8,7 +8,6 @@ use App\Module\Product\Domain\Entity\Product;
 use App\Module\Product\Domain\Repository\ProductRepositoryInterface;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -31,9 +30,9 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
     }
 
     /**
-     * @return ArrayCollection<Product>
+     * @return array<Product>
      */
-    public function getAll(): ArrayCollection
+    public function getAll(): array
     {
         return $this->createQueryBuilder('p')
             ->select('p')

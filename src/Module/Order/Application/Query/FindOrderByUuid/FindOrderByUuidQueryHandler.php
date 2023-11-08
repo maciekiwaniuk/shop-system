@@ -22,7 +22,7 @@ class FindOrderByUuidQueryHandler implements QueryHandlerInterface
         protected readonly LoggerInterface $logger
     ) {
     }
-    
+
     public function __invoke(FindOrderByUuidQuery $query): QueryResult
     {
         try {
