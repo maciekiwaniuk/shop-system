@@ -33,7 +33,7 @@ class UserController extends AbstractController
 
     #[OA\Response(
         response: Response::HTTP_OK,
-        description: 'Returns all orders',
+        description: 'Registers user',
         content: new OA\JsonContent(
             properties: [
                 new OA\Property(property: 'success', type: 'bool'),
@@ -76,7 +76,6 @@ class UserController extends AbstractController
                 'message' => 'Something went wrong while registering.'
             ]
         };
-
         return $this->json($result, $commandResult->statusCode);
     }
 }

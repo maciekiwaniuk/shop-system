@@ -6,6 +6,7 @@ namespace App\Tests\Module\Order\UI\Controller;
 
 use App\Module\Order\Domain\Repository\OrderRepositoryInterface;
 use App\Tests\AbstractApplicationTestCase;
+use Symfony\Component\HttpFoundation\Request;
 
 class OrdersControllerTest extends AbstractApplicationTestCase
 {
