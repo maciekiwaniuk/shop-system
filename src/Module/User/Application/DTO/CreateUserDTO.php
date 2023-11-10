@@ -6,13 +6,13 @@ namespace App\Module\User\Application\DTO;
 
 use App\Module\User\Domain\Entity\User;
 use App\Shared\Application\Constraint\UniqueFieldInEntity;
-use App\Shared\Application\DTO\BaseDTO;
+use App\Shared\Application\DTO\AbstractDTO;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Sequentially;
 
-class CreateUserDTO extends BaseDTO
+class CreateUserDTO extends AbstractDTO
 {
     #[Sequentially([
         new NotBlank(['message' => 'Email cannot be blank.']),

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Module\Order\Application\DTO;
 
 use App\Module\Order\Domain\Enum\OrderStatus;
-use App\Shared\Application\DTO\BaseDTO;
+use App\Shared\Application\DTO\AbstractDTO;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Sequentially;
 
-class ChangeOrderStatusDTO extends BaseDTO
+class ChangeOrderStatusDTO extends AbstractDTO
 {
     #[Sequentially([
         new NotBlank(['message' => 'Order status cannot be blank.'])

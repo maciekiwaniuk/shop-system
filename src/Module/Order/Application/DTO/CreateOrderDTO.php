@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Module\Order\Application\DTO;
 
 use App\Module\Order\Application\Constraint\ProductsArray;
-use App\Shared\Application\DTO\BaseDTO;
+use App\Shared\Application\DTO\AbstractDTO;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Sequentially;
 
-class CreateOrderDTO extends BaseDTO
+class CreateOrderDTO extends AbstractDTO
 {
     #[Sequentially([
         new NotBlank(['message' => 'Order must have products.']),

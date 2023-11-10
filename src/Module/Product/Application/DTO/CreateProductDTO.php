@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Module\Product\Application\DTO;
 
-use App\Shared\Application\DTO\BaseDTO;
+use App\Shared\Application\DTO\AbstractDTO;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
 use Symfony\Component\Validator\Constraints\Sequentially;
 
-class CreateProductDTO extends BaseDTO
+class CreateProductDTO extends AbstractDTO
 {
     #[Sequentially([
         new NotBlank(['message' => 'Name cannot be blank.']),
