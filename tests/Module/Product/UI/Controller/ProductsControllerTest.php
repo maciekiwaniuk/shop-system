@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Module\Product\UI\Controller;
+namespace App\Tests\Module\Product\UI\Controller;
 
 use App\Module\Product\Domain\Repository\ProductRepositoryInterface;
 use App\Module\Product\Infrastructure\Doctrine\Generator\ProductGenerator;

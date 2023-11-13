@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\Module\User\Application\DTO;
 
 use App\Module\User\Application\DTO\CreateUserDTO;
-use App\Tests\AbstractApplicationTestCase;
+use App\Tests\AbstractIntegrationTestCase;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class CreateUserDTOTest extends AbstractApplicationTestCase
+class CreateUserDTOTest extends AbstractIntegrationTestCase
 {
     protected object $validator;
     protected string $exampleValidEmail = 'example@email.com';

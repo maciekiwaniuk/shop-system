@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Module\Product\Application\DTO;
+namespace App\Tests\Module\Product\Application\DTO;
 
 use App\Module\Product\Application\DTO\CreateProductDTO;
-use App\Tests\AbstractApplicationTestCase;
+use App\Tests\AbstractIntegrationTestCase;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class CreateProductDTOTest extends AbstractApplicationTestCase
+class CreateProductDTOTest extends AbstractIntegrationTestCase
 {
     protected object $validator;
     protected string $exampleValidName = 'Example name';
