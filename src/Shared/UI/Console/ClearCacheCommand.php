@@ -10,6 +10,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 #[AsCommand(
     name: 'app:clear-cache',
@@ -33,9 +34,20 @@ final class ClearCacheCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->cache->delByKeys(
-            $this->cache->keysByPrefix()
-        );
-        return Command::SUCCESS;
+        try {
+            $this->cache->delByKeys(
+                $this->cache->keysByPrefix()
+            );
+            $output->writeln('Successfully cleared cache.');
+            return Command::SUCCESS;
+        } catch (Throwable $throwable) {
+            $output->writeln(
+                sprintf(
+                    'There was a technical problem while clearing cache. Error: %s',
+                    $throwable->getMessage()
+                )
+            );
+        }
+        return Command::FAILURE;
     }
 }

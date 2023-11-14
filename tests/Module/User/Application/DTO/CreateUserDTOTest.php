@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Tests\Module\User\Application\DTO;
 
 use App\Module\User\Application\DTO\CreateUserDTO;
+use App\Module\User\Domain\Entity\User;
+use App\Module\User\Domain\Repository\UserRepositoryInterface;
 use App\Tests\AbstractIntegrationTestCase;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CreateUserDTOTest extends AbstractIntegrationTestCase
 {
-    protected object $validator;
+    protected ValidatorInterface $validator;
     protected string $exampleValidEmail = 'example@email.com';
     protected string $exampleValidPassword = 'example123';
     protected string $exampleValidName = 'John';
@@ -125,6 +127,29 @@ class CreateUserDTOTest extends AbstractIntegrationTestCase
             password: $this->exampleValidPassword,
             name: $this->exampleValidName,
             surname: $surname
+        );
+
+        $errors = $this->validator->validate($dto);
+
+        $this->assertCount(1, $errors);
+    }
+
+    public function testDuplicateEmail(): void
+    {
+        $user = new User(
+            email: 'duplicated@email.com',
+            password: $this->exampleValidPassword,
+            name: $this->exampleValidName,
+            surname: $this->exampleValidSurname
+        );
+        $userRepository = self::getContainer()->get(UserRepositoryInterface::class);
+        $userRepository->save($user, true);
+
+        $dto = new CreateUserDTO(
+            email: $user->getEmail(),
+            password: $this->exampleValidPassword,
+            name: $this->exampleValidName,
+            surname: $this->exampleValidSurname
         );
 
         $errors = $this->validator->validate($dto);

@@ -6,7 +6,7 @@ namespace App\Tests;
 
 use App\Module\User\Domain\Entity\User;
 use App\Module\User\Domain\Enum\UserRole;
-use App\Module\User\Infrastructure\Doctrine\Repository\UserRepository;
+use App\Module\User\Domain\Repository\UserRepositoryInterface;
 use App\Shared\Infrastructure\Doctrine\DataFixtures\AppFixtures;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
@@ -83,7 +83,7 @@ class AbstractApplicationTestCase extends WebTestCase
             $passwordHasher->hashPassword($user, $unhashedPassword)
         );
 
-        $userRepository = self::getContainer()->get(UserRepository::class);
+        $userRepository = self::getContainer()->get(UserRepositoryInterface::class);
         $userRepository->save($user, true);
 
         $this->client->request(
@@ -123,7 +123,7 @@ class AbstractApplicationTestCase extends WebTestCase
             array_merge($admin->getRoles(), [UserRole::ADMIN->value])
         );
 
-        $userRepository = self::getContainer()->get(UserRepository::class);
+        $userRepository = self::getContainer()->get(UserRepositoryInterface::class);
         $userRepository->save($admin, true);
 
         $this->client->request(

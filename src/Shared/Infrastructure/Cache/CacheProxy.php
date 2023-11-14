@@ -54,7 +54,7 @@ class CacheProxy
     public function keysByPrefix(): array
     {
         try {
-            return $this->cache->keys($this->prefix);
+            return $this->cache->keys($this->prefix . '*');
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return [];

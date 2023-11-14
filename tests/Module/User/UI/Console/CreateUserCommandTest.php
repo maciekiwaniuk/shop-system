@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Module\User\UI\Console;
 
+use App\Module\User\Domain\Repository\UserRepositoryInterface;
 use App\Module\User\UI\Console\CreateUserCommand;
 use App\Shared\Application\Bus\CommandBus\CommandBusInterface;
 use App\Tests\AbstractApplicationTestCase;
@@ -23,6 +24,9 @@ class CreateUserCommandTest extends AbstractApplicationTestCase
         /** @var ValidatorInterface $validator */
         $validator = $container->get(ValidatorInterface::class);
 
+        /** @var UserRepositoryInterface $userRepository */
+        $userRepository = $container->get(UserRepositoryInterface::class);
+
         $application = new Application();
         $application->add(
             new CreateUserCommand(
@@ -41,8 +45,8 @@ class CreateUserCommandTest extends AbstractApplicationTestCase
         ]);
 
         $commandTester->assertCommandIsSuccessful();
-
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('Successfully created user.', $output);
+        $this->assertNotEmpty($userRepository->findUserByEmail('test1234@wp.pl'));
     }
 }
