@@ -7,6 +7,7 @@ namespace App\Tests;
 use App\Module\User\Domain\Entity\User;
 use App\Module\User\Domain\Enum\UserRole;
 use App\Module\User\Domain\Repository\UserRepositoryInterface;
+use App\Shared\Infrastructure\Cache\CacheCreator;
 use App\Shared\Infrastructure\Doctrine\DataFixtures\AppFixtures;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
@@ -49,9 +50,21 @@ class AbstractApplicationTestCase extends WebTestCase
     {
         parent::tearDown();
 
+        $this->clearCache();
+
         $purger = new ORMPurger($this->entityManager);
         $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);
         $purger->purge();
+    }
+
+    protected function clearCache(): void
+    {
+        /** @var CacheCreator $cacheCreator */
+        $cacheCreator = self::getContainer()->get(CacheCreator::class);
+        $cache = $cacheCreator->create('');
+        $cache->delByKeys(
+            $cache->keysByPrefix()
+        );
     }
 
     public function addFixture(string $className): void

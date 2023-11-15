@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
+use App\Shared\Infrastructure\Cache\CacheCreator;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -38,8 +39,20 @@ class AbstractIntegrationTestCase extends KernelTestCase
     {
         parent::tearDown();
 
+        $this->clearCache();
+
         $purger = new ORMPurger($this->entityManager);
         $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);
         $purger->purge();
+    }
+
+    protected function clearCache(): void
+    {
+        /** @var CacheCreator $cacheCreator */
+        $cacheCreator = self::getContainer()->get(CacheCreator::class);
+        $cache = $cacheCreator->create('');
+        $cache->delByKeys(
+            $cache->keysByPrefix()
+        );
     }
 }

@@ -29,10 +29,19 @@ services:
         ports:
             - "3306:3306"
 
+    redis_prod:
+        image: redis:alpine
+        ports:
+            - "6379:6379"
+        profiles:
+            - "prod"
+
     redis:
         image: redis:alpine
         ports:
             - "6379:6379"
+        profiles:
+            - "dev"
 
 volumes:
     mysql:
