@@ -5,8 +5,13 @@ declare(strict_types=1);
 namespace App\Module\User\UI\Console;
 
 use App\Module\User\Application\Command\CreateUser\CreateUserCommand as CreateUserCommandEvent;
+use App\Module\User\Application\Command\SetUserAsAdmin\SetUserAsAdminCommand;
 use App\Module\User\Application\DTO\CreateUserDTO;
+use App\Module\User\Application\Query\FindUserByEmail\FindUserByEmailQuery;
+use App\Module\User\Domain\Entity\User;
 use App\Shared\Application\Bus\CommandBus\CommandBusInterface;
+use App\Shared\Application\Bus\QueryBus\QueryBusInterface;
+use App\Shared\Infrastructure\Serializer\JsonSerializer;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -23,7 +28,9 @@ final class CreateUserCommand extends Command
 {
     public function __construct(
         protected readonly CommandBusInterface $commandBus,
-        protected readonly ValidatorInterface $validator
+        protected readonly QueryBusInterface $queryBus,
+        protected readonly ValidatorInterface $validator,
+        protected readonly JsonSerializer $serializer
     ) {
         parent::__construct();
     }
@@ -35,7 +42,8 @@ final class CreateUserCommand extends Command
             ->addArgument('email', InputArgument::REQUIRED, 'Email')
             ->addArgument('password', InputArgument::REQUIRED, 'Password')
             ->addArgument('name', InputArgument::REQUIRED, 'Name')
-            ->addArgument('surname', InputArgument::REQUIRED, 'Surname');
+            ->addArgument('surname', InputArgument::REQUIRED, 'Surname')
+            ->addArgument('isAdmin', InputArgument::OPTIONAL, 'Is admin | 1 to set it');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -58,6 +66,15 @@ final class CreateUserCommand extends Command
         $commandResult = $this->commandBus->handle(new CreateUserCommandEvent($dto));
         if ($commandResult->success) {
             $output->writeln('Successfully created user.');
+
+            $queryResult = $this->queryBus->handle(new FindUserByEmailQuery($dto->email));
+            $user = $this->serializer->deserialize(json_encode($queryResult->data), User::class);
+            $commandResult = $this->commandBus->handle(new SetUserAsAdminCommand($user));
+
+            var_dump($commandResult->success);
+            if ($commandResult->success) {
+                $output->writeln('Successfully set user as admin.');
+            }
             return Command::SUCCESS;
         }
 
