@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Module\User\UI\Console;
 
+use App\Module\User\Domain\Enum\UserRole;
 use App\Module\User\Domain\Repository\UserRepositoryInterface;
 use App\Module\User\UI\Console\CreateUserCommand;
 use App\Shared\Application\Bus\CommandBus\CommandBusInterface;
 use App\Shared\Application\Bus\QueryBus\QueryBusInterface;
-use App\Shared\Infrastructure\Serializer\JsonSerializer;
 use App\Tests\AbstractIntegrationTestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -33,9 +33,6 @@ class CreateUserCommandTest extends AbstractIntegrationTestCase
         /** @var ValidatorInterface $validator */
         $validator = $container->get(ValidatorInterface::class);
 
-        /** @var JsonSerializer $serializer */
-        $serializer = $container->get(JsonSerializer::class);
-
         $this->userRepository = $container->get(UserRepositoryInterface::class);
 
         $this->application = new Application();
@@ -44,7 +41,7 @@ class CreateUserCommandTest extends AbstractIntegrationTestCase
                 commandBus: $commandBus,
                 queryBus: $queryBus,
                 validator: $validator,
-                serializer: $serializer
+                entityManager: $this->entityManager
             )
         );
     }
@@ -78,10 +75,13 @@ class CreateUserCommandTest extends AbstractIntegrationTestCase
             'isAdmin' => '1'
         ]);
 
+        $user = $this->userRepository->findUserByEmail('example@mail.pl');
+
         $commandTester->assertCommandIsSuccessful();
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('Successfully created user.', $output);
         $this->assertStringContainsString('Successfully set user as admin.', $output);
-        $this->assertNotEmpty($this->userRepository->findUserByEmail('example@@mail.pl'));
+        $this->assertNotEmpty($user);
+        $this->assertContains(UserRole::ADMIN->value, $user->getRoles());
     }
 }

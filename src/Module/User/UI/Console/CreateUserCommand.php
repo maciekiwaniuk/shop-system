@@ -11,7 +11,7 @@ use App\Module\User\Application\Query\FindUserByEmail\FindUserByEmailQuery;
 use App\Module\User\Domain\Entity\User;
 use App\Shared\Application\Bus\CommandBus\CommandBusInterface;
 use App\Shared\Application\Bus\QueryBus\QueryBusInterface;
-use App\Shared\Infrastructure\Serializer\JsonSerializer;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -30,7 +30,7 @@ final class CreateUserCommand extends Command
         protected readonly CommandBusInterface $commandBus,
         protected readonly QueryBusInterface $queryBus,
         protected readonly ValidatorInterface $validator,
-        protected readonly JsonSerializer $serializer
+        protected readonly EntityManagerInterface $entityManager
     ) {
         parent::__construct();
     }
@@ -68,12 +68,13 @@ final class CreateUserCommand extends Command
             $output->writeln('Successfully created user.');
 
             $queryResult = $this->queryBus->handle(new FindUserByEmailQuery($dto->email));
-            $user = $this->serializer->deserialize(json_encode($queryResult->data), User::class);
-            $commandResult = $this->commandBus->handle(new SetUserAsAdminCommand($user));
+            if (array_key_exists('id', $queryResult->data)) {
+                $user = $this->entityManager->getReference(User::class, $queryResult->data['id']);
+                $commandResult = $this->commandBus->handle(new SetUserAsAdminCommand($user));
 
-            var_dump($commandResult->success);
-            if ($commandResult->success) {
-                $output->writeln('Successfully set user as admin.');
+                if ($commandResult->success) {
+                    $output->writeln('Successfully set user as admin.');
+                }
             }
             return Command::SUCCESS;
         }
