@@ -83,7 +83,10 @@ class Product
 
     private function generateSlug(string $name): string
     {
-        return (new AsciiSlugger())->slug($name) . '-' . substr((string) Uuid::v1(), 0, 8);
+        return strtolower(
+            (new AsciiSlugger())->slug($name) . '-' . substr((string) Uuid::v1(), 0, 8)
+        );
+
     }
 
     public function getName(): string
