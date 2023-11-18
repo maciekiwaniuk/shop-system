@@ -20,21 +20,8 @@ class ProductTest extends AbstractUnitTestCase
         $this->assertEquals('exampleName', $product->getName());
         $this->assertEquals(3.21, $product->getPrice());
         $this->assertNotNull($product->getSlug());
-        $this->assertNotNull($product->getId());
         $this->assertNotNull($product->getCreatedAt());
         $this->assertNotNull($product->getUpdatedAt());
         $this->assertNull($product->getDeletedAt());
-    }
-
-    public function testGenerateSlug(): void
-    {
-        $product = new Product(
-            'exampleName',
-            3.21
-        );
-
-        $slug = (new AsciiSlugger())->slug($product->getName()) . '-' . substr($product->getId(), 0, 8);
-
-        $this->assertEquals($slug, $product->getSlug());
     }
 }

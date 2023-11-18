@@ -34,7 +34,6 @@ class GetProductsQueryHandler implements QueryHandlerInterface
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
-
         return new QueryResult(
             success: true,
             statusCode: Response::HTTP_OK,

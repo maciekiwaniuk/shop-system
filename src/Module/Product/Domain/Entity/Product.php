@@ -22,9 +22,10 @@ use Symfony\Component\Uid\UuidV1;
 class Product
 {
     #[ORM\Id]
+    #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups(['default'])]
-    private string $id;
+    private ?int $id = null;
 
     #[ORM\Column(length: 200)]
     #[Groups(['default'])]
@@ -54,10 +55,8 @@ class Product
         string $name,
         float $price
     ) {
-        $uuid = Uuid::v1();
-        $this->id = (string) $uuid;
         $this->name = $name;
-        $this->slug = $this->generateSlug($name, $uuid);
+        $this->slug = $this->generateSlug($name);
         $this->price = $price;
         $this->deletedAt = null;
         $this->createdAt = new DateTimeImmutable();
@@ -67,27 +66,24 @@ class Product
     #[ORM\PreUpdate]
     public function refreshUpdatedAtValue(): void
     {
-        $this->slug = $this->generateSlug(
-            $this->name,
-            UuidV1::fromString($this->id)
-        );
+        $this->slug = $this->generateSlug($this->name);
         $this->updatedAt = new DateTimeImmutable();
     }
 
-    public function setId(string $id): self
+    public function setId(int $id): self
     {
         $this->id = $id;
         return $this;
     }
 
-    public function getId(): string
+    public function getId(): int
     {
         return $this->id;
     }
 
-    private function generateSlug(string $name, UuidV1 $uuid): string
+    private function generateSlug(string $name): string
     {
-        return (new AsciiSlugger())->slug($name) . '-' . substr((string) $uuid, 0, 8);
+        return (new AsciiSlugger())->slug($name) . '-' . substr((string) Uuid::v1(), 0, 8);
     }
 
     public function getName(): string

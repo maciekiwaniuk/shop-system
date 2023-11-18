@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Product\Application\Query\FindProductByUuid;
+namespace App\Module\Product\Application\Query\FindProductById;
 
 use App\Module\Product\Infrastructure\Doctrine\Repository\ProductRepository;
 use App\Shared\Application\BusResult\QueryResult;
@@ -14,7 +14,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 
 #[AsMessageHandler]
-class FindProductByUuidQueryHandler implements QueryHandlerInterface
+class FindProductByIdQueryHandler implements QueryHandlerInterface
 {
     public function __construct(
         protected readonly ProductRepository $productRepository,
@@ -23,10 +23,10 @@ class FindProductByUuidQueryHandler implements QueryHandlerInterface
     ) {
     }
 
-    public function __invoke(FindProductByUuidQuery $query): QueryResult
+    public function __invoke(FindProductByIdQuery $query): QueryResult
     {
         try {
-            $product = $this->productRepository->findByUuid($query->uuid);
+            $product = $this->productRepository->findById($query->id);
             if ($product === null) {
                 return new QueryResult(
                     success: false,

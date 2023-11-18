@@ -92,7 +92,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         );
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
-        $updatedProduct = $this->productRepository->findByUuid($product->getId());
+        $updatedProduct = $this->productRepository->findBySlug($product->getSlug());
 
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
@@ -112,7 +112,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         );
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
-        $deletedProduct = $this->productRepository->findByUuid($product->getId());
+        $deletedProduct = $this->productRepository->findBySlug($product->getSlug());
 
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);

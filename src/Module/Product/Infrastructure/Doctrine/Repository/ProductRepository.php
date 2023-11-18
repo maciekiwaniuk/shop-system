@@ -52,13 +52,13 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
             ->getOneOrNullResult();
     }
 
-    public function findByUuid(string $uuid): ?Product
+    public function findById(int $id): ?Product
     {
         return $this->createQueryBuilder('p')
             ->select('p')
             ->where('p.id = :id')
             ->andWhere('p.deletedAt IS NULL')
-            ->setParameter('id', $uuid)
+            ->setParameter('id', $id)
             ->getQuery()
             ->getOneOrNullResult();
     }

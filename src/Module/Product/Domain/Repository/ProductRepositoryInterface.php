@@ -14,5 +14,5 @@ interface ProductRepositoryInterface
 
     public function findBySlug(string $slug): ?Product;
 
-    public function findByUuid(string $uuid): ?Product;
+    public function findById(int $id): ?Product;
 }

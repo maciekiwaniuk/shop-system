@@ -10,7 +10,7 @@ use App\Module\Product\Application\Command\UpdateProduct\UpdateProductCommand;
 use App\Module\Product\Application\DTO\CreateProductDTO;
 use App\Module\Product\Application\DTO\UpdateProductDTO;
 use App\Module\Product\Application\Query\FindProductBySlug\FindProductBySlugQuery;
-use App\Module\Product\Application\Query\FindProductByUuid\FindProductByUuidQuery;
+use App\Module\Product\Application\Query\FindProductById\FindProductByIdQuery;
 use App\Module\Product\Application\Query\GetProducts\GetProductsQuery;
 use App\Module\Product\Application\Voter\ProductsVoter;
 use App\Module\Product\Domain\Entity\Product;
@@ -96,11 +96,11 @@ class ProductsController extends AbstractController
         return $this->json($result, $queryResult->statusCode);
     }
 
-    #[Route('/update/{uuid}', methods: [Request::METHOD_PUT])]
+    #[Route('/update/{id}', methods: [Request::METHOD_PUT])]
     #[IsGranted(ProductsVoter::UPDATE)]
     public function update(
         #[ValueResolver('update_product_dto')] UpdateProductDTO $dto,
-        string $uuid
+        int $id
     ): Response {
         if ($dto->hasErrors()) {
             return $this->json([
@@ -109,7 +109,7 @@ class ProductsController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $queryResult = $this->queryBus->handle(new FindProductByUuidQuery($uuid));
+        $queryResult = $this->queryBus->handle(new FindProductByIdQuery($id));
         if ($queryResult->data !== null) {
             $product = $this->serializer->deserialize(json_encode($queryResult->data), Product::class);
             $commandResult = $this->commandBus->handle(new UpdateProductCommand($product, $dto));
@@ -132,11 +132,11 @@ class ProductsController extends AbstractController
         return $this->json($result, isset($commandResult) ? $commandResult->statusCode : $queryResult->statusCode);
     }
 
-    #[Route('/delete/{uuid}', methods: [Request::METHOD_DELETE])]
+    #[Route('/delete/{id}', methods: [Request::METHOD_DELETE])]
     #[IsGranted(ProductsVoter::DELETE)]
-    public function delete(string $uuid): Response
+    public function delete(int $id): Response
     {
-        $queryResult = $this->queryBus->handle(new FindProductByUuidQuery($uuid));
+        $queryResult = $this->queryBus->handle(new FindProductByIdQuery($id));
         if ($queryResult->data !== null) {
             $product = $this->serializer->deserialize(json_encode($queryResult->data), Product::class);
             $commandResult = $this->commandBus->handle(new DeleteProductCommand($product));
