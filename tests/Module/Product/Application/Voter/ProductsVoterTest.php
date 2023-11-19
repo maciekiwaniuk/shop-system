@@ -33,7 +33,7 @@ class ProductsVoterTest extends AbstractUnitTestCase
             ->willReturn(true);
     }
 
-    public function testUserCanGetAll(): void
+    public function testUserCanGetPaginated(): void
     {
         $this->token
             ->method('getUser')
@@ -44,7 +44,7 @@ class ProductsVoterTest extends AbstractUnitTestCase
                 object: $this->voter,
                 method: 'voteOnAttribute',
                 args: [
-                    ProductsVoter::GET_ALL,
+                    ProductsVoter::GET_PAGINATED,
                     null,
                     $this->token
                 ]

@@ -11,11 +11,12 @@ use App\Module\Product\Application\DTO\CreateProductDTO;
 use App\Module\Product\Application\DTO\UpdateProductDTO;
 use App\Module\Product\Application\Query\FindProductBySlug\FindProductBySlugQuery;
 use App\Module\Product\Application\Query\FindProductById\FindProductByIdQuery;
-use App\Module\Product\Application\Query\GetProducts\GetProductsQuery;
+use App\Module\Product\Application\Query\GetPaginatedProducts\GetPaginatedProductsQuery;
 use App\Module\Product\Application\Voter\ProductsVoter;
 use App\Module\Product\Domain\Entity\Product;
 use App\Shared\Application\Bus\CommandBus\CommandBusInterface;
 use App\Shared\Application\Bus\QueryBus\QueryBusInterface;
+use App\Shared\Application\DTO\PaginationDTO;
 use App\Shared\Infrastructure\Serializer\JsonSerializer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,11 +35,18 @@ class ProductsController extends AbstractController
     ) {
     }
 
-    #[Route('/get-all', methods: [Request::METHOD_GET])]
-    #[IsGranted(ProductsVoter::GET_ALL)]
-    public function getAll(): Response
+    #[Route('/get-paginated', methods: [Request::METHOD_GET])]
+    #[IsGranted(ProductsVoter::GET_PAGINATED)]
+    public function getPaginated(#[ValueResolver('get_paginated_products')] PaginationDTO $dto): Response
     {
-        $queryResult = $this->queryBus->handle(new GetProductsQuery());
+        if ($dto->hasErrors()) {
+            return $this->json([
+                'success' => false,
+                'errors' => $dto->getErrors()
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $queryResult = $this->queryBus->handle(new GetPaginatedProductsQuery($dto->offset, $dto->limit));
 
         $result = match (true) {
             $queryResult->success => [

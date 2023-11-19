@@ -20,25 +20,30 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         $this->productRepository = self::getContainer()->get(ProductRepositoryInterface::class);
     }
 
-    public function testGetAllAsUser(): void
+    public function testGetPaginatedAsUser(): void
     {
-        $products = $this->productRepository->getAll();
+        $products = $this->productRepository->getPaginated(1, 10);
 
         $client = $this->getUserClient();
         $client->request(
             method: Request::METHOD_GET,
-            uri: $this->url . '/get-all'
+            uri: $this->url . '/get-paginated',
+            parameters: [
+                'offset' => 1,
+                'limit' => 10
+            ]
         );
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
         $this->assertEquals($products[0]->getName(), $responseData['data'][0]['name']);
+        $this->assertCount(2, $products);
     }
 
     public function testCreateAsAdmin(): void
     {
-        $productsCountBeforeAction = count($this->productRepository->getAll());
+        $productsCountBeforeAction = count($this->productRepository->getPaginated(1, 10));
 
         $client = $this->getAdminClient();
         $client->request(
@@ -55,7 +60,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         $this->assertTrue($responseData['success']);
         $this->assertCount(
             $productsCountBeforeAction + 1,
-            $this->productRepository->getAll()
+            $this->productRepository->getPaginated(1, 10)
         );
     }
 

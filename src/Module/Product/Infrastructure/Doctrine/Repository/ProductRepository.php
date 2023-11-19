@@ -32,11 +32,17 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
     /**
      * @return array<Product>
      */
-    public function getAll(): array
+    public function getPaginated(int $offset = 1, int $limit = 10): array
     {
+        $limit = min($limit, 20);
+        $offset = min($offset, 1);
+
         return $this->createQueryBuilder('p')
             ->select('p')
             ->andWhere('p.deletedAt IS NULL')
+            ->andWhere('p.id >= :offset')
+            ->setParameter('offset', $offset)
+            ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
     }

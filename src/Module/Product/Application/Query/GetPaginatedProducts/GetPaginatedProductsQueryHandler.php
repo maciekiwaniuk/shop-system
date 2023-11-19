@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Product\Application\Query\GetProducts;
+namespace App\Module\Product\Application\Query\GetPaginatedProducts;
 
 use App\Module\Product\Domain\Repository\ProductRepositoryInterface;
 use App\Shared\Application\BusResult\QueryResult;
@@ -14,7 +14,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 
 #[AsMessageHandler]
-class GetProductsQueryHandler implements QueryHandlerInterface
+class GetPaginatedProductsQueryHandler implements QueryHandlerInterface
 {
     public function __construct(
         protected readonly ProductRepositoryInterface $productRepository,
@@ -23,10 +23,10 @@ class GetProductsQueryHandler implements QueryHandlerInterface
     ) {
     }
 
-    public function __invoke(GetProductsQuery $query): QueryResult
+    public function __invoke(GetPaginatedProductsQuery $query): QueryResult
     {
         try {
-            $products = $this->productRepository->getAll();
+            $products = $this->productRepository->getPaginated($query->offset, $query->limit);
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return new QueryResult(

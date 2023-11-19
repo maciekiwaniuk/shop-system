@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class ProductsVoter extends Voter
 {
-    public const GET_ALL = 'GET_ALL_PRODUCTS';
+    public const GET_PAGINATED = 'GET_PAGINATED_PRODUCTS';
     public const CREATE = 'CREATE_PRODUCT';
     public const SHOW = 'SHOW_PRODUCT';
     public const UPDATE = 'UPDATE_PRODUCT';
@@ -21,7 +21,7 @@ class ProductsVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return in_array($attribute, [self::GET_ALL, self::CREATE, self::SHOW, self::UPDATE, self::DELETE])
+        return in_array($attribute, [self::GET_PAGINATED, self::CREATE, self::SHOW, self::UPDATE, self::DELETE])
             && ($subject instanceof Product || $subject === null);
     }
 
@@ -37,7 +37,7 @@ class ProductsVoter extends Voter
         }
 
         return match ($attribute) {
-            self::GET_ALL => $this->canGetAll(),
+            self::GET_PAGINATED => $this->canGetPaginated(),
             self::CREATE => $this->canCreate($user),
             self::SHOW => $this->canShow(),
             self::UPDATE => $this->canUpdate($user),
@@ -46,7 +46,7 @@ class ProductsVoter extends Voter
         };
     }
 
-    private function canGetAll(): bool
+    private function canGetPaginated(): bool
     {
         return true;
     }
