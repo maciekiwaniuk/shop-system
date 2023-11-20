@@ -32,7 +32,6 @@ class AbstractIntegrationTestCase extends KernelTestCase
         $schemaTool->updateSchema(
             $this->entityManager->getMetadataFactory()->getAllMetadata()
         );
-
     }
 
     public function tearDown(): void
