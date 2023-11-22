@@ -17,9 +17,9 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 
 class QueryBusTest extends AbstractUnitTestCase
 {
-    protected MessageBusInterface $bus;
-    protected LoggerInterface $logger;
-    protected QueryBusInterface $queryBus;
+    protected readonly MessageBusInterface $bus;
+    protected readonly LoggerInterface $logger;
+    protected readonly QueryBusInterface $queryBus;
 
     protected function setUp(): void
     {

@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UpdateProductDTOTest extends AbstractIntegrationTestCase
 {
-    protected object $validator;
+    protected readonly ValidatorInterface $validator;
     protected string $exampleValidName = 'Example name';
     protected float $exampleValidPrice = 45.33;
 

@@ -21,8 +21,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AbstractApplicationTestCase extends WebTestCase
 {
-    protected KernelBrowser $client;
-    protected EntityManagerInterface $entityManager;
+    protected readonly KernelBrowser $client;
+    protected readonly EntityManagerInterface $entityManager;
 
     protected function setUp(): void
     {

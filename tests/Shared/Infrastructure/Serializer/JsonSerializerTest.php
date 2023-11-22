@@ -11,7 +11,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 class JsonSerializerTest extends AbstractUnitTestCase
 {
-    protected object $serializer;
+    protected readonly JsonSerializer $serializer;
 
     protected function setUp(): void
     {
