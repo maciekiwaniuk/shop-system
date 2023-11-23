@@ -21,7 +21,7 @@ class OrderStatusUpdate
 
     #[ORM\ManyToOne(targetEntity: Order::class)]
     #[ORM\JoinColumn(name: 'order_id', referencedColumnName: 'id', nullable: false)]
-    #[Groups(['default'])]
+    #[Groups(['order'])]
     private readonly Order $order;
 
     #[ORM\Column(length: 200)]
@@ -52,9 +52,9 @@ class OrderStatusUpdate
         return $this->order;
     }
 
-    public function getStatus(): OrderStatus
+    public function getStatus(): string
     {
-        return $this->status;
+        return $this->status->value;
     }
 
     public function getCreatedAt(): DateTimeImmutable

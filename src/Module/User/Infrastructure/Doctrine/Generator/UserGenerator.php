@@ -31,4 +31,18 @@ class UserGenerator
         );
         return $user;
     }
+
+    public function generateWithUnhashedPassword(
+        string $email = 'test1234@email.com',
+        string $password = 'test1234',
+        string $name = 'exampleName',
+        string $surname = 'exampleSurname'
+    ): User {
+        return new User(
+            email: $email,
+            password: $password,
+            name: $name,
+            surname: $surname
+        );
+    }
 }

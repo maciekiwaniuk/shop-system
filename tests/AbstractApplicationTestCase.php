@@ -98,20 +98,22 @@ class AbstractApplicationTestCase extends WebTestCase
         return $this->client;
     }
 
-    public function getUserClient(): KernelBrowser
+    public function getUserClient(?User $user = null): KernelBrowser
     {
         $passwordHasher = self::getContainer()->get(UserPasswordHasherInterface::class);
-        $unhashedPassword = 'examplePassword';
-        $user = new User(
-            email: 'example@email.com',
-            password: $unhashedPassword,
-            name: 'exampleName',
-            surname: 'exampleSurname'
-        );
+
+        $unhashedPassword = isset($user) ? $user->getPassword() : 'examplePassword';
+        if (!isset($user)) {
+            $user = new User(
+                email: 'example@email.com',
+                password: $unhashedPassword,
+                name: 'exampleName',
+                surname: 'exampleSurname'
+            );
+        }
         $user->setPassword(
             $passwordHasher->hashPassword($user, $unhashedPassword)
         );
-
         $userRepository = self::getContainer()->get(UserRepositoryInterface::class);
         $userRepository->save($user, true);
 

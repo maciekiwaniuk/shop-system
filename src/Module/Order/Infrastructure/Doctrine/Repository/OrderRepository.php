@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Module\Order\Infrastructure\Doctrine\Repository;
 
 use App\Module\Order\Domain\Entity\Order;
+use App\Module\Order\Domain\Entity\OrderProduct;
 use App\Module\Order\Domain\Repository\OrderRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -36,6 +38,11 @@ class OrderRepository extends ServiceEntityRepository implements OrderRepository
     {
         $query = $this->createQueryBuilder('o')
             ->select('o');
+
+        if (isset($cursor)) {
+            $query->where('o.id > :cursor')
+                ->setParameter('cursor', $cursor);
+        }
 
         return $query
             ->getQuery()

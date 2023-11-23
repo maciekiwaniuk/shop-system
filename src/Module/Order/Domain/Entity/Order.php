@@ -37,7 +37,7 @@ class Order
     /**
      * @var Collection<int, OrderProduct>
      */
-    #[ORM\OneToMany(mappedBy: 'ordersProducts', targetEntity: OrderProduct::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'order', targetEntity: OrderProduct::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'id', referencedColumnName: 'order_id', nullable: false)]
     #[Groups(['default'])]
     private Collection $ordersProducts;
@@ -45,7 +45,7 @@ class Order
     /**
      * @var Collection<int, OrderStatusUpdate>
      */
-    #[ORM\OneToMany(mappedBy: 'ordersStatusUpdates', targetEntity: OrderStatusUpdate::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'order', targetEntity: OrderStatusUpdate::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'id', referencedColumnName: 'order_id', nullable: false)]
     #[Groups(['default'])]
     private Collection $ordersStatusUpdates;

@@ -19,7 +19,7 @@ class OrderProduct
 
     #[ORM\ManyToOne(targetEntity: Order::class)]
     #[ORM\JoinColumn(name: 'order_id', referencedColumnName: 'id', nullable: false)]
-    #[Groups(['default'])]
+    #[Groups(['order'])]
     private readonly Order $order;
 
     #[ORM\ManyToOne(targetEntity: Product::class)]

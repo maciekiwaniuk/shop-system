@@ -15,6 +15,8 @@ use App\Module\Order\Domain\Entity\Order;
 use App\Shared\Application\Bus\CommandBus\CommandBusInterface;
 use App\Shared\Application\Bus\QueryBus\QueryBusInterface;
 use App\Shared\Application\DTO\PaginationUuidDTO;
+use App\Shared\Infrastructure\Serializer\JsonSerializer;
+use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,7 +31,8 @@ class OrdersController extends AbstractController
 {
     public function __construct(
         protected readonly CommandBusInterface $commandBus,
-        protected readonly QueryBusInterface $queryBus
+        protected readonly QueryBusInterface $queryBus,
+        protected readonly EntityManagerInterface $entityManager
     ) {
     }
 
@@ -73,10 +76,14 @@ class OrdersController extends AbstractController
     }
 
     #[Route('/show/{uuid}', methods: [Request::METHOD_GET])]
-    #[IsGranted(OrdersVoter::SHOW)]
     public function show(string $uuid): Response
     {
         $queryResult = $this->queryBus->handle(new FindOrderByUuidQuery($uuid));
+
+        $order = $this->entityManager->getReference(Order::class, $queryResult->data['id']);
+        if (!$this->isGranted(OrdersVoter::SHOW, $order)) {
+            throw $this->createAccessDeniedException();
+        }
 
         $result = match (true) {
             $queryResult->success => [
@@ -84,7 +91,8 @@ class OrdersController extends AbstractController
                 'data' => $queryResult->data
             ],
             default => [
-                'success' => false
+                'success' => false,
+                'message' => 'Something went wrong while showing order.'
             ]
         };
         return $this->json($result, $queryResult->statusCode);
