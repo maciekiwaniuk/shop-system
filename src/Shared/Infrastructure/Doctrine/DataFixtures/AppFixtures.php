@@ -33,17 +33,24 @@ class AppFixtures extends Fixture
             price: 30.99
         );
 
-        $order = (new OrderGenerator())->generate(
+        $orderOne = (new OrderGenerator())->generate(
             user: $user,
             products: new ArrayCollection([
                 $productApple, $productBall
+            ])
+        );
+        $orderTwo = (new OrderGenerator())->generate(
+            user: $user,
+            products: new ArrayCollection([
+                $productBall, $productApple
             ])
         );
 
         $manager->persist($user);
         $manager->persist($productApple);
         $manager->persist($productBall);
-        $manager->persist($order);
+        $manager->persist($orderOne);
+        $manager->persist($orderTwo);
         $manager->flush();
     }
 }

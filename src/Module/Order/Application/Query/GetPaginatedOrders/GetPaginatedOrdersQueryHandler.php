@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Order\Application\Query\GetOrders;
+namespace App\Module\Order\Application\Query\GetPaginatedOrders;
 
 use App\Module\Order\Domain\Repository\OrderRepositoryInterface;
 use App\Shared\Application\BusResult\QueryResult;
@@ -14,7 +14,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 
 #[AsMessageHandler]
-class GetOrdersQueryHandler implements QueryHandlerInterface
+class GetPaginatedOrdersQueryHandler implements QueryHandlerInterface
 {
     public function __construct(
         protected readonly OrderRepositoryInterface $orderRepository,
@@ -23,10 +23,10 @@ class GetOrdersQueryHandler implements QueryHandlerInterface
     ) {
     }
 
-    public function __invoke(GetOrdersQuery $query): QueryResult
+    public function __invoke(GetPaginatedOrdersQuery $query): QueryResult
     {
         try {
-            $orders = $this->orderRepository->getAll();
+            $orders = $this->orderRepository->getPaginatedByUuid($query->cursor, $query->limit);
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return new QueryResult(

@@ -17,7 +17,14 @@ class ProductsArrayValidator extends ConstraintValidator
     {
         $fields = ['id', 'quantity', 'pricePerPiece'];
 
-        $valid = is_array($value) && $this->arrayHasKeys(array: $value, keys: $fields);
+        $valid = is_array($value);
+        if ($valid) {
+            foreach ($value as $product) {
+                if (!is_array($product) || !$this->arrayHasKeys($product, $fields)) {
+                    $valid = false;
+                }
+            }
+        }
 
         if (!$valid) {
             $this->context->buildViolation($constraint->message)

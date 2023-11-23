@@ -10,7 +10,7 @@ interface OrderRepositoryInterface
 {
     public function save(Order $order, bool $flush = false): void;
 
-    public function getAll(): array;
+    public function getPaginatedByUuid(?string $cursor, int $limit): array;
 
     public function findByUuid(string $uuid): ?Order;
 }

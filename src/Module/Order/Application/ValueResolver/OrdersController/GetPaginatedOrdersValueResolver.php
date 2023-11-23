@@ -22,12 +22,15 @@ class GetPaginatedOrdersValueResolver implements ValueResolverInterface
      */
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
-        $dto = new PaginationUuidDTO();
+        $dto = new PaginationUuidDTO(
+            cursor: $request->query->get('cursor') ?? null,
+            limit: $request->query->get('limit') ?? null
+        );
 
-//        $errors = $this->validator->validate($dto);
-//        if (count($errors) > 0) {
-//            $dto->setErrors($errors);
-//        }
+        $errors = $this->validator->validate($dto);
+        if (count($errors) > 0) {
+            $dto->setErrors($errors);
+        }
 
         yield $dto;
     }

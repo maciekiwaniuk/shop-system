@@ -26,7 +26,7 @@ class GetPaginatedProductsQueryHandler implements QueryHandlerInterface
     public function __invoke(GetPaginatedProductsQuery $query): QueryResult
     {
         try {
-            $products = $this->productRepository->getPaginated($query->offset, $query->limit);
+            $products = $this->productRepository->getPaginatedById($query->offset, $query->limit);
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return new QueryResult(

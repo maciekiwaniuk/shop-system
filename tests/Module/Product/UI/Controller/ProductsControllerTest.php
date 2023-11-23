@@ -22,7 +22,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
 
     public function testGetPaginatedAsUser(): void
     {
-        $products = $this->productRepository->getPaginated(1, 10);
+        $products = $this->productRepository->getPaginatedById(offset: 1, limit: 10);
 
         $client = $this->getUserClient();
         $client->request(
@@ -38,12 +38,12 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
         $this->assertEquals($products[0]->getName(), $responseData['data'][0]['name']);
-        $this->assertCount(2, $products);
+        $this->assertEquals(count($products), count($responseData['data']));
     }
 
     public function testCreateAsAdmin(): void
     {
-        $productsCountBeforeAction = count($this->productRepository->getPaginated(1, 10));
+        $productsCountBeforeAction = count($this->productRepository->getPaginatedById());
 
         $client = $this->getAdminClient();
         $client->request(
@@ -60,7 +60,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         $this->assertTrue($responseData['success']);
         $this->assertCount(
             $productsCountBeforeAction + 1,
-            $this->productRepository->getPaginated(1, 10)
+            $this->productRepository->getPaginatedById()
         );
     }
 

@@ -32,10 +32,12 @@ class OrderRepository extends ServiceEntityRepository implements OrderRepository
     /**
      * @return array<Order>
      */
-    public function getAll(): array
+    public function getPaginatedByUuid(?string $cursor = null, int $limit = 10): array
     {
-        return $this->createQueryBuilder('o')
-            ->select('o')
+        $query = $this->createQueryBuilder('o')
+            ->select('o');
+
+        return $query
             ->getQuery()
             ->getResult();
     }

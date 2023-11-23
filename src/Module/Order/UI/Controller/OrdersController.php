@@ -9,7 +9,7 @@ use App\Module\Order\Application\Command\CreateOrder\CreateOrderCommand;
 use App\Module\Order\Application\DTO\ChangeOrderStatusDTO;
 use App\Module\Order\Application\DTO\CreateOrderDTO;
 use App\Module\Order\Application\Query\FindOrderByUuid\FindOrderByUuidQuery;
-use App\Module\Order\Application\Query\GetOrders\GetOrdersQuery;
+use App\Module\Order\Application\Query\GetPaginatedOrders\GetPaginatedOrdersQuery;
 use App\Module\Order\Application\Voter\OrdersVoter;
 use App\Module\Order\Domain\Entity\Order;
 use App\Shared\Application\Bus\CommandBus\CommandBusInterface;
@@ -51,7 +51,14 @@ class OrdersController extends AbstractController
     #[IsGranted(OrdersVoter::GET_PAGINATED)]
     public function getPaginated(#[ValueResolver('get_paginated_orders')] PaginationUuidDTO $dto): Response
     {
-        $queryResult = $this->queryBus->handle(new GetOrdersQuery());
+        if ($dto->hasErrors()) {
+            return $this->json([
+                'success' => false,
+                'errors' => $dto->getErrors()
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $queryResult = $this->queryBus->handle(new GetPaginatedOrdersQuery($dto->cursor, $dto->limit));
 
         $result = match (true) {
             $queryResult->success => [
