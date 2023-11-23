@@ -2,7 +2,7 @@
 
 namespace App\Module\Product\Application\ValueResolver\ProductsController;
 
-use App\Shared\Application\DTO\PaginationDTO;
+use App\Shared\Application\DTO\PaginationIdDTO;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsTargetedValueResolver;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
@@ -18,11 +18,11 @@ class GetPaginatedProductsValueResolver implements ValueResolverInterface
     }
 
     /**
-     * @return iterable<PaginationDTO>
+     * @return iterable<PaginationIdDTO>
      */
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
-        $dto = new PaginationDTO(
+        $dto = new PaginationIdDTO(
             offset: $request->query->get('offset') ?? null,
             limit: $request->query->get('limit') ?? null
         );

@@ -43,7 +43,12 @@ class AbstractApplicationTestCase extends WebTestCase
             $this->entityManager->getMetadataFactory()->getAllMetadata()
         );
 
-        $this->addFixture(AppFixtures::class);
+        $this->addFixture(
+            className: AppFixtures::class,
+            classesToInjectToFixture: [
+                UserPasswordHasherInterface::class
+            ]
+        );
     }
 
     public function tearDown(): void
@@ -67,10 +72,21 @@ class AbstractApplicationTestCase extends WebTestCase
         );
     }
 
-    public function addFixture(string $className): void
+    /**
+     * @param class-string $className
+     * @param array<class-string> $classesToInjectToFixture
+     */
+    public function addFixture(string $className, array $classesToInjectToFixture = []): void
     {
+        $instancesOfClassesToInject = array_map(
+            fn($class) => self::getContainer()->get($class),
+            $classesToInjectToFixture
+        );
+
         $loader = new Loader();
-        $loader->addFixture(new $className());
+        $loader->addFixture(
+            new $className(...$instancesOfClassesToInject)
+        );
 
         $purger = new ORMPurger($this->entityManager);
         $executor = new ORMExecutor($this->entityManager, $purger);

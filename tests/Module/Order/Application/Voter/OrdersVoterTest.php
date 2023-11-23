@@ -34,7 +34,7 @@ class OrdersVoterTest extends AbstractUnitTestCase
             ->willReturn(true);
     }
 
-    public function testUserCantGetAll(): void
+    public function testUserCantGetPaginated(): void
     {
         $this->token
             ->method('getUser')
@@ -45,7 +45,7 @@ class OrdersVoterTest extends AbstractUnitTestCase
                 object: $this->voter,
                 method: 'voteOnAttribute',
                 args: [
-                    OrdersVoter::GET_ALL,
+                    OrdersVoter::GET_PAGINATED,
                     null,
                     $this->token
                 ]
@@ -53,7 +53,7 @@ class OrdersVoterTest extends AbstractUnitTestCase
         );
     }
 
-    public function testAdminCanGetAll(): void
+    public function testAdminCanGetPaginated(): void
     {
         $this->token
             ->method('getUser')
@@ -64,7 +64,7 @@ class OrdersVoterTest extends AbstractUnitTestCase
                 object: $this->voter,
                 method: 'voteOnAttribute',
                 args: [
-                    OrdersVoter::GET_ALL,
+                    OrdersVoter::GET_PAGINATED,
                     null,
                     $this->token
                 ]

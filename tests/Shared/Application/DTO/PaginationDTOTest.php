@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Shared\Application\DTO;
 
-use App\Shared\Application\DTO\PaginationDTO;
+use App\Shared\Application\DTO\PaginationIdDTO;
 use App\Tests\AbstractIntegrationTestCase;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -22,7 +22,7 @@ class PaginationDTOTest extends AbstractIntegrationTestCase
 
     public function testValidData(): void
     {
-        $dto = new PaginationDTO(
+        $dto = new PaginationIdDTO(
             offset: $this->exampleValidOffset,
             limit: $this->exampleValidLimit
         );
@@ -43,7 +43,7 @@ class PaginationDTOTest extends AbstractIntegrationTestCase
      */
     public function testInvalidOffset(int $offset): void
     {
-        $dto = new PaginationDTO(
+        $dto = new PaginationIdDTO(
             offset: $offset,
             limit: $this->exampleValidLimit
         );
@@ -64,7 +64,7 @@ class PaginationDTOTest extends AbstractIntegrationTestCase
      */
     public function testInvalidLimit(int $limit): void
     {
-        $dto = new PaginationDTO(
+        $dto = new PaginationIdDTO(
             offset: $this->exampleValidOffset,
             limit: $limit
         );

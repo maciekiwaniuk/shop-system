@@ -19,7 +19,7 @@ class OrdersControllerTest extends AbstractApplicationTestCase
         $this->orderRepository = self::getContainer()->get(OrderRepositoryInterface::class);
     }
 
-//    public function testGetAllAsAdmin(): void
+//    public function testGetPaginatedAsAdmin(): void
 //    {
 //        $orders = $this->orderRepository->getAll();
 //

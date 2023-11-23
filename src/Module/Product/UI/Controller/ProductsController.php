@@ -16,7 +16,7 @@ use App\Module\Product\Application\Voter\ProductsVoter;
 use App\Module\Product\Domain\Entity\Product;
 use App\Shared\Application\Bus\CommandBus\CommandBusInterface;
 use App\Shared\Application\Bus\QueryBus\QueryBusInterface;
-use App\Shared\Application\DTO\PaginationDTO;
+use App\Shared\Application\DTO\PaginationIdDTO;
 use App\Shared\Infrastructure\Serializer\JsonSerializer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,7 +37,7 @@ class ProductsController extends AbstractController
 
     #[Route('/get-paginated', methods: [Request::METHOD_GET])]
     #[IsGranted(ProductsVoter::GET_PAGINATED)]
-    public function getPaginated(#[ValueResolver('get_paginated_products')] PaginationDTO $dto): Response
+    public function getPaginated(#[ValueResolver('get_paginated_products')] PaginationIdDTO $dto): Response
     {
         if ($dto->hasErrors()) {
             return $this->json([

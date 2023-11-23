@@ -14,6 +14,7 @@ use App\Module\Order\Application\Voter\OrdersVoter;
 use App\Module\Order\Domain\Entity\Order;
 use App\Shared\Application\Bus\CommandBus\CommandBusInterface;
 use App\Shared\Application\Bus\QueryBus\QueryBusInterface;
+use App\Shared\Application\DTO\PaginationUuidDTO;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -46,9 +47,9 @@ class OrdersController extends AbstractController
             ]
         )
     )]
-    #[Route('/get-all', methods: [Request::METHOD_GET])]
-    #[IsGranted(OrdersVoter::GET_ALL)]
-    public function getAll(): Response
+    #[Route('/get-paginated', methods: [Request::METHOD_GET])]
+    #[IsGranted(OrdersVoter::GET_PAGINATED)]
+    public function getPaginated(#[ValueResolver('get_paginated_orders')] PaginationUuidDTO $dto): Response
     {
         $queryResult = $this->queryBus->handle(new GetOrdersQuery());
 
@@ -65,6 +66,7 @@ class OrdersController extends AbstractController
     }
 
     #[Route('/show/{uuid}', methods: [Request::METHOD_GET])]
+    #[IsGranted(OrdersVoter::SHOW)]
     public function show(string $uuid): Response
     {
         $queryResult = $this->queryBus->handle(new FindOrderByUuidQuery($uuid));

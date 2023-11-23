@@ -13,14 +13,14 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class OrdersVoter extends Voter
 {
-    public const GET_ALL = 'GET_ALL_ORDERS';
+    public const GET_PAGINATED = 'GET_PAGINATED_ORDERS';
     public const SHOW = 'SHOW_ORDER';
     public const CREATE = 'CREATE_ORDER';
     public const UPDATE_STATUS = 'UPDATE_STATUS_ORDER';
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return in_array($attribute, [self::GET_ALL, self::SHOW, self::CREATE, self::UPDATE_STATUS])
+        return in_array($attribute, [self::GET_PAGINATED, self::SHOW, self::CREATE, self::UPDATE_STATUS])
             && ($subject instanceof Order || $subject === null);
     }
 
@@ -36,7 +36,7 @@ class OrdersVoter extends Voter
         }
 
         return match ($attribute) {
-            self::GET_ALL => $this->canGetAll($user),
+            self::GET_PAGINATED => $this->canGetPaginated($user),
             self::SHOW => $this->canShow($subject, $user),
             self::CREATE => $this->canCreate(),
             self::UPDATE_STATUS => $this->canUpdateStatus($user),
@@ -44,7 +44,7 @@ class OrdersVoter extends Voter
         };
     }
 
-    private function canGetAll(User $user): bool
+    private function canGetPaginated(User $user): bool
     {
         return $user->isAdmin();
     }

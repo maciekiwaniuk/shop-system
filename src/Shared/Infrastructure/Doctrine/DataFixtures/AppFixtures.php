@@ -10,14 +10,18 @@ use App\Module\User\Infrastructure\Doctrine\Generator\UserGenerator;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+    public function __construct(
+        protected readonly UserPasswordHasherInterface $passwordHasher
+    ) {
+    }
+
     public function load(ObjectManager $manager): void
     {
-        $user = (new UserGenerator())->generate(
-            email: 'fixture@email.com'
-        );
+        $user = (new UserGenerator($this->passwordHasher))->generate();
 
         $productGenerator = new ProductGenerator();
         $productApple = $productGenerator->generate(
