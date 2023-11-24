@@ -69,7 +69,8 @@ class OrdersController extends AbstractController
                 'data' => $queryResult->data
             ],
             default => [
-                'success' => false
+                'success' => false,
+                'message' => 'Something went wrong while getting paginated products.'
             ]
         };
         return $this->json($result, $queryResult->statusCode);
