@@ -29,7 +29,7 @@ class Order
     #[Groups(['default'])]
     private readonly string $id;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
     #[Groups(['default'])]
     private readonly User $user;
@@ -121,6 +121,11 @@ class Order
             )
         );
         return $this;
+    }
+
+    public function getCurrentStatus(): string
+    {
+        return $this->ordersStatusUpdates->last()->getStatus();
     }
 
     public function setCompletedAt(DateTimeImmutable $completedAt): self

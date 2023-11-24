@@ -12,8 +12,10 @@ use App\Shared\Application\Command\CommandHandlerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 
+#[AsMessageHandler]
 class ChangeOrderStatusCommandHandler implements CommandHandlerInterface
 {
     public function __construct(

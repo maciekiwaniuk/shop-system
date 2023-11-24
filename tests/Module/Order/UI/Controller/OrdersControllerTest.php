@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Module\Order\UI\Controller;
 
 use App\Module\Order\Domain\Entity\Order;
+use App\Module\Order\Domain\Enum\OrderStatus;
 use App\Module\Order\Domain\Repository\OrderRepositoryInterface;
 use App\Module\Order\Infrastructure\Doctrine\Generator\OrderGenerator;
 use App\Module\Product\Domain\Entity\Product;
@@ -70,7 +71,7 @@ class OrdersControllerTest extends AbstractApplicationTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
-        $this->assertCount(1, $responseData['data']);
+        $this->assertEquals(count($orders) - 1, count($responseData['data']));
     }
 
     public function testShowAsOwner(): void
@@ -158,9 +159,36 @@ class OrdersControllerTest extends AbstractApplicationTestCase
             $this->orderRepository->getPaginatedByUuid()
         );
     }
-//
-//    public function testChangeStatusAsAdmin(): void
-//    {
-//
-//    }
+
+    public function testChangeStatusAsAdmin(): void
+    {
+        $user = (new UserGenerator(self::getContainer()->get(UserPasswordHasherInterface::class)))
+            ->generate(email: 'exampleOrder@email.com');
+        $product = (new ProductGenerator())->generate();
+        $order = (new OrderGenerator())->generate(
+            user: $user,
+            products: new ArrayCollection([$product])
+        );
+        $statusBeforeAction = $order->getCurrentStatus();
+
+        $client = $this->getAdminClient();
+        $this->productRepository->save($product, true);
+        $this->orderRepository->save($order, true);
+
+        $client->request(
+            method: Request::METHOD_POST,
+            uri: $this->url . '/change-status/' . $order->getId(),
+            content: json_encode([
+                'status' => OrderStatus::IN_DELIVERY->value
+            ])
+        );
+        $responseData = json_decode($client->getResponse()->getContent(), true);
+
+        $orderAfterAction = $this->orderRepository->findByUuid($order->getId());
+
+        $this->assertResponseIsSuccessful();
+        $this->assertTrue($responseData['success']);
+        $this->assertNotEquals($statusBeforeAction, $orderAfterAction->getCurrentStatus());
+        $this->assertEquals(OrderStatus::IN_DELIVERY->value, $orderAfterAction->getCurrentStatus());
+    }
 }
