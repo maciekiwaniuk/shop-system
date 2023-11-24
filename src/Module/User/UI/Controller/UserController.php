@@ -10,7 +10,7 @@ use App\Module\User\Application\Query\FindUserByEmail\FindUserByEmailQuery;
 use App\Module\User\Domain\Entity\User;
 use App\Shared\Application\Bus\CommandBus\CommandBusInterface;
 use App\Shared\Application\Bus\QueryBus\QueryBusInterface;
-use App\Shared\Infrastructure\Serializer\JsonSerializer;
+use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
@@ -27,7 +27,7 @@ class UserController extends AbstractController
         protected readonly CommandBusInterface $commandBus,
         protected readonly QueryBusInterface $queryBus,
         protected readonly JWTTokenManagerInterface $JWTTokenManager,
-        protected readonly JsonSerializer $serializer
+        protected readonly EntityManagerInterface $entityManager
     ) {
     }
 
@@ -60,7 +60,7 @@ class UserController extends AbstractController
         $commandResult = $this->commandBus->handle(new CreateUserCommandEvent($dto));
         $queryResult = $this->queryBus->handle(new FindUserByEmailQuery($dto->email));
         if ($queryResult->data !== null) {
-            $user = $this->serializer->deserialize(json_encode($queryResult->data), User::class);
+            $user = $this->entityManager->getReference(User::class, $queryResult->data['id']);
         }
 
         $result = match (true) {
