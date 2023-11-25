@@ -27,6 +27,9 @@ components shared across all modules. Each module [Order, Product, User] compris
 the completion of actions. Each command returns a CommandResult, while queries return a QueryResult, which contains 
 information about success, status codes, and retrieved data.
 
+![](https://github.com/maciekiwaniuk/shop-system/raw/main/public/images/database.jpg)
+![](https://github.com/maciekiwaniuk/shop-system/raw/main/public/images/modules.jpg)
+
 ## Commands using Make
 
 Initialize for first time run
