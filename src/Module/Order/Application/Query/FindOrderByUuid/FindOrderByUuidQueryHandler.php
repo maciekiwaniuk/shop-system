@@ -26,8 +26,7 @@ class FindOrderByUuidQueryHandler implements QueryHandlerInterface
     public function __invoke(FindOrderByUuidQuery $query): QueryResult
     {
         try {
-            $order = $this->orderRepository->findByUuid($query->email);
-            if ($order === null) {
+            if (null === $order = $this->orderRepository->findByUuid($query->email)) {
                 return new QueryResult(
                     success: false,
                     statusCode: Response::HTTP_NOT_FOUND

@@ -15,29 +15,29 @@ class ProductsArrayValidator extends ConstraintValidator
      */
     public function validate(mixed $value, Constraint $constraint): void
     {
-        $fields = ['id', 'quantity', 'pricePerPiece'];
-
         $valid = is_array($value);
         if ($valid) {
             foreach ($value as $product) {
-                if (!is_array($product) || !$this->arrayHasKeys($product, $fields)) {
+                if (!is_array($product) || !$this->arrayHasValidKeys($product)) {
                     $valid = false;
                 }
             }
         }
 
         if (!$valid) {
-            $this->context->buildViolation($constraint->message)
+            $this->context
+                ->buildViolation($constraint->message)
                 ->addViolation();
         }
     }
 
     /**
      * @param array<string> $array
-     * @param array<string> $keys
      */
-    private function arrayHasKeys(array $array, array $keys): bool
+    private function arrayHasValidKeys(array $array): bool
     {
-        return !array_diff_key(array_flip($keys), $array);
+        return !array_diff_key(
+            array_flip(['id', 'quantity', 'pricePerPiece']), $array
+        );
     }
 }

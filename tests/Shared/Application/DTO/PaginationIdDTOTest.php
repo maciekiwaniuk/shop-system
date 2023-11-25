@@ -8,7 +8,7 @@ use App\Shared\Application\DTO\PaginationIdDTO;
 use App\Tests\AbstractIntegrationTestCase;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class PaginationDTOTest extends AbstractIntegrationTestCase
+class PaginationIdDTOTest extends AbstractIntegrationTestCase
 {
     protected readonly ValidatorInterface $validator;
     protected int $exampleValidOffset = 1;

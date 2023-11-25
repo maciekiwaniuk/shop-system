@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints\Sequentially;
 class CreateOrderDTO extends AbstractDTO
 {
     /**
-     * @var array<array{id:int, quantity: int, pricePerPiece: float}>|null $products
+     * @var array<array{id: int, quantity: int, pricePerPiece: float}>|null $products
      */
     #[Sequentially([
         new NotBlank(['message' => 'Order must have products.']),
@@ -21,7 +21,7 @@ class CreateOrderDTO extends AbstractDTO
     public readonly ?array $products;
 
     /**
-     * @param array<array{id:int, quantity: int, pricePerPiece: float}>|null $products
+     * @param array<array{id: int, quantity: int, pricePerPiece: float}>|null $products
      */
     public function __construct(
         ?array $products
