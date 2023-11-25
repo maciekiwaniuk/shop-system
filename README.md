@@ -2,30 +2,58 @@
 
 > ### Project of the backend of shop
 
+![image](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![image](https://img.shields.io/badge/Symfony-000000?style=for-the-badge&logo=Symfony&logoColor=white)
+![image](https://img.shields.io/badge/redis-%23DD0031.svg?&style=for-the-badge&logo=redis&logoColor=white)
+![image](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
+![image](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
+
 ## General info
 
-- This is project of backend of basic shop system. 
-- App is structured using DDD architecture, based on CQRS.
-- There are used a few tools which help create valuable code: phpstan, deptrac, codesniffer.
-- Application is well-tested. Tests are divided into Application (E2E), Integration and Unit tests.
-- Validation of data is based on DTO-Constraints way.
-- There is implemented caching system based on Redis.
+- App is structured using DDD architecture, based on the Command Query Responsibility Segregation (CQRS) pattern.
+- Several tools are utilized to facilitate the creation of robust code: phpstan, deptrac, codesniffer.
+- The application is well-tested, with tests categorized into Application (E2E), Integration, and Unit tests.
+- A caching system based on Redis has been implemented.
 
-## Used design patterns
+## Technical solutions
 
-- Proxy used for example in Caching, in CacheProxy
-- Fluent interface
+- Directories are organized into /Module, which contains subdirectories for all modules, and /Shared, which includes 
+components shared across all modules. Each module [Order, Product, User] comprises four directories:
+    - Application -> houses the implementation of application logic
+    - Domain -> contains things related strictly to business information - entities, enums and interfaces of repositories
+    - Infrastructure -> includes components related to the technical layer, such as the database and caching system
+    - UI -> contains console commands or controllers that serve as the connection between the user and the system
+- Actions are classified into commands and queries. I have implemented a custom solution for storing information after 
+the completion of actions. Each command returns a CommandResult, while queries return a QueryResult, which contains 
+information about success, status codes, and retrieved data.
 
-# Commands
+## Commands using Make
 
-Run application
+Initialize for first time run
 
-    docker-compose up -d
+    make initialize
 
-Tests all in one using shell script
+Run development profile
 
-    docker-compose exec php bin/tests.sh
+    make run
 
-Tests all using command
+Drop migrations, migrate and load fixtures
 
-    docker-compose exec php vendor/bin/phpcs && docker-compose exec php vendor/bin/deptrac analyse &&  docker-compose exec php vendor/bin/phpstan analyse && docker-compose exec php bin/phpunit
+    make drop_migrations
+    make migrate
+    make load_fixtures
+
+Run all tests
+
+    make test
+
+## Commands without Make
+
+Initialize for first time run
+
+    docker-compose up --profile dev -d
+	docker-compose exec php bin/console doctrine:migrations:diff
+	docker-compose exec php bin/console doctrine:migrations:migrate
+	docker-compose exec php bin/console lexik:jwt:generate-keypair
+
+#### For other commands check content of Makefile

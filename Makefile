@@ -7,6 +7,9 @@ initialize:
 run:
 	docker-compose up --profile dev -d
 
+run_prod:
+	docker-compose up --profile prod -d
+
 drop_migrations:
 	docker-compose exec php bin/console doctrine:schema:drop --full-database --force
 
