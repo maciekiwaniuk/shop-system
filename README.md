@@ -29,6 +29,7 @@ information about success, status codes, and retrieved data.
 
 ![](https://github.com/maciekiwaniuk/shop-system/raw/main/public/images/database.jpg)
 ![](https://github.com/maciekiwaniuk/shop-system/raw/main/public/images/modules.jpg)
+![](https://github.com/maciekiwaniuk/shop-system/raw/main/public/images/module.jpg)
 
 ## Commands using Make
 
