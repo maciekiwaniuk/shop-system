@@ -120,6 +120,9 @@ class Order
                 status: $orderStatusUpdate
             )
         );
+        if ($orderStatusUpdate->value === OrderStatus::DELIVERED->value) {
+            $this->setCompletedAt(new DateTimeImmutable());
+        }
         return $this;
     }
 
