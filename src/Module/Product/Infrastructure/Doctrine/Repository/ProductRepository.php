@@ -90,6 +90,7 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
             ->set('p.name', ':name')
             ->set('p.price', ':price')
             ->where('p.id = :id')
+            ->andWhere('p.deletedAt IS NULL')
             ->setParameter('name', $name)
             ->setParameter('price', $price)
             ->setParameter('id', $product->getId())
