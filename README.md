@@ -10,8 +10,8 @@
 
 ## General info
 
-- App is structured using DDD architecture, based on the Command Query Responsibility Segregation (CQRS) pattern.
-- Several tools are utilized to facilitate the creation of robust code: phpstan, deptrac, codesniffer.
+- App is structured using DDD approach, based on the Command Query Responsibility Segregation (CQRS) pattern.
+- Several tools are utilized to facilitate the creation of robust code: phpstan (6 level), deptrac, codesniffer.
 - The application is well-tested, with tests categorized into Application (E2E), Integration, and Unit tests.
 - A caching system based on Redis has been implemented.
 
@@ -27,8 +27,13 @@ components shared across all modules. Each module [Order, Product, User] compris
 the completion of actions. Each command returns a CommandResult, while queries return a QueryResult, which contains 
 information about success, status codes, and retrieved data.
 
+### Database
 ![](https://github.com/maciekiwaniuk/shop-system/raw/main/public/images/database.jpg)
+
+### Structure
 ![](https://github.com/maciekiwaniuk/shop-system/raw/main/public/images/modules.jpg)
+
+### Module
 ![](https://github.com/maciekiwaniuk/shop-system/raw/main/public/images/module.jpg)
 
 ## Commands using Make
