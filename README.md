@@ -26,9 +26,16 @@ components shared across all modules. Each module [Order, Product, User] compris
 - Actions are classified into commands and queries. I have implemented a custom solution for storing information after 
 the completion of actions. Each command returns a CommandResult, while queries return a QueryResult, which contains 
 information about success, status codes, and retrieved data.
+- Authentication is implemented using the JWT approach with the LexikJWTAuthenticationBundle.
+- Event sourcing is used to store information about the current status of an order. The latest created order status 
+indicates its current status.
 
 ### Database
 ![](https://github.com/maciekiwaniuk/shop-system/raw/main/public/images/database.jpg)
+
+### API Docs
+
+![](https://github.com/maciekiwaniuk/shop-system/raw/main/public/images/docs.jpg)
 
 ### Structure
 ![](https://github.com/maciekiwaniuk/shop-system/raw/main/public/images/modules.jpg)
@@ -66,3 +73,9 @@ Initialize for first time run
 	docker-compose exec php bin/console lexik:jwt:generate-keypair
 
 #### For other commands check content of Makefile
+
+## API Documentation
+
+The API documentation is available at
+
+    localhost:80/api/doc
