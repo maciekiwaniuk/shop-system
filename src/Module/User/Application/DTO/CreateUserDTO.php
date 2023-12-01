@@ -7,6 +7,7 @@ namespace App\Module\User\Application\DTO;
 use App\Module\User\Domain\Entity\User;
 use App\Shared\Application\Constraint\UniqueFieldInEntity;
 use App\Shared\Application\DTO\AbstractDTO;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -25,6 +26,7 @@ class CreateUserDTO extends AbstractDTO
         ]),
         new UniqueFieldInEntity(field: 'email', entityClassName: User::class)
     ])]
+    #[Groups(['default'])]
     public readonly ?string $email;
 
     #[Sequentially([
@@ -36,6 +38,7 @@ class CreateUserDTO extends AbstractDTO
             'maxMessage' => 'Name can be up to 100 characters long.'
         ])
     ])]
+    #[Groups(['default'])]
     public readonly ?string $name;
 
     #[Sequentially([
@@ -47,6 +50,7 @@ class CreateUserDTO extends AbstractDTO
             'maxMessage' => 'Password can be up to 100 characters long.'
         ])
     ])]
+    #[Groups(['default'])]
     public readonly ?string $password;
 
     #[Sequentially([
@@ -58,6 +62,7 @@ class CreateUserDTO extends AbstractDTO
             'maxMessage' => 'Surname can be up to 100 characters long.'
         ])
     ])]
+    #[Groups(['default'])]
     public readonly ?string $surname;
 
     public function __construct(

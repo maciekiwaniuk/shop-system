@@ -79,22 +79,4 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
             ->getQuery()
             ->execute();
     }
-
-    public function update(
-        Product $product,
-        string $name,
-        float $price
-    ): bool {
-        return (bool) $this->createQueryBuilder('p')
-            ->update()
-            ->set('p.name', ':name')
-            ->set('p.price', ':price')
-            ->where('p.id = :id')
-            ->andWhere('p.deletedAt IS NULL')
-            ->setParameter('name', $name)
-            ->setParameter('price', $price)
-            ->setParameter('id', $product->getId())
-            ->getQuery()
-            ->execute();
-    }
 }

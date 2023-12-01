@@ -33,7 +33,7 @@ class UserController extends AbstractController
 
     #[OA\Response(
         response: Response::HTTP_OK,
-        description: 'Registers user',
+        description: 'Register user',
         content: new OA\JsonContent(
             properties: [
                 new OA\Property(property: 'success', type: 'bool'),

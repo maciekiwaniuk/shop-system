@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Shared\Application\DTO;
 
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
 use Symfony\Component\Validator\Constraints\Sequentially;

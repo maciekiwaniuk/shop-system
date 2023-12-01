@@ -97,7 +97,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         );
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
-        $updatedProduct = $this->productRepository->findBySlug($product->getSlug());
+        $updatedProduct = $this->productRepository->findById($product->getId());
 
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);

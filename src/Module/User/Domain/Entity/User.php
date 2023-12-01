@@ -34,7 +34,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $email;
 
     #[ORM\Column]
-    #[Groups(['default'])]
+    #[Groups(['user_password'])]
     private string $password;
 
     #[ORM\Column(length: 100)]

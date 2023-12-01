@@ -18,4 +18,6 @@ interface ProductRepositoryInterface
     public function findBySlug(string $slug): ?Product;
 
     public function findById(int $id): ?Product;
+
+    public function softDelete(Product $product): bool;
 }
