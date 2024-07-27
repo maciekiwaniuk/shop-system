@@ -1,4 +1,4 @@
-FROM php:8.2-fpm-buster
+FROM php:8.3-fpm
 
 COPY php.ini /usr/local/etc/php/conf.d/docker-php-config.ini
 
@@ -17,8 +17,7 @@ RUN apt-get update && apt-get install -y \
     libicu-dev  \
     libonig-dev \
     libxslt1-dev \
-    acl \
-    && echo 'alias sf="php bin/console"' >> ~/.bashrc
+    acl
 
 RUN apt-get update && apt-get install -y \
     redis-server \

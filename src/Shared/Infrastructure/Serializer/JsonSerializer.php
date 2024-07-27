@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace App\Shared\Infrastructure\Serializer;
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
-use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
+use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -28,7 +26,7 @@ class JsonSerializer
             ]);
 
         $objectNormalizer = new ObjectNormalizer(
-            new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader())),
+            new ClassMetadataFactory(new AttributeLoader()),
         );
 
         $this->serializer = new Serializer(

@@ -36,3 +36,7 @@ README.md.bak
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
+
+###> qossmic/deptrac ###
+/.deptrac.cache
+###< qossmic/deptrac ###
