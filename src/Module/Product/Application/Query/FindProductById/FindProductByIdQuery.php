@@ -9,7 +9,7 @@ use App\Shared\Application\Query\QueryInterface;
 class FindProductByIdQuery implements QueryInterface
 {
     public function __construct(
-        public readonly int $id
+        public readonly int $id,
     ) {
     }
 }

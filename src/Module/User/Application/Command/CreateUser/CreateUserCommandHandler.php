@@ -20,7 +20,7 @@ class CreateUserCommandHandler implements CommandHandlerInterface
     public function __construct(
         protected readonly UserRepository $userRepository,
         protected readonly LoggerInterface $logger,
-        protected readonly UserPasswordHasherInterface $passwordHasher
+        protected readonly UserPasswordHasherInterface $passwordHasher,
     ) {
     }
 
@@ -31,10 +31,10 @@ class CreateUserCommandHandler implements CommandHandlerInterface
                 email: $command->dto->email,
                 password: $command->dto->password,
                 name: $command->dto->name,
-                surname: $command->dto->surname
+                surname: $command->dto->surname,
             );
             $user->setPassword(
-                $this->passwordHasher->hashPassword($user, $user->getPassword())
+                $this->passwordHasher->hashPassword($user, $user->getPassword()),
             );
             $this->userRepository->save($user, true);
         } catch (Throwable $throwable) {

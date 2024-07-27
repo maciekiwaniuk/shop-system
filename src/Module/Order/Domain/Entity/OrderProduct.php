@@ -42,7 +42,7 @@ class OrderProduct
         Order $order,
         Product $product,
         int $productQuantity,
-        float $productPricePerPiece
+        float $productPricePerPiece,
     ) {
         $this->order = $order;
         $this->product = $product;

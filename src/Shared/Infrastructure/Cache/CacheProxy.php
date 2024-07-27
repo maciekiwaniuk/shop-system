@@ -13,7 +13,7 @@ class CacheProxy
     public function __construct(
         protected readonly Redis $cache,
         protected readonly LoggerInterface $logger,
-        protected readonly string $prefix
+        protected readonly string $prefix,
     ) {
     }
 
@@ -69,7 +69,7 @@ class CacheProxy
         try {
             $this->cache->del(array_map(
                 fn($key) => $this->prefix . $key,
-                $keys
+                $keys,
             ));
             return true;
         } catch (Throwable $throwable) {

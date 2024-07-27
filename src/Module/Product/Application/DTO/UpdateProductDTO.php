@@ -19,8 +19,8 @@ class UpdateProductDTO extends AbstractDTO
             'min' => 2,
             'minMessage' => 'Name should be at least 2 characters long.',
             'max' => 100,
-            'maxMessage' => 'Name can be up to 100 characters long.'
-        ])
+            'maxMessage' => 'Name can be up to 100 characters long.',
+        ]),
     ])]
     #[Groups(['default'])]
     public readonly ?string $name;
@@ -28,15 +28,15 @@ class UpdateProductDTO extends AbstractDTO
     #[Sequentially([
         new NotBlank(['message' => 'Price cannot be blank.']),
         new Positive([
-            'message' => 'Price must be valid number.'
-        ])
+            'message' => 'Price must be valid number.',
+        ]),
     ])]
     #[Groups(['default'])]
     public readonly ?float $price;
 
     public function __construct(
         ?string $name,
-        ?float $price
+        ?float $price,
     ) {
         $this->name = $name;
         $this->price = $price;

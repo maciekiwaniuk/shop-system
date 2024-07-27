@@ -10,7 +10,7 @@ class GetPaginatedOrdersQuery implements QueryInterface
 {
     public function __construct(
         public readonly ?string $cursor,
-        public readonly int $limit
+        public readonly int $limit,
     ) {
     }
 }

@@ -46,9 +46,9 @@ class ProductsVoterTest extends AbstractUnitTestCase
                 args: [
                     ProductsVoter::GET_PAGINATED,
                     null,
-                    $this->token
-                ]
-            )
+                    $this->token,
+                ],
+            ),
         );
     }
 
@@ -65,9 +65,9 @@ class ProductsVoterTest extends AbstractUnitTestCase
                 args: [
                     ProductsVoter::CREATE,
                     null,
-                    $this->token
-                ]
-            )
+                    $this->token,
+                ],
+            ),
         );
     }
 
@@ -84,9 +84,9 @@ class ProductsVoterTest extends AbstractUnitTestCase
                 args: [
                     ProductsVoter::CREATE,
                     null,
-                    $this->token
-                ]
-            )
+                    $this->token,
+                ],
+            ),
         );
     }
 
@@ -103,9 +103,9 @@ class ProductsVoterTest extends AbstractUnitTestCase
                 args: [
                     ProductsVoter::SHOW,
                     null,
-                    $this->token
-                ]
-            )
+                    $this->token,
+                ],
+            ),
         );
     }
 
@@ -122,9 +122,9 @@ class ProductsVoterTest extends AbstractUnitTestCase
                 args: [
                     ProductsVoter::UPDATE,
                     null,
-                    $this->token
-                ]
-            )
+                    $this->token,
+                ],
+            ),
         );
     }
 
@@ -141,9 +141,9 @@ class ProductsVoterTest extends AbstractUnitTestCase
                 args: [
                     ProductsVoter::UPDATE,
                     null,
-                    $this->token
-                ]
-            )
+                    $this->token,
+                ],
+            ),
         );
     }
 
@@ -160,9 +160,9 @@ class ProductsVoterTest extends AbstractUnitTestCase
                 args: [
                     ProductsVoter::DELETE,
                     null,
-                    $this->token
-                ]
-            )
+                    $this->token,
+                ],
+            ),
         );
     }
 
@@ -179,9 +179,9 @@ class ProductsVoterTest extends AbstractUnitTestCase
                 args: [
                     ProductsVoter::DELETE,
                     null,
-                    $this->token
-                ]
-            )
+                    $this->token,
+                ],
+            ),
         );
     }
 }

@@ -41,8 +41,8 @@ class CreateUserCommandTest extends AbstractIntegrationTestCase
                 commandBus: $commandBus,
                 queryBus: $queryBus,
                 validator: $validator,
-                entityManager: $this->entityManager
-            )
+                entityManager: $this->entityManager,
+            ),
         );
     }
 
@@ -54,7 +54,7 @@ class CreateUserCommandTest extends AbstractIntegrationTestCase
             'email' => 'example@mail.pl',
             'password' => 'examplePassword',
             'name' => 'Maciek',
-            'surname' => 'Iwaniuk'
+            'surname' => 'Iwaniuk',
         ]);
 
         $commandTester->assertCommandIsSuccessful();
@@ -72,7 +72,7 @@ class CreateUserCommandTest extends AbstractIntegrationTestCase
             'password' => 'examplePassword',
             'name' => 'Maciek',
             'surname' => 'Iwaniuk',
-            'isAdmin' => '1'
+            'isAdmin' => '1',
         ]);
 
         $user = $this->userRepository->findUserByEmail('example@mail.pl');

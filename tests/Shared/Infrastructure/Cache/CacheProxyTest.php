@@ -39,14 +39,14 @@ class CacheProxyTest extends AbstractUnitTestCase
         $cacheProxy = new CacheProxy(
             $this->cache,
             $this->logger,
-            'examplePrefix.'
+            'examplePrefix.',
         );
 
         $exists = $cacheProxy->exists('key');
 
         $this->assertEquals(
             true,
-            $exists
+            $exists,
         );
     }
 
@@ -63,14 +63,14 @@ class CacheProxyTest extends AbstractUnitTestCase
         $cacheProxy = new CacheProxy(
             $this->cache,
             $this->logger,
-            'prefix.'
+            'prefix.',
         );
 
         $exists = $cacheProxy->exists('key');
 
         $this->assertEquals(
             false,
-            $exists
+            $exists,
         );
     }
 }

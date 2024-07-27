@@ -10,7 +10,7 @@ use App\Shared\Application\Command\CommandInterface;
 class CreateProductCommand implements CommandInterface
 {
     public function __construct(
-        public readonly CreateProductDTO $dto
+        public readonly CreateProductDTO $dto,
     ) {
     }
 }

@@ -30,7 +30,7 @@ class AbstractIntegrationTestCase extends KernelTestCase
 
         $schemaTool = new SchemaTool($this->entityManager);
         $schemaTool->updateSchema(
-            $this->entityManager->getMetadataFactory()->getAllMetadata()
+            $this->entityManager->getMetadataFactory()->getAllMetadata(),
         );
     }
 
@@ -51,7 +51,7 @@ class AbstractIntegrationTestCase extends KernelTestCase
         $cacheCreator = self::getContainer()->get(CacheCreator::class);
         $cache = $cacheCreator->create('');
         $cache->delByKeys(
-            $cache->keysByPrefix()
+            $cache->keysByPrefix(),
         );
     }
 }

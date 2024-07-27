@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AsCommand(
     name: 'app:create-user',
-    description: 'Create user'
+    description: 'Create user',
 )]
 final class CreateUserCommand extends Command
 {
@@ -30,7 +30,7 @@ final class CreateUserCommand extends Command
         protected readonly CommandBusInterface $commandBus,
         protected readonly QueryBusInterface $queryBus,
         protected readonly ValidatorInterface $validator,
-        protected readonly EntityManagerInterface $entityManager
+        protected readonly EntityManagerInterface $entityManager,
     ) {
         parent::__construct();
     }
@@ -52,13 +52,13 @@ final class CreateUserCommand extends Command
             email: $input->getArgument('email'),
             password: $input->getArgument('password'),
             name: $input->getArgument('name'),
-            surname: $input->getArgument('surname')
+            surname: $input->getArgument('surname'),
         );
 
         $errors = $this->validator->validate($dto);
         if (count($errors) > 0) {
             $output->writeln(
-                'There was a problem while creating user. Errors: ' . $this->validationErrorsToString($errors)
+                'There was a problem while creating user. Errors: ' . $this->validationErrorsToString($errors),
             );
             return Command::FAILURE;
         }

@@ -12,7 +12,7 @@ class CacheCreator
 {
     public function __construct(
         protected readonly LoggerInterface $logger,
-        protected readonly string $redisUrl
+        protected readonly string $redisUrl,
     ) {
     }
 
@@ -21,7 +21,7 @@ class CacheCreator
         return new CacheProxy(
             (new RedisAdapter(new Redis()))::createConnection($this->redisUrl),
             $this->logger,
-            $prefix
+            $prefix,
         );
     }
 }

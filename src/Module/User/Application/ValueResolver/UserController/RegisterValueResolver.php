@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class RegisterValueResolver implements ValueResolverInterface
 {
     public function __construct(
-        protected readonly ValidatorInterface $validator
+        protected readonly ValidatorInterface $validator,
     ) {
     }
 
@@ -30,7 +30,7 @@ class RegisterValueResolver implements ValueResolverInterface
             email: $data['email'] ?? null,
             password: $data['password'] ?? null,
             name: $data['name'] ?? null,
-            surname: $data['surname'] ?? null
+            surname: $data['surname'] ?? null,
         );
 
         $errors = $this->validator->validate($dto);

@@ -10,11 +10,11 @@ class ProductGenerator
 {
     public function generate(
         string $name = 'exampleName',
-        float $price = 41.33
+        float $price = 41.33,
     ): Product {
         return new Product(
             name: $name,
-            price: $price
+            price: $price,
         );
     }
 }

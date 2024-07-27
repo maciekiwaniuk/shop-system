@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Module\Order\Application\ValueResolver\OrdersController;
 
 use App\Shared\Application\DTO\PaginationUuidDTO;
@@ -13,7 +15,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class GetPaginatedOrdersValueResolver implements ValueResolverInterface
 {
     public function __construct(
-        protected readonly ValidatorInterface $validator
+        protected readonly ValidatorInterface $validator,
     ) {
     }
 
@@ -24,7 +26,7 @@ class GetPaginatedOrdersValueResolver implements ValueResolverInterface
     {
         $dto = new PaginationUuidDTO(
             cursor: $request->query->get('cursor') ?? null,
-            limit: $request->query->get('limit') ?? null
+            limit: $request->query->get('limit') ?? null,
         );
 
         $errors = $this->validator->validate($dto);

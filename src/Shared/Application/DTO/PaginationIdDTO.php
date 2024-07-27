@@ -14,22 +14,22 @@ class PaginationIdDTO extends AbstractDTO
     #[Sequentially([
         new NotBlank(['message' => 'Offset cannot be blank.']),
         new Positive([
-            'message' => 'Offset must be valid number.'
-        ])
+            'message' => 'Offset must be valid number.',
+        ]),
     ])]
     public readonly ?int $offset;
 
     #[Sequentially([
         new NotBlank(['message' => 'Limit cannot be blank.']),
         new Positive([
-            'message' => 'Limit must be valid number.'
-        ])
+            'message' => 'Limit must be valid number.',
+        ]),
     ])]
     public readonly ?int $limit;
 
     public function __construct(
         ?int $offset,
-        ?int $limit
+        ?int $limit,
     ) {
         $this->offset = $offset;
         $this->limit = $limit;

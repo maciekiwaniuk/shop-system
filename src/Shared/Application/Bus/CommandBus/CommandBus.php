@@ -15,7 +15,7 @@ class CommandBus implements CommandBusInterface
 {
     public function __construct(
         protected readonly MessageBusInterface $bus,
-        protected readonly LoggerInterface $logger
+        protected readonly LoggerInterface $logger,
     ) {
     }
 
@@ -38,7 +38,7 @@ class CommandBus implements CommandBusInterface
             $this->logger->error('Something went wrong while handling action in command bus');
             return new CommandResult(
                 success: false,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR,
             );
         }
 

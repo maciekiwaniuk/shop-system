@@ -16,7 +16,7 @@ use Symfony\Component\Uid\UuidV1;
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Index(
     columns: ['slug'],
-    name: 'product_search_idx'
+    name: 'product_search_idx',
 )]
 #[ORM\Table(name: '`product`')]
 class Product
@@ -53,7 +53,7 @@ class Product
 
     public function __construct(
         string $name,
-        float $price
+        float $price,
     ) {
         $this->name = $name;
         $this->slug = $this->generateSlug($name);
@@ -84,7 +84,7 @@ class Product
     private function generateSlug(string $name): string
     {
         return strtolower(
-            (new AsciiSlugger())->slug($name) . '-' . substr((string) Uuid::v1(), 0, 8)
+            (new AsciiSlugger())->slug($name) . '-' . substr((string) Uuid::v1(), 0, 8),
         );
     }
 

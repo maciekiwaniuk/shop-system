@@ -23,7 +23,7 @@ class UniqueFieldInEntity extends Constraint
         string $entityClassName,
         mixed $options = null,
         array $groups = null,
-        mixed $payload = null
+        mixed $payload = null,
     ) {
         parent::__construct($options, $groups, $payload);
 

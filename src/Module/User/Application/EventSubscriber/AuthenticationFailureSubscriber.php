@@ -24,7 +24,7 @@ class AuthenticationFailureSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Events::AUTHENTICATION_FAILURE => 'onAuthenticationFailure'
+            Events::AUTHENTICATION_FAILURE => 'onAuthenticationFailure',
         ];
     }
 }

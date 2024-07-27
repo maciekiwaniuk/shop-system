@@ -28,7 +28,7 @@ class QueryBusTest extends AbstractUnitTestCase
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->queryBus = new QueryBus(
             $this->bus,
-            $this->logger
+            $this->logger,
         );
     }
 
@@ -37,14 +37,14 @@ class QueryBusTest extends AbstractUnitTestCase
         $stamp = new HandledStamp(
             result: new QueryResult(
                 success: true,
-                statusCode: Response::HTTP_OK
+                statusCode: Response::HTTP_OK,
             ),
-            handlerName: 'handlerName'
+            handlerName: 'handlerName',
         );
 
         $envelope = new Envelope(
             message: $stamp,
-            stamps: [$stamp]
+            stamps: [$stamp],
         );
 
         $this->bus
@@ -54,7 +54,7 @@ class QueryBusTest extends AbstractUnitTestCase
 
         $queryResult = $this->queryBus->handle(
             new class implements QueryInterface {
-            }
+            },
         );
 
         $this->assertTrue($queryResult->success);
@@ -66,14 +66,14 @@ class QueryBusTest extends AbstractUnitTestCase
         $stamp = new HandledStamp(
             result: new QueryResult(
                 success: true,
-                statusCode: Response::HTTP_OK
+                statusCode: Response::HTTP_OK,
             ),
-            handlerName: 'exampleHandlerName'
+            handlerName: 'exampleHandlerName',
         );
 
         $envelope = new Envelope(
             message: $stamp,
-            stamps: [$stamp, $stamp]
+            stamps: [$stamp, $stamp],
         );
 
         $this->bus
@@ -83,7 +83,7 @@ class QueryBusTest extends AbstractUnitTestCase
 
         $queryResult = $this->queryBus->handle(
             new class implements QueryInterface {
-            }
+            },
         );
 
         $this->assertFalse($queryResult->success);
@@ -95,12 +95,12 @@ class QueryBusTest extends AbstractUnitTestCase
         $stamp = new HandledStamp(
             result: new class {
             },
-            handlerName: 'exampleHandlerName'
+            handlerName: 'exampleHandlerName',
         );
 
         $envelope = new Envelope(
             message: $stamp,
-            stamps: [$stamp]
+            stamps: [$stamp],
         );
 
         $this->bus
@@ -110,7 +110,7 @@ class QueryBusTest extends AbstractUnitTestCase
 
         $queryResult = $this->queryBus->handle(
             new class implements QueryInterface {
-            }
+            },
         );
 
         $this->assertFalse($queryResult->success);

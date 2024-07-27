@@ -15,14 +15,14 @@ class PaginationUuidDTO extends AbstractDTO
     #[Sequentially([
         new NotBlank(['message' => 'Limit cannot be blank.']),
         new Positive([
-            'message' => 'Limit must be valid number.'
-        ])
+            'message' => 'Limit must be valid number.',
+        ]),
     ])]
     public readonly ?int $limit;
 
     public function __construct(
         ?string $cursor,
-        ?int $limit
+        ?int $limit,
     ) {
         $this->cursor = $cursor;
         $this->limit = $limit;

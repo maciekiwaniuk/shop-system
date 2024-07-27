@@ -24,7 +24,7 @@ class CreateOrderCommandHandler implements CommandHandlerInterface
         protected readonly OrderRepository $orderRepository,
         protected readonly EntityManagerInterface $entityManager,
         protected readonly LoggerInterface $logger,
-        protected readonly TokenStorageInterface $tokenStorage
+        protected readonly TokenStorageInterface $tokenStorage,
     ) {
     }
 
@@ -34,13 +34,13 @@ class CreateOrderCommandHandler implements CommandHandlerInterface
         $user = $this->tokenStorage->getToken()->getUser();
         try {
             $order = new Order(
-                user: $user
+                user: $user,
             );
             foreach ($command->dto->products as $product) {
                 $order->createAndAddOrderProduct(
                     $this->entityManager->getReference(Product::class, $product['id']),
                     $product['quantity'],
-                    $product['pricePerPiece']
+                    $product['pricePerPiece'],
                 );
             }
             $this->orderRepository->save($order, true);

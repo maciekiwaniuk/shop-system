@@ -30,7 +30,7 @@ class CreateUserDTOTest extends AbstractIntegrationTestCase
             email: $this->exampleValidEmail,
             password: $this->exampleValidPassword,
             name: $this->exampleValidName,
-            surname: $this->exampleValidSurname
+            surname: $this->exampleValidSurname,
         );
 
         $errors = $this->validator->validate($dto);
@@ -54,7 +54,7 @@ class CreateUserDTOTest extends AbstractIntegrationTestCase
             email: $email,
             password: $this->exampleValidPassword,
             name: $this->exampleValidName,
-            surname: $this->exampleValidSurname
+            surname: $this->exampleValidSurname,
         );
 
         $errors = $this->validator->validate($dto);
@@ -78,7 +78,7 @@ class CreateUserDTOTest extends AbstractIntegrationTestCase
             email: $this->exampleValidEmail,
             password: $password,
             name: $this->exampleValidName,
-            surname: $this->exampleValidSurname
+            surname: $this->exampleValidSurname,
         );
 
         $errors = $this->validator->validate($dto);
@@ -102,7 +102,7 @@ class CreateUserDTOTest extends AbstractIntegrationTestCase
             email: $this->exampleValidEmail,
             password: $this->exampleValidPassword,
             name: $name,
-            surname: $this->exampleValidSurname
+            surname: $this->exampleValidSurname,
         );
 
         $errors = $this->validator->validate($dto);
@@ -126,7 +126,7 @@ class CreateUserDTOTest extends AbstractIntegrationTestCase
             email: $this->exampleValidEmail,
             password: $this->exampleValidPassword,
             name: $this->exampleValidName,
-            surname: $surname
+            surname: $surname,
         );
 
         $errors = $this->validator->validate($dto);
@@ -140,7 +140,7 @@ class CreateUserDTOTest extends AbstractIntegrationTestCase
             email: 'duplicated@email.com',
             password: $this->exampleValidPassword,
             name: $this->exampleValidName,
-            surname: $this->exampleValidSurname
+            surname: $this->exampleValidSurname,
         );
         $userRepository = self::getContainer()->get(UserRepositoryInterface::class);
         $userRepository->save($user, true);
@@ -149,7 +149,7 @@ class CreateUserDTOTest extends AbstractIntegrationTestCase
             email: $user->getEmail(),
             password: $this->exampleValidPassword,
             name: $this->exampleValidName,
-            surname: $this->exampleValidSurname
+            surname: $this->exampleValidSurname,
         );
 
         $errors = $this->validator->validate($dto);

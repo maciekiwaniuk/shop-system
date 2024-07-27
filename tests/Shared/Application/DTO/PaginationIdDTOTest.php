@@ -24,7 +24,7 @@ class PaginationIdDTOTest extends AbstractIntegrationTestCase
     {
         $dto = new PaginationIdDTO(
             offset: $this->exampleValidOffset,
-            limit: $this->exampleValidLimit
+            limit: $this->exampleValidLimit,
         );
 
         $errors = $this->validator->validate($dto);
@@ -45,7 +45,7 @@ class PaginationIdDTOTest extends AbstractIntegrationTestCase
     {
         $dto = new PaginationIdDTO(
             offset: $offset,
-            limit: $this->exampleValidLimit
+            limit: $this->exampleValidLimit,
         );
 
         $errors = $this->validator->validate($dto);
@@ -66,7 +66,7 @@ class PaginationIdDTOTest extends AbstractIntegrationTestCase
     {
         $dto = new PaginationIdDTO(
             offset: $this->exampleValidOffset,
-            limit: $limit
+            limit: $limit,
         );
 
         $errors = $this->validator->validate($dto);

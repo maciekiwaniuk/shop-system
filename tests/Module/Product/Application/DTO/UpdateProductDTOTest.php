@@ -24,7 +24,7 @@ class UpdateProductDTOTest extends AbstractIntegrationTestCase
     {
         $dto = new UpdateProductDTO(
             name: $this->exampleValidName,
-            price: $this->exampleValidPrice
+            price: $this->exampleValidPrice,
         );
 
         $errors = $this->validator->validate($dto);
@@ -39,7 +39,7 @@ class UpdateProductDTOTest extends AbstractIntegrationTestCase
     {
         $dto = new UpdateProductDTO(
             name: $name,
-            price: $this->exampleValidPrice
+            price: $this->exampleValidPrice,
         );
 
         $errors = $this->validator->validate($dto);
@@ -61,7 +61,7 @@ class UpdateProductDTOTest extends AbstractIntegrationTestCase
     {
         $dto = new UpdateProductDTO(
             name: $this->exampleValidName,
-            price: $price
+            price: $price,
         );
 
         $errors = $this->validator->validate($dto);

@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ChangeOrderStatusValueResolver implements ValueResolverInterface
 {
     public function __construct(
-        protected readonly ValidatorInterface $validator
+        protected readonly ValidatorInterface $validator,
     ) {
     }
 
@@ -28,7 +28,7 @@ class ChangeOrderStatusValueResolver implements ValueResolverInterface
         $data = $request->toArray();
 
         $dto = new ChangeOrderStatusDTO(
-            status: isset($data['status']) ? OrderStatus::from($data['status']) : null
+            status: isset($data['status']) ? OrderStatus::from($data['status']) : null,
         );
 
         $errors = $this->validator->validate($dto);

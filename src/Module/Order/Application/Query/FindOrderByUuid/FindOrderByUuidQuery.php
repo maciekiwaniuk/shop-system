@@ -9,7 +9,7 @@ use App\Shared\Application\Query\QueryInterface;
 class FindOrderByUuidQuery implements QueryInterface
 {
     public function __construct(
-        public readonly string $email
+        public readonly string $email,
     ) {
     }
 }

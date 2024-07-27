@@ -19,7 +19,7 @@ class GetPaginatedOrdersQueryHandler implements QueryHandlerInterface
     public function __construct(
         protected readonly OrderRepositoryInterface $orderRepository,
         protected readonly JsonSerializer $serializer,
-        protected readonly LoggerInterface $logger
+        protected readonly LoggerInterface $logger,
     ) {
     }
 
@@ -31,13 +31,13 @@ class GetPaginatedOrdersQueryHandler implements QueryHandlerInterface
             $this->logger->error($throwable->getMessage());
             return new QueryResult(
                 success: false,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR,
             );
         }
         return new QueryResult(
             success: true,
             statusCode: Response::HTTP_OK,
-            data: json_decode($this->serializer->serialize($orders), true)
+            data: json_decode($this->serializer->serialize($orders), true),
         );
     }
 }

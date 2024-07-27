@@ -25,7 +25,7 @@ class FindProductBySlugQueryHandler implements QueryHandlerInterface
         protected readonly ProductRepository $productRepository,
         protected readonly JsonSerializer $serializer,
         protected readonly LoggerInterface $logger,
-        CacheCreator $cacheCreator
+        CacheCreator $cacheCreator,
     ) {
         $this->cache = $cacheCreator->create('query.products.findProductBySlugQuery.');
     }
@@ -40,14 +40,14 @@ class FindProductBySlugQueryHandler implements QueryHandlerInterface
             if ($product === null) {
                 return new QueryResult(
                     success: false,
-                    statusCode: Response::HTTP_NOT_FOUND
+                    statusCode: Response::HTTP_NOT_FOUND,
                 );
             }
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return new QueryResult(
                 success: false,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR,
             );
         }
         return new QueryResult(
@@ -55,7 +55,7 @@ class FindProductBySlugQueryHandler implements QueryHandlerInterface
             statusCode: Response::HTTP_OK,
             data: $product instanceof Product
                 ? json_decode($this->serializer->serialize($product), true)
-                : json_decode($product, true)
+                : json_decode($product, true),
         );
     }
 

@@ -27,7 +27,7 @@ class UserController extends AbstractController
         protected readonly CommandBusInterface $commandBus,
         protected readonly QueryBusInterface $queryBus,
         protected readonly JWTTokenManagerInterface $JWTTokenManager,
-        protected readonly EntityManagerInterface $entityManager
+        protected readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -41,10 +41,10 @@ class UserController extends AbstractController
                 new OA\Property(
                     property: 'data',
                     properties: [new OA\Property(property: 'token', type: 'string')],
-                    type: 'object'
-                )
-            ]
-        )
+                    type: 'object',
+                ),
+            ],
+        ),
     )]
     #[OA\RequestBody(content: new Model(type: CreateUserDTO::class))]
     #[Route('/register', methods: [Request::METHOD_POST])]
@@ -53,7 +53,7 @@ class UserController extends AbstractController
         if ($dto->hasErrors()) {
             return $this->json([
                 'success' => false,
-                'errors' => $dto->getErrors()
+                'errors' => $dto->getErrors(),
             ], Response::HTTP_BAD_REQUEST);
         }
 
@@ -68,12 +68,12 @@ class UserController extends AbstractController
                 'success' => true,
                 'message' => 'Successfully registered.',
                 'data' => [
-                    'token' => $this->JWTTokenManager->create($user)
-                ]
+                    'token' => $this->JWTTokenManager->create($user),
+                ],
             ],
             default => [
                 'success' => false,
-                'message' => 'Something went wrong while registering.'
+                'message' => 'Something went wrong while registering.',
             ]
         };
         return $this->json($result, $commandResult->statusCode);

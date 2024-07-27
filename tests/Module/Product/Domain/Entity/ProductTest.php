@@ -14,7 +14,7 @@ class ProductTest extends AbstractUnitTestCase
     {
         $product = new Product(
             'exampleName',
-            3.21
+            3.21,
         );
 
         $this->assertEquals('exampleName', $product->getName());

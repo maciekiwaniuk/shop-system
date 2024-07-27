@@ -38,7 +38,7 @@ class ProductsArrayValidator extends ConstraintValidator
     {
         return !array_diff_key(
             array_flip(['id', 'quantity', 'pricePerPiece']),
-            $array
+            $array,
         );
     }
 }

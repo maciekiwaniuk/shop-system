@@ -31,8 +31,8 @@ class UserControllerTest extends AbstractApplicationTestCase
                 'email' => 'newUser@email.com',
                 'password' => 'superHardPassword',
                 'name' => 'John',
-                'surname' => 'Williams'
-            ])
+                'surname' => 'Williams',
+            ]),
         );
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
@@ -41,7 +41,7 @@ class UserControllerTest extends AbstractApplicationTestCase
         $this->assertNotNull($responseData['message']);
         $this->assertCount(
             $usersBeforeAction + 1,
-            $this->userRepository->findAll()
+            $this->userRepository->findAll(),
         );
     }
 }

@@ -40,14 +40,14 @@ class AbstractApplicationTestCase extends WebTestCase
 
         $schemaTool = new SchemaTool($this->entityManager);
         $schemaTool->updateSchema(
-            $this->entityManager->getMetadataFactory()->getAllMetadata()
+            $this->entityManager->getMetadataFactory()->getAllMetadata(),
         );
 
         $this->addFixture(
             className: AppFixtures::class,
             classesToInjectToFixture: [
-                UserPasswordHasherInterface::class
-            ]
+                UserPasswordHasherInterface::class,
+            ],
         );
     }
 
@@ -68,7 +68,7 @@ class AbstractApplicationTestCase extends WebTestCase
         $cacheCreator = self::getContainer()->get(CacheCreator::class);
         $cache = $cacheCreator->create('');
         $cache->delByKeys(
-            $cache->keysByPrefix()
+            $cache->keysByPrefix(),
         );
     }
 
@@ -80,12 +80,12 @@ class AbstractApplicationTestCase extends WebTestCase
     {
         $instancesOfClassesToInject = array_map(
             fn($class) => self::getContainer()->get($class),
-            $classesToInjectToFixture
+            $classesToInjectToFixture,
         );
 
         $loader = new Loader();
         $loader->addFixture(
-            new $className(...$instancesOfClassesToInject)
+            new $className(...$instancesOfClassesToInject),
         );
 
         $purger = new ORMPurger($this->entityManager);
@@ -108,11 +108,11 @@ class AbstractApplicationTestCase extends WebTestCase
                 email: 'example@email.com',
                 password: $unhashedPassword,
                 name: 'exampleName',
-                surname: 'exampleSurname'
+                surname: 'exampleSurname',
             );
         }
         $user->setPassword(
-            $passwordHasher->hashPassword($user, $unhashedPassword)
+            $passwordHasher->hashPassword($user, $unhashedPassword),
         );
         $userRepository = self::getContainer()->get(UserRepositoryInterface::class);
         $userRepository->save($user, true);
@@ -121,18 +121,18 @@ class AbstractApplicationTestCase extends WebTestCase
             method: 'POST',
             uri: '/api/v1/login',
             server: [
-                'CONTENT_TYPE' => 'application/json'
+                'CONTENT_TYPE' => 'application/json',
             ],
             content: json_encode([
                 'email' => $user->getEmail(),
                 'password' => $unhashedPassword,
-            ])
+            ]),
         );
         $data = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->client->setServerParameter(
             'HTTP_Authorization',
-            sprintf('Bearer %s', $data['data']['token'])
+            sprintf('Bearer %s', $data['data']['token']),
         );
         return $this->client;
     }
@@ -145,13 +145,13 @@ class AbstractApplicationTestCase extends WebTestCase
             email: 'example@email.com',
             password: $unhashedPassword,
             name: 'exampleName',
-            surname: 'exampleSurname'
+            surname: 'exampleSurname',
         );
         $admin->setPassword(
-            $passwordHasher->hashPassword($admin, $unhashedPassword)
+            $passwordHasher->hashPassword($admin, $unhashedPassword),
         );
         $admin->setRoles(
-            array_merge($admin->getRoles(), [UserRole::ADMIN->value])
+            array_merge($admin->getRoles(), [UserRole::ADMIN->value]),
         );
 
         $userRepository = self::getContainer()->get(UserRepositoryInterface::class);
@@ -161,18 +161,18 @@ class AbstractApplicationTestCase extends WebTestCase
             method: 'POST',
             uri: '/api/v1/login',
             server: [
-                'CONTENT_TYPE' => 'application/json'
+                'CONTENT_TYPE' => 'application/json',
             ],
             content: json_encode([
                 'email' => $admin->getEmail(),
                 'password' => $unhashedPassword,
-            ])
+            ]),
         );
         $data = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->client->setServerParameter(
             'HTTP_Authorization',
-            sprintf('Bearer %s', $data['data']['token'])
+            sprintf('Bearer %s', $data['data']['token']),
         );
         return $this->client;
     }

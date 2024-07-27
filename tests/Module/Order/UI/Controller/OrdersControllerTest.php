@@ -43,8 +43,8 @@ class OrdersControllerTest extends AbstractApplicationTestCase
             method: Request::METHOD_GET,
             uri: $this->url . '/get-paginated',
             parameters: [
-                'limit' => 10
-            ]
+                'limit' => 10,
+            ],
         );
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
@@ -64,8 +64,8 @@ class OrdersControllerTest extends AbstractApplicationTestCase
             uri: $this->url . '/get-paginated',
             parameters: [
                 'cursor' => $firstOrder->getId(),
-                'limit' => 10
-            ]
+                'limit' => 10,
+            ],
         );
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
@@ -81,7 +81,7 @@ class OrdersControllerTest extends AbstractApplicationTestCase
         $product = (new ProductGenerator())->generate();
         $order = (new OrderGenerator())->generate(
             user: $user,
-            products: new ArrayCollection([$product])
+            products: new ArrayCollection([$product]),
         );
 
         $client = $this->getUserClient($user);
@@ -90,7 +90,7 @@ class OrdersControllerTest extends AbstractApplicationTestCase
 
         $client->request(
             method: Request::METHOD_GET,
-            uri: $this->url . '/show/' . $order->getId()
+            uri: $this->url . '/show/' . $order->getId(),
         );
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
@@ -100,9 +100,9 @@ class OrdersControllerTest extends AbstractApplicationTestCase
             $order->getCreatedAt()->setTime(
                 (int) $order->getCreatedAt()->format('H'),
                 (int) $order->getCreatedAt()->format('i'),
-                (int) $order->getCreatedAt()->format('s')
+                (int) $order->getCreatedAt()->format('s'),
             ),
-            new DateTimeImmutable($responseData['data']['createdAt'])
+            new DateTimeImmutable($responseData['data']['createdAt']),
         );
     }
 
@@ -114,7 +114,7 @@ class OrdersControllerTest extends AbstractApplicationTestCase
         $client = $this->getAdminClient();
         $client->request(
             method: Request::METHOD_GET,
-            uri: $this->url . '/show/' . $order->getId()
+            uri: $this->url . '/show/' . $order->getId(),
         );
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
@@ -124,9 +124,9 @@ class OrdersControllerTest extends AbstractApplicationTestCase
             $order->getCreatedAt()->setTime(
                 (int) $order->getCreatedAt()->format('H'),
                 (int) $order->getCreatedAt()->format('i'),
-                (int) $order->getCreatedAt()->format('s')
+                (int) $order->getCreatedAt()->format('s'),
             ),
-            new DateTimeImmutable($responseData['data']['createdAt'])
+            new DateTimeImmutable($responseData['data']['createdAt']),
         );
     }
 
@@ -145,10 +145,10 @@ class OrdersControllerTest extends AbstractApplicationTestCase
                     [
                         'id' => $product->getId(),
                         'quantity' => 4,
-                        'pricePerPiece' => 3.43
-                    ]
-                ]
-            ])
+                        'pricePerPiece' => 3.43,
+                    ],
+                ],
+            ]),
         );
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
@@ -156,7 +156,7 @@ class OrdersControllerTest extends AbstractApplicationTestCase
         $this->assertTrue($responseData['success']);
         $this->assertCount(
             $ordersCountBeforeAction + 1,
-            $this->orderRepository->getPaginatedByUuid()
+            $this->orderRepository->getPaginatedByUuid(),
         );
     }
 
@@ -167,7 +167,7 @@ class OrdersControllerTest extends AbstractApplicationTestCase
         $product = (new ProductGenerator())->generate();
         $order = (new OrderGenerator())->generate(
             user: $user,
-            products: new ArrayCollection([$product])
+            products: new ArrayCollection([$product]),
         );
         $statusBeforeAction = $order->getCurrentStatus();
 
@@ -179,8 +179,8 @@ class OrdersControllerTest extends AbstractApplicationTestCase
             method: Request::METHOD_POST,
             uri: $this->url . '/change-status/' . $order->getId(),
             content: json_encode([
-                'status' => OrderStatus::IN_DELIVERY->value
-            ])
+                'status' => OrderStatus::IN_DELIVERY->value,
+            ]),
         );
         $responseData = json_decode($client->getResponse()->getContent(), true);
 

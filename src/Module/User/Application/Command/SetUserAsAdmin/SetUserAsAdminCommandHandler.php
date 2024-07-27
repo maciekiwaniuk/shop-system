@@ -19,7 +19,7 @@ class SetUserAsAdminCommandHandler implements CommandInterface
 {
     public function __construct(
         protected readonly EntityManagerInterface $entityManager,
-        protected readonly LoggerInterface $logger
+        protected readonly LoggerInterface $logger,
     ) {
     }
 
@@ -28,7 +28,7 @@ class SetUserAsAdminCommandHandler implements CommandInterface
         try {
             $user = $this->entityManager->getReference(User::class, $command->user->getId());
             $user->setRoles(
-                array_merge($command->user->getRoles(), [UserRole::ADMIN->value])
+                array_merge($command->user->getRoles(), [UserRole::ADMIN->value]),
             );
             $this->entityManager->flush();
         } catch (Throwable $throwable) {

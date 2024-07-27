@@ -18,7 +18,7 @@ class AuthenticationSuccessSubscriber implements EventSubscriberInterface
     protected Request $request;
 
     public function __construct(
-        protected readonly UserRepository $userRepository
+        protected readonly UserRepository $userRepository,
     ) {
     }
 
@@ -42,9 +42,9 @@ class AuthenticationSuccessSubscriber implements EventSubscriberInterface
             [
                 'success' => true,
                 'data' => [
-                    'token' => $event->getData()['token']
-                ]
-            ]
+                    'token' => $event->getData()['token'],
+                ],
+            ],
         );
     }
 

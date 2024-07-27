@@ -14,14 +14,14 @@ use Throwable;
 
 #[AsCommand(
     name: 'app:clear-cache',
-    description: 'Clear cache'
+    description: 'Clear cache',
 )]
 final class ClearCacheCommand extends Command
 {
     protected readonly CacheProxy $cache;
 
     public function __construct(
-        CacheCreator $cacheCreator
+        CacheCreator $cacheCreator,
     ) {
         parent::__construct();
         $this->cache = $cacheCreator->create('');
@@ -36,7 +36,7 @@ final class ClearCacheCommand extends Command
     {
         try {
             $this->cache->delByKeys(
-                $this->cache->keysByPrefix()
+                $this->cache->keysByPrefix(),
             );
             $output->writeln('Successfully cleared cache.');
             return Command::SUCCESS;
@@ -44,8 +44,8 @@ final class ClearCacheCommand extends Command
             $output->writeln(
                 sprintf(
                     'There was a technical problem while clearing cache. Error: %s',
-                    $throwable->getMessage()
-                )
+                    $throwable->getMessage(),
+                ),
             );
         }
         return Command::FAILURE;

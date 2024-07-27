@@ -24,16 +24,16 @@ class JsonSerializer
         $dateTimeNormalizer
             ->setDefaultContext([
                 DateTimeNormalizer::FORMAT_KEY => 'Y-m-d H:i:s',
-                DateTimeNormalizer::TIMEZONE_KEY => null
+                DateTimeNormalizer::TIMEZONE_KEY => null,
             ]);
 
         $objectNormalizer = new ObjectNormalizer(
-            new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()))
+            new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader())),
         );
 
         $this->serializer = new Serializer(
             [$dateTimeNormalizer, $objectNormalizer],
-            [new JsonEncoder()]
+            [new JsonEncoder()],
         );
     }
 
@@ -42,7 +42,7 @@ class JsonSerializer
      */
     public function serialize(
         mixed $data,
-        array $context = ['groups' => ['default']]
+        array $context = ['groups' => ['default']],
     ): string {
         return $this->serializer->serialize($data, 'json', $context);
     }
@@ -53,7 +53,7 @@ class JsonSerializer
     public function deserialize(
         mixed $data,
         string $type,
-        array $context = ['groups' => ['default']]
+        array $context = ['groups' => ['default']],
     ): mixed {
         return $this->serializer->deserialize($data, $type, 'json', $context);
     }

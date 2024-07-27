@@ -31,7 +31,7 @@ class OrdersController extends AbstractController
     public function __construct(
         protected readonly CommandBusInterface $commandBus,
         protected readonly QueryBusInterface $queryBus,
-        protected readonly EntityManagerInterface $entityManager
+        protected readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -44,20 +44,20 @@ class OrdersController extends AbstractController
                 new OA\Property(
                     property: 'data',
                     type: 'array',
-                    items: new OA\Items(ref: new Model(type: Order::class, groups: ['default']))
-                )
-            ]
-        )
+                    items: new OA\Items(ref: new Model(type: Order::class, groups: ['default'])),
+                ),
+            ],
+        ),
     )]
     #[OA\Parameter(
         name: 'cursor',
         description: 'Set cursor (UUID) for pagination',
-        schema: new OA\Schema(type: 'string')
+        schema: new OA\Schema(type: 'string'),
     )]
     #[OA\Parameter(
         name: 'limit',
         description: 'Set limit for pagination',
-        schema: new OA\Schema(type: 'int')
+        schema: new OA\Schema(type: 'int'),
     )]
     #[Route('/get-paginated', methods: [Request::METHOD_GET])]
     #[IsGranted(OrdersVoter::GET_PAGINATED)]
@@ -66,7 +66,7 @@ class OrdersController extends AbstractController
         if ($dto->hasErrors()) {
             return $this->json([
                 'success' => false,
-                'errors' => $dto->getErrors()
+                'errors' => $dto->getErrors(),
             ], Response::HTTP_BAD_REQUEST);
         }
 
@@ -75,11 +75,11 @@ class OrdersController extends AbstractController
         $result = match (true) {
             $queryResult->success => [
                 'success' => true,
-                'data' => $queryResult->data
+                'data' => $queryResult->data,
             ],
             default => [
                 'success' => false,
-                'message' => 'Something went wrong while getting paginated orders.'
+                'message' => 'Something went wrong while getting paginated orders.',
             ]
         };
         return $this->json($result, $queryResult->statusCode);
@@ -94,10 +94,10 @@ class OrdersController extends AbstractController
                 new OA\Property(
                     property: 'data',
                     ref: new Model(type: Order::class, groups: ['default']),
-                    type: 'object'
+                    type: 'object',
                 ),
-            ]
-        )
+            ],
+        ),
     )]
     #[Route('/show/{uuid}', methods: [Request::METHOD_GET])]
     public function show(string $uuid): Response
@@ -112,11 +112,11 @@ class OrdersController extends AbstractController
         $result = match (true) {
             $queryResult->success => [
                 'success' => true,
-                'data' => $queryResult->data
+                'data' => $queryResult->data,
             ],
             default => [
                 'success' => false,
-                'message' => 'Something went wrong while showing order.'
+                'message' => 'Something went wrong while showing order.',
             ]
         };
         return $this->json($result, $queryResult->statusCode);
@@ -129,8 +129,8 @@ class OrdersController extends AbstractController
             properties: [
                 new OA\Property(property: 'success', type: 'bool'),
                 new OA\Property(property: 'message', type: 'string'),
-            ]
-        )
+            ],
+        ),
     )]
     #[OA\RequestBody(content: new Model(type: CreateOrderDTO::class, groups: ['default']))]
     #[Route('/create', methods: [Request::METHOD_POST])]
@@ -140,7 +140,7 @@ class OrdersController extends AbstractController
         if ($dto->hasErrors()) {
             return $this->json([
                 'success' => false,
-                'errors' => $dto->getErrors()
+                'errors' => $dto->getErrors(),
             ], Response::HTTP_BAD_REQUEST);
         }
 
@@ -149,11 +149,11 @@ class OrdersController extends AbstractController
         $result = match (true) {
             $commandResult->success => [
                 'success' => true,
-                'message' => 'Successfully created order.'
+                'message' => 'Successfully created order.',
             ],
             default => [
                 'success' => false,
-                'message' => 'Something went wrong while creating order.'
+                'message' => 'Something went wrong while creating order.',
             ]
         };
         return $this->json($result, $commandResult->statusCode);
@@ -163,12 +163,12 @@ class OrdersController extends AbstractController
     #[IsGranted(OrdersVoter::UPDATE_STATUS)]
     public function changeStatus(
         #[ValueResolver('change_order_status_dto')] ChangeOrderStatusDTO $dto,
-        string $uuid
+        string $uuid,
     ): Response {
         if ($dto->hasErrors()) {
             return $this->json([
                 'success' => false,
-                'errors' => $dto->getErrors()
+                'errors' => $dto->getErrors(),
             ], Response::HTTP_BAD_REQUEST);
         }
 
@@ -177,11 +177,11 @@ class OrdersController extends AbstractController
         $result = match (true) {
             $commandResult->success => [
                 'success' => true,
-                'message' => 'Successfully updated status of order.'
+                'message' => 'Successfully updated status of order.',
             ],
             default => [
                 'success' => false,
-                'message' => 'Something went wrong while updating status of order.'
+                'message' => 'Something went wrong while updating status of order.',
             ]
         };
         return $this->json($result, $commandResult->statusCode);

@@ -22,9 +22,9 @@ class CreateUserDTO extends AbstractDTO
             'min' => 2,
             'minMessage' => 'Email should be at least 2 characters long.',
             'max' => 100,
-            'maxMessage' => 'Email can be up to 100 characters long.'
+            'maxMessage' => 'Email can be up to 100 characters long.',
         ]),
-        new UniqueFieldInEntity(field: 'email', entityClassName: User::class)
+        new UniqueFieldInEntity(field: 'email', entityClassName: User::class),
     ])]
     #[Groups(['default'])]
     public readonly ?string $email;
@@ -35,8 +35,8 @@ class CreateUserDTO extends AbstractDTO
             'min' => 2,
             'minMessage' => 'Name should be at least 2 characters long.',
             'max' => 100,
-            'maxMessage' => 'Name can be up to 100 characters long.'
-        ])
+            'maxMessage' => 'Name can be up to 100 characters long.',
+        ]),
     ])]
     #[Groups(['default'])]
     public readonly ?string $name;
@@ -47,8 +47,8 @@ class CreateUserDTO extends AbstractDTO
             'min' => 2,
             'minMessage' => 'Password should be at least 2 characters long.',
             'max' => 100,
-            'maxMessage' => 'Password can be up to 100 characters long.'
-        ])
+            'maxMessage' => 'Password can be up to 100 characters long.',
+        ]),
     ])]
     #[Groups(['default'])]
     public readonly ?string $password;
@@ -59,8 +59,8 @@ class CreateUserDTO extends AbstractDTO
             'min' => 2,
             'minMessage' => 'Surname should be at least 2 characters long.',
             'max' => 100,
-            'maxMessage' => 'Surname can be up to 100 characters long.'
-        ])
+            'maxMessage' => 'Surname can be up to 100 characters long.',
+        ]),
     ])]
     #[Groups(['default'])]
     public readonly ?string $surname;
@@ -69,7 +69,7 @@ class CreateUserDTO extends AbstractDTO
         ?string $email,
         ?string $password,
         ?string $name,
-        ?string $surname
+        ?string $surname,
     ) {
         $this->email = $email;
         $this->password = $password;

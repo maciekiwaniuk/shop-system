@@ -24,7 +24,7 @@ class PaginationUuidDTOTest extends AbstractIntegrationTestCase
     {
         $dto = new PaginationUuidDTO(
             cursor: $this->exampleValidCursor,
-            limit: $this->exampleValidLimit
+            limit: $this->exampleValidLimit,
         );
 
         $errors = $this->validator->validate($dto);
@@ -45,7 +45,7 @@ class PaginationUuidDTOTest extends AbstractIntegrationTestCase
     {
         $dto = new PaginationUuidDTO(
             cursor: $this->exampleValidCursor,
-            limit: $limit
+            limit: $limit,
         );
 
         $errors = $this->validator->validate($dto);

@@ -18,7 +18,7 @@ class CreateProductCommandHandler implements CommandHandlerInterface
 {
     public function __construct(
         protected readonly ProductRepository $productRepository,
-        protected readonly LoggerInterface $logger
+        protected readonly LoggerInterface $logger,
     ) {
     }
 
@@ -27,7 +27,7 @@ class CreateProductCommandHandler implements CommandHandlerInterface
         try {
             $product = new Product(
                 name: $command->dto->name,
-                price: $command->dto->price
+                price: $command->dto->price,
             );
             $this->productRepository->save($product, true);
         } catch (Throwable $throwable) {

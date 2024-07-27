@@ -22,7 +22,7 @@ class DeleteProductCommandHandler implements CommandHandlerInterface
     public function __construct(
         protected readonly ProductRepository $productRepository,
         protected readonly LoggerInterface $logger,
-        CacheCreator $cacheCreator
+        CacheCreator $cacheCreator,
     ) {
         $this->cache = $cacheCreator->create('query.products.findProductBySlugQuery.');
     }

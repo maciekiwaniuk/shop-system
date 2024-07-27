@@ -21,7 +21,7 @@ class ChangeOrderStatusCommandHandler implements CommandHandlerInterface
     public function __construct(
         protected readonly OrderStatusUpdateRepositoryInterface $orderStatusUpdateRepository,
         protected readonly EntityManagerInterface $entityManager,
-        protected readonly LoggerInterface $logger
+        protected readonly LoggerInterface $logger,
     ) {
     }
 
@@ -30,7 +30,7 @@ class ChangeOrderStatusCommandHandler implements CommandHandlerInterface
         try {
             $changeOrderStatus = new OrderStatusUpdate(
                 order: $this->entityManager->getReference(Order::class, $command->uuid),
-                status: $command->dto->status
+                status: $command->dto->status,
             );
             $this->orderStatusUpdateRepository->save($changeOrderStatus, true);
         } catch (Throwable $throwable) {

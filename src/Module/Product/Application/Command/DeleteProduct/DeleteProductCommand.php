@@ -10,7 +10,7 @@ use App\Shared\Application\Command\CommandInterface;
 class DeleteProductCommand implements CommandInterface
 {
     public function __construct(
-        public readonly Product $product
+        public readonly Product $product,
     ) {
     }
 }

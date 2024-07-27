@@ -47,9 +47,9 @@ class OrdersVoterTest extends AbstractUnitTestCase
                 args: [
                     OrdersVoter::GET_PAGINATED,
                     null,
-                    $this->token
-                ]
-            )
+                    $this->token,
+                ],
+            ),
         );
     }
 
@@ -66,9 +66,9 @@ class OrdersVoterTest extends AbstractUnitTestCase
                 args: [
                     OrdersVoter::GET_PAGINATED,
                     null,
-                    $this->token
-                ]
-            )
+                    $this->token,
+                ],
+            ),
         );
     }
 
@@ -90,9 +90,9 @@ class OrdersVoterTest extends AbstractUnitTestCase
                 args: [
                     OrdersVoter::SHOW,
                     $order,
-                    $this->token
-                ]
-            )
+                    $this->token,
+                ],
+            ),
         );
     }
 
@@ -114,9 +114,9 @@ class OrdersVoterTest extends AbstractUnitTestCase
                 args: [
                     OrdersVoter::SHOW,
                     $order,
-                    $this->token
-                ]
-            )
+                    $this->token,
+                ],
+            ),
         );
     }
 
@@ -138,9 +138,9 @@ class OrdersVoterTest extends AbstractUnitTestCase
                 args: [
                     OrdersVoter::SHOW,
                     $order,
-                    $this->token
-                ]
-            )
+                    $this->token,
+                ],
+            ),
         );
     }
 
@@ -157,9 +157,9 @@ class OrdersVoterTest extends AbstractUnitTestCase
                 args: [
                     OrdersVoter::CREATE,
                     null,
-                    $this->token
-                ]
-            )
+                    $this->token,
+                ],
+            ),
         );
     }
 
@@ -181,9 +181,9 @@ class OrdersVoterTest extends AbstractUnitTestCase
                 args: [
                     OrdersVoter::UPDATE_STATUS,
                     $order,
-                    $this->token
-                ]
-            )
+                    $this->token,
+                ],
+            ),
         );
     }
 
@@ -205,9 +205,9 @@ class OrdersVoterTest extends AbstractUnitTestCase
                 args: [
                     OrdersVoter::UPDATE_STATUS,
                     $order,
-                    $this->token
-                ]
-            )
+                    $this->token,
+                ],
+            ),
         );
     }
 }

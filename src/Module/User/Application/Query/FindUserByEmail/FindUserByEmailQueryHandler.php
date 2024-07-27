@@ -19,7 +19,7 @@ class FindUserByEmailQueryHandler implements QueryHandlerInterface
     public function __construct(
         protected readonly UserRepositoryInterface $userRepository,
         protected readonly JsonSerializer $serializer,
-        protected readonly LoggerInterface $logger
+        protected readonly LoggerInterface $logger,
     ) {
     }
 
@@ -30,20 +30,20 @@ class FindUserByEmailQueryHandler implements QueryHandlerInterface
             if ($user === null) {
                 return new QueryResult(
                     success: false,
-                    statusCode: Response::HTTP_NOT_FOUND
+                    statusCode: Response::HTTP_NOT_FOUND,
                 );
             }
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return new QueryResult(
                 success: false,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR
+                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR,
             );
         }
         return new QueryResult(
             success: true,
             statusCode: Response::HTTP_OK,
-            data: json_decode($this->serializer->serialize($user), true)
+            data: json_decode($this->serializer->serialize($user), true),
         );
     }
 }

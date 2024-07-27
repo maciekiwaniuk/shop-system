@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class UpdateProductValueResolver implements ValueResolverInterface
 {
     public function __construct(
-        protected readonly ValidatorInterface $validator
+        protected readonly ValidatorInterface $validator,
     ) {
     }
 
@@ -28,7 +28,7 @@ class UpdateProductValueResolver implements ValueResolverInterface
 
         $dto = new UpdateProductDTO(
             name: $data['name'] ?? null,
-            price: $data['price'] ? (float) $data['price'] : null
+            price: $data['price'] ? (float) $data['price'] : null,
         );
 
         $errors = $this->validator->validate($dto);

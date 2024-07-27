@@ -30,8 +30,8 @@ class ProductsControllerTest extends AbstractApplicationTestCase
             uri: $this->url . '/get-paginated',
             parameters: [
                 'offset' => 1,
-                'limit' => 10
-            ]
+                'limit' => 10,
+            ],
         );
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
@@ -51,8 +51,8 @@ class ProductsControllerTest extends AbstractApplicationTestCase
             uri: $this->url . '/create',
             content: json_encode([
                 'name' => 'exampleProductName',
-                'price' => 1999.99
-            ])
+                'price' => 1999.99,
+            ]),
         );
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
@@ -60,7 +60,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         $this->assertTrue($responseData['success']);
         $this->assertCount(
             $productsCountBeforeAction + 1,
-            $this->productRepository->getPaginatedById()
+            $this->productRepository->getPaginatedById(),
         );
     }
 
@@ -72,7 +72,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         $client = $this->getUserClient();
         $client->request(
             method: Request::METHOD_GET,
-            uri: $this->url . '/show/' . $product->getSlug()
+            uri: $this->url . '/show/' . $product->getSlug(),
         );
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
@@ -92,8 +92,8 @@ class ProductsControllerTest extends AbstractApplicationTestCase
             uri: $this->url . '/update/' . $product->getId(),
             content: json_encode([
                 'name' => 'newExampleName',
-                'price' => 102.00
-            ])
+                'price' => 102.00,
+            ]),
         );
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
@@ -113,7 +113,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         $client = $this->getAdminClient();
         $client->request(
             method: Request::METHOD_DELETE,
-            uri: $this->url . '/delete/' . $product->getId()
+            uri: $this->url . '/delete/' . $product->getId(),
         );
         $responseData = json_decode($client->getResponse()->getContent(), true);
 

@@ -12,7 +12,7 @@ class UpdateProductCommand implements CommandInterface
 {
     public function __construct(
         public readonly Product $product,
-        public readonly UpdateProductDTO $dto
+        public readonly UpdateProductDTO $dto,
     ) {
     }
 }

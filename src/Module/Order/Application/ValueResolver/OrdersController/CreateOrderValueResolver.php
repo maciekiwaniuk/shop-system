@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class CreateOrderValueResolver implements ValueResolverInterface
 {
     public function __construct(
-        protected readonly ValidatorInterface $validator
+        protected readonly ValidatorInterface $validator,
     ) {
     }
 
@@ -27,7 +27,7 @@ class CreateOrderValueResolver implements ValueResolverInterface
         $data = $request->toArray();
 
         $dto = new CreateOrderDTO(
-            products: $data['products'] ?? null
+            products: $data['products'] ?? null,
         );
 
         $errors = $this->validator->validate($dto);

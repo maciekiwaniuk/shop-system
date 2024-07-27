@@ -24,8 +24,8 @@ class ClearCacheCommandTest extends AbstractIntegrationTestCase
         $application = new Application();
         $application->add(
             new ClearCacheCommand(
-                cacheCreator: $cacheCreator
-            )
+                cacheCreator: $cacheCreator,
+            ),
         );
 
         $command = $application->find('app:clear-cache');

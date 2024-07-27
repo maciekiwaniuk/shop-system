@@ -10,7 +10,7 @@ use App\Shared\Application\Command\CommandInterface;
 class CreateUserCommand implements CommandInterface
 {
     public function __construct(
-        public readonly CreateUserDTO $dto
+        public readonly CreateUserDTO $dto,
     ) {
     }
 }

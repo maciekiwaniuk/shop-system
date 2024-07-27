@@ -18,7 +18,7 @@ class CreateOrderDTO extends AbstractDTO
      */
     #[Sequentially([
         new NotBlank(['message' => 'Order must have products.']),
-        new ProductsArray()
+        new ProductsArray(),
     ])]
     #[OA\Property(
         type: 'array',
@@ -26,10 +26,10 @@ class CreateOrderDTO extends AbstractDTO
             properties: [
                 new OA\Property(property: 'id'),
                 new OA\Property(property: 'quantity'),
-                new OA\Property(property: 'pricePerPiece')
+                new OA\Property(property: 'pricePerPiece'),
             ],
-            type: 'object'
-        )
+            type: 'object',
+        ),
     )]
     #[Groups(['default'])]
     public readonly ?array $products;
@@ -38,7 +38,7 @@ class CreateOrderDTO extends AbstractDTO
      * @param array<array{id: int, quantity: int, pricePerPiece: float}>|null $products
      */
     public function __construct(
-        ?array $products
+        ?array $products,
     ) {
         $this->products = $products;
     }

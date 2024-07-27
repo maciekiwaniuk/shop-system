@@ -33,7 +33,7 @@ class ProductsController extends AbstractController
     public function __construct(
         protected readonly CommandBusInterface $commandBus,
         protected readonly QueryBusInterface $queryBus,
-        protected readonly EntityManagerInterface $entityManager
+        protected readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -46,20 +46,20 @@ class ProductsController extends AbstractController
                 new OA\Property(
                     property: 'data',
                     type: 'array',
-                    items: new OA\Items(ref: new Model(type: Product::class, groups: ['default']))
-                )
-            ]
-        )
+                    items: new OA\Items(ref: new Model(type: Product::class, groups: ['default'])),
+                ),
+            ],
+        ),
     )]
     #[OA\Parameter(
         name: 'offset',
         description: 'Set offset (ID) for pagination',
-        schema: new OA\Schema(type: 'int')
+        schema: new OA\Schema(type: 'int'),
     )]
     #[OA\Parameter(
         name: 'limit',
         description: 'Set limit for pagination',
-        schema: new OA\Schema(type: 'int')
+        schema: new OA\Schema(type: 'int'),
     )]
     #[Route('/get-paginated', methods: [Request::METHOD_GET])]
     #[IsGranted(ProductsVoter::GET_PAGINATED)]
@@ -68,7 +68,7 @@ class ProductsController extends AbstractController
         if ($dto->hasErrors()) {
             return $this->json([
                 'success' => false,
-                'errors' => $dto->getErrors()
+                'errors' => $dto->getErrors(),
             ], Response::HTTP_BAD_REQUEST);
         }
 
@@ -77,11 +77,11 @@ class ProductsController extends AbstractController
         $result = match (true) {
             $queryResult->success => [
                 'success' => true,
-                'data' => $queryResult->data
+                'data' => $queryResult->data,
             ],
             default => [
                 'success' => false,
-                'message' => 'Something went wrong while getting paginated products.'
+                'message' => 'Something went wrong while getting paginated products.',
             ]
         };
         return $this->json($result, $queryResult->statusCode);
@@ -94,8 +94,8 @@ class ProductsController extends AbstractController
             properties: [
                 new OA\Property(property: 'success', type: 'bool'),
                 new OA\Property(property: 'message', type: 'string'),
-            ]
-        )
+            ],
+        ),
     )]
     #[OA\RequestBody(content: new Model(type: CreateProductDTO::class, groups: ['default']))]
     #[Route('/create', methods: [Request::METHOD_POST])]
@@ -105,7 +105,7 @@ class ProductsController extends AbstractController
         if ($dto->hasErrors()) {
             return $this->json([
                 'success' => false,
-                'errors' => $dto->getErrors()
+                'errors' => $dto->getErrors(),
             ], Response::HTTP_BAD_REQUEST);
         }
 
@@ -114,11 +114,11 @@ class ProductsController extends AbstractController
         $result = match (true) {
             $commandResult->success => [
                 'success' => true,
-                'message' => 'Successfully created product.'
+                'message' => 'Successfully created product.',
             ],
             default => [
                 'success' => false,
-                'message' => 'Something went wrong while creating product.'
+                'message' => 'Something went wrong while creating product.',
             ]
         };
         return $this->json($result, $commandResult->statusCode);
@@ -133,10 +133,10 @@ class ProductsController extends AbstractController
                 new OA\Property(
                     property: 'data',
                     ref: new Model(type: Product::class, groups: ['default']),
-                    type: 'object'
+                    type: 'object',
                 ),
-            ]
-        )
+            ],
+        ),
     )]
     #[Route('/show/{slug}', methods: [Request::METHOD_GET])]
     #[IsGranted(ProductsVoter::SHOW)]
@@ -147,11 +147,11 @@ class ProductsController extends AbstractController
         $result = match (true) {
             $queryResult->success => [
                 'success' => true,
-                'data' => $queryResult->data
+                'data' => $queryResult->data,
             ],
             default => [
                 'success' => false,
-                'message' => 'Something went wrong while showing product.'
+                'message' => 'Something went wrong while showing product.',
             ]
         };
         return $this->json($result, $queryResult->statusCode);
@@ -164,20 +164,20 @@ class ProductsController extends AbstractController
             properties: [
                 new OA\Property(property: 'success', type: 'bool'),
                 new OA\Property(property: 'message', type: 'string'),
-            ]
-        )
+            ],
+        ),
     )]
     #[OA\RequestBody(content: new Model(type: UpdateProductDTO::class, groups: ['default']))]
     #[Route('/update/{id}', methods: [Request::METHOD_PUT])]
     #[IsGranted(ProductsVoter::UPDATE)]
     public function update(
         #[ValueResolver('update_product_dto')] UpdateProductDTO $dto,
-        int $id
+        int $id,
     ): Response {
         if ($dto->hasErrors()) {
             return $this->json([
                 'success' => false,
-                'errors' => $dto->getErrors()
+                'errors' => $dto->getErrors(),
             ], Response::HTTP_BAD_REQUEST);
         }
 
@@ -190,15 +190,15 @@ class ProductsController extends AbstractController
         $result = match (true) {
             $queryResult->data === null => [
                 'success' => false,
-                'message' => 'Update failed. Could not find product with given id.'
+                'message' => 'Update failed. Could not find product with given id.',
             ],
             $commandResult->success => [
                 'success' => true,
-                'message' => 'Successfully updated product.'
+                'message' => 'Successfully updated product.',
             ],
             default => [
                 'success' => false,
-                'message' => 'Something went wrong while updating product.'
+                'message' => 'Something went wrong while updating product.',
             ]
         };
         return $this->json($result, isset($commandResult) ? $commandResult->statusCode : $queryResult->statusCode);
@@ -211,8 +211,8 @@ class ProductsController extends AbstractController
             properties: [
                 new OA\Property(property: 'success', type: 'bool'),
                 new OA\Property(property: 'message', type: 'string'),
-            ]
-        )
+            ],
+        ),
     )]
     #[Route('/delete/{id}', methods: [Request::METHOD_DELETE])]
     #[IsGranted(ProductsVoter::DELETE)]
@@ -227,15 +227,15 @@ class ProductsController extends AbstractController
         $result = match (true) {
             $queryResult->data === null => [
                 'success' => false,
-                'message' => 'Deletion failed. Could not find product with given id.'
+                'message' => 'Deletion failed. Could not find product with given id.',
             ],
             $commandResult->success => [
                 'success' => true,
-                'message' => 'Successfully deleted product.'
+                'message' => 'Successfully deleted product.',
             ],
             default => [
                 'success' => false,
-                'message' => 'Something went wrong while deleting product.'
+                'message' => 'Something went wrong while deleting product.',
             ]
         };
         return $this->json($result, isset($commandResult) ? $commandResult->statusCode : $queryResult->statusCode);

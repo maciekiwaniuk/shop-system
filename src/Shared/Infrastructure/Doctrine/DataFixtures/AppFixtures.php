@@ -15,7 +15,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class AppFixtures extends Fixture
 {
     public function __construct(
-        protected readonly UserPasswordHasherInterface $passwordHasher
+        protected readonly UserPasswordHasherInterface $passwordHasher,
     ) {
     }
 
@@ -26,24 +26,24 @@ class AppFixtures extends Fixture
         $productGenerator = new ProductGenerator();
         $productApple = $productGenerator->generate(
             name: 'Apple',
-            price: 0.99
+            price: 0.99,
         );
         $productBall = $productGenerator->generate(
             name: 'Ball',
-            price: 30.99
+            price: 30.99,
         );
 
         $orderOne = (new OrderGenerator())->generate(
             user: $user,
             products: new ArrayCollection([
-                $productApple, $productBall
-            ])
+                $productApple, $productBall,
+            ]),
         );
         $orderTwo = (new OrderGenerator())->generate(
             user: $user,
             products: new ArrayCollection([
-                $productBall, $productApple
-            ])
+                $productBall, $productApple,
+            ]),
         );
 
         $manager->persist($user);

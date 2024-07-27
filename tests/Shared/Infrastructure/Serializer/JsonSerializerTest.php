@@ -35,7 +35,7 @@ class JsonSerializerTest extends AbstractUnitTestCase
 
         $this->assertEquals(
             json_encode(['name' => 'exampleName']),
-            $serializedObject
+            $serializedObject,
         );
     }
 
@@ -55,7 +55,7 @@ class JsonSerializerTest extends AbstractUnitTestCase
 
         $this->assertEquals(
             json_encode(['name' => 'exampleName']),
-            $serializedObject
+            $serializedObject,
         );
     }
 
@@ -75,7 +75,7 @@ class JsonSerializerTest extends AbstractUnitTestCase
 
         $this->assertEquals(
             '[]',
-            $serializedObject
+            $serializedObject,
         );
     }
 
@@ -93,12 +93,12 @@ class JsonSerializerTest extends AbstractUnitTestCase
 
         $deserializedData = $this->serializer->deserialize(
             json_encode(['name' => 'exampleName']),
-            get_class($object)
+            get_class($object),
         );
 
         $this->assertEquals(
             $object->name,
-            $deserializedData->name
+            $deserializedData->name,
         );
     }
 
@@ -117,12 +117,12 @@ class JsonSerializerTest extends AbstractUnitTestCase
         $deserializedData = $this->serializer->deserialize(
             json_encode(['name' => 'exampleName']),
             get_class($object),
-            ['groups' => ['existing-group']]
+            ['groups' => ['existing-group']],
         );
 
         $this->assertEquals(
             $object->name,
-            $deserializedData->name
+            $deserializedData->name,
         );
     }
 
@@ -142,7 +142,7 @@ class JsonSerializerTest extends AbstractUnitTestCase
 
         $this->serializer->deserialize(
             json_encode(['name' => 'exampleName']),
-            get_class($object)
+            get_class($object),
         );
     }
 }

@@ -18,7 +18,7 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Index(
     columns: ['email'],
-    name: 'user_search_idx'
+    name: 'user_search_idx',
 )]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity(fields: ['email'])]
@@ -76,7 +76,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         string $email,
         string $password,
         string $name,
-        string $surname
+        string $surname,
     ) {
         $this->id = (string) Uuid::v1();
         $this->email = $email;

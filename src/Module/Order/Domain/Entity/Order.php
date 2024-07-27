@@ -19,7 +19,7 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Index(
     columns: ['id'],
-    name: 'order_search_idx'
+    name: 'order_search_idx',
 )]
 #[ORM\Table(name: '`order`')]
 class Order
@@ -59,7 +59,7 @@ class Order
     private readonly DateTimeImmutable $createdAt;
 
     public function __construct(
-        User $user
+        User $user,
     ) {
         $this->id = (string) Uuid::v1();
         $this->user = $user;
@@ -99,15 +99,15 @@ class Order
     public function createAndAddOrderProduct(
         Product $product,
         int $productQuantity,
-        float $productPricePerPiece
+        float $productPricePerPiece,
     ): self {
         $this->ordersProducts->add(
             new OrderProduct(
                 order: $this,
                 product: $product,
                 productQuantity: $productQuantity,
-                productPricePerPiece: $productPricePerPiece
-            )
+                productPricePerPiece: $productPricePerPiece,
+            ),
         );
         return $this;
     }
@@ -117,8 +117,8 @@ class Order
         $this->ordersStatusUpdates->add(
             new OrderStatusUpdate(
                 order: $this,
-                status: $orderStatusUpdate
-            )
+                status: $orderStatusUpdate,
+            ),
         );
         if ($orderStatusUpdate->value === OrderStatus::DELIVERED->value) {
             $this->setCompletedAt(new DateTimeImmutable());
