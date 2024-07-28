@@ -25,8 +25,8 @@ class GetPaginatedProductsValueResolver implements ValueResolverInterface
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
         $dto = new PaginationIdDTO(
-            offset: $request->query->get('offset') ?? null,
-            limit: $request->query->get('limit') ?? null,
+            offset: ($offset = $request->query->get('offset')) ? (int) $offset : null,
+            limit: ($limit = $request->query->get('limit')) ? (int) $limit : null,
         );
 
         $errors = $this->validator->validate($dto);

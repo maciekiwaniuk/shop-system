@@ -26,7 +26,7 @@ class GetPaginatedOrdersValueResolver implements ValueResolverInterface
     {
         $dto = new PaginationUuidDTO(
             cursor: $request->query->get('cursor') ?? null,
-            limit: $request->query->get('limit') ?? null,
+            limit: ($limit = $request->query->get('limit')) ? (int) $limit : null,
         );
 
         $errors = $this->validator->validate($dto);

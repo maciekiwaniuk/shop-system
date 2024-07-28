@@ -1,8 +1,10 @@
+copy_env:
+	cp .env.dist .env
+
 initialize:
-	docker-compose up --profile dev -d
-	docker-compose exec php bin/console doctrine:migrations:diff
-	docker-compose exec php bin/console doctrine:migrations:migrate
-	docker-compose exec php bin/console lexik:jwt:generate-keypair
+	docker-compose exec php php bin/console doctrine:migrations:diff
+	docker-compose exec php php bin/console doctrine:migrations:migrate
+	docker-compose exec php php bin/console lexik:jwt:generate-keypair
 
 run:
 	docker-compose up --profile dev -d
