@@ -1,13 +1,9 @@
-controllers_order:
-    resource: ../src/Module/Order/UI/Controller
+controllers_auth:
+    resource: ../src/Module/Auth/UI/Controller
     type: attribute
 
-controllers_product:
-    resource: ../src/Module/Product/UI/Controller
-    type: attribute
-
-controllers_user:
-    resource: ../src/Module/User/UI/Controller
+controllers_commerce:
+    resource: ../src/Module/Commerce/UI/Controller
     type: attribute
 
 kernel:

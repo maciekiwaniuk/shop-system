@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Shared\Infrastructure\Doctrine\DataFixtures;
 
-use App\Module\Order\Infrastructure\Doctrine\Generator\OrderGenerator;
-use App\Module\Product\Infrastructure\Doctrine\Generator\ProductGenerator;
-use App\Module\User\Infrastructure\Doctrine\Generator\UserGenerator;
+use App\Module\Commerce\Infrastructure\Doctrine\Generator\OrderGenerator;
+use App\Module\Commerce\Infrastructure\Doctrine\Generator\ProductGenerator;
+use App\Module\Auth\Infrastructure\Doctrine\Generator\UserGenerator;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ObjectManager;

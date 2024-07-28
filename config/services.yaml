@@ -10,23 +10,22 @@ services:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
-            - '../src/Module/Order/Domain/Entity'
-            - '../src/Module/Product/Domain/Entity'
-            - '../src/Module/User/Domain/Entity'
+            - '../src/Module/Auth/Domain/Entity'
+            - '../src/Module/Commerce/Domain/Entity'
             - '../src/Kernel.php'
 
-    App\Module\Order\Domain\Repository\OrderRepositoryInterface:
-        class: 'App\Module\Order\Infrastructure\Doctrine\Repository\OrderRepository'
-    App\Module\Product\Domain\Repository\ProductRepositoryInterface:
-        class: 'App\Module\Product\Infrastructure\Doctrine\Repository\ProductRepository'
-    App\Module\User\Domain\Repository\UserRepositoryInterface:
-        class: 'App\Module\User\Infrastructure\Doctrine\Repository\UserRepository'
+    App\Module\Commerce\Domain\Repository\OrderRepositoryInterface:
+        class: 'App\Module\Commerce\Infrastructure\Doctrine\Repository\OrderRepository'
+    App\Module\Commerce\Domain\Repository\ProductRepositoryInterface:
+        class: 'App\Module\Commerce\Infrastructure\Doctrine\Repository\ProductRepository'
+    App\Module\Auth\Domain\Repository\UserRepositoryInterface:
+        class: 'App\Module\Auth\Infrastructure\Doctrine\Repository\UserRepository'
 
-    App\Module\User\Application\EventSubscriber\AuthenticationSuccessSubscriber:
+    App\Module\Auth\Application\EventSubscriber\AuthenticationSuccessSubscriber:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 255 }
 
-    App\Module\User\Application\EventSubscriber\AuthenticationFailureSubscriber:
+    App\Module\Auth\Application\EventSubscriber\AuthenticationFailureSubscriber:
         tags:
             - { name: kernel.event_subscriber }
 

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
-use App\Module\User\Domain\Entity\User;
-use App\Module\User\Domain\Enum\UserRole;
-use App\Module\User\Domain\Repository\UserRepositoryInterface;
+use App\Module\Auth\Domain\Entity\User;
+use App\Module\Auth\Domain\Enum\UserRole;
+use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Shared\Infrastructure\Cache\CacheCreator;
 use App\Shared\Infrastructure\Doctrine\DataFixtures\AppFixtures;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
