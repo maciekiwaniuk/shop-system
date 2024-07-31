@@ -7,19 +7,19 @@ parameters:
         - name: Domain
           collectors:
               - type: className
-                regex: ^App\\Module\\(?:Order|Product|User)\\Domain\\.*
+                regex: ^App\\Module\\(?:Auth|Commerce)\\Domain\\.*
               - type: className
                 regex: ^App\\Shared\\Domain\\.*
         - name: Application
           collectors:
               - type: className
-                regex: ^App\\Module\\(?:Order|Product|User)\\Application\\.*
+                regex: ^App\\Module\\(?:Auth|Commerce)\\Application\\.*
               - type: className
                 regex: ^App\\Shared\\Application\\.*
         - name: Infrastructure
           collectors:
               - type: className
-                regex: ^App\\Module\\(?:Order|Product|User)\\Infrastructure\\.*
+                regex: ^App\\Module\\(?:Auth|Commerce)\\Infrastructure\\.*
               - type: className
                 regex: ^App\\Shared\\Infrastructure\\.*
         - name: UI
