@@ -12,10 +12,10 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AsTargetedValueResolver('get_paginated_orders')]
-class GetPaginatedOrdersValueResolver implements ValueResolverInterface
+readonly class GetPaginatedOrdersValueResolver implements ValueResolverInterface
 {
     public function __construct(
-        protected readonly ValidatorInterface $validator,
+        protected ValidatorInterface $validator,
     ) {
     }
 

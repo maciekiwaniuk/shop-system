@@ -7,10 +7,10 @@ namespace App\Module\Auth\Application\Command\CreateUser;
 use App\Module\Auth\Application\DTO\CreateUserDTO;
 use App\Common\Application\Command\CommandInterface;
 
-class CreateUserCommand implements CommandInterface
+readonly class CreateUserCommand implements CommandInterface
 {
     public function __construct(
-        public readonly CreateUserDTO $dto,
+        public CreateUserDTO $dto,
     ) {
     }
 }

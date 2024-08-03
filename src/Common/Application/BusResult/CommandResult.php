@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Common\Application\BusResult;
 
-class CommandResult implements BusResultInterface
+readonly class CommandResult implements BusResultInterface
 {
     public function __construct(
-        public readonly bool $success,
-        public readonly int $statusCode,
+        public bool $success,
+        public int $statusCode,
     ) {
     }
 }

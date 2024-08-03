@@ -11,11 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 
-class CommandBus implements CommandBusInterface
+readonly class CommandBus implements CommandBusInterface
 {
     public function __construct(
-        protected readonly MessageBusInterface $bus,
-        protected readonly LoggerInterface $logger,
+        protected MessageBusInterface $bus,
+        protected LoggerInterface $logger,
     ) {
     }
 

@@ -16,12 +16,12 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 
 #[AsMessageHandler]
-class ChangeOrderStatusCommandHandler implements CommandHandlerInterface
+readonly class ChangeOrderStatusCommandHandler implements CommandHandlerInterface
 {
     public function __construct(
-        protected readonly OrderStatusUpdateRepositoryInterface $orderStatusUpdateRepository,
-        protected readonly EntityManagerInterface $entityManager,
-        protected readonly LoggerInterface $logger,
+        protected OrderStatusUpdateRepositoryInterface $orderStatusUpdateRepository,
+        protected EntityManagerInterface $entityManager,
+        protected LoggerInterface $logger,
     ) {
     }
 

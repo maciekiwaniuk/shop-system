@@ -14,11 +14,11 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 
 #[AsMessageHandler]
-class CreateProductCommandHandler implements CommandHandlerInterface
+readonly class CreateProductCommandHandler implements CommandHandlerInterface
 {
     public function __construct(
-        protected readonly ProductRepository $productRepository,
-        protected readonly LoggerInterface $logger,
+        protected ProductRepository $productRepository,
+        protected LoggerInterface $logger,
     ) {
     }
 

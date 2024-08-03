@@ -18,13 +18,13 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Throwable;
 
 #[AsMessageHandler]
-class CreateOrderCommandHandler implements CommandHandlerInterface
+readonly class CreateOrderCommandHandler implements CommandHandlerInterface
 {
     public function __construct(
-        protected readonly OrderRepository $orderRepository,
-        protected readonly EntityManagerInterface $entityManager,
-        protected readonly LoggerInterface $logger,
-        protected readonly TokenStorageInterface $tokenStorage,
+        protected OrderRepository $orderRepository,
+        protected EntityManagerInterface $entityManager,
+        protected LoggerInterface $logger,
+        protected TokenStorageInterface $tokenStorage,
     ) {
     }
 

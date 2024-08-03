@@ -13,11 +13,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class ProductsVoter extends Voter
 {
-    public const GET_PAGINATED = 'GET_PAGINATED_PRODUCTS';
-    public const CREATE = 'CREATE_PRODUCT';
-    public const SHOW = 'SHOW_PRODUCT';
-    public const UPDATE = 'UPDATE_PRODUCT';
-    public const DELETE = 'DELETE_PRODUCT';
+    public const string GET_PAGINATED = 'GET_PAGINATED_PRODUCTS';
+    public const string CREATE = 'CREATE_PRODUCT';
+    public const string SHOW = 'SHOW_PRODUCT';
+    public const string UPDATE = 'UPDATE_PRODUCT';
+    public const string DELETE = 'DELETE_PRODUCT';
 
     protected function supports(string $attribute, mixed $subject): bool
     {

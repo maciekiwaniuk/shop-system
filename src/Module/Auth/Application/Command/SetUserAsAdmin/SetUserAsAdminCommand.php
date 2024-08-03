@@ -7,10 +7,10 @@ namespace App\Module\Auth\Application\Command\SetUserAsAdmin;
 use App\Module\Auth\Domain\Entity\User;
 use App\Common\Application\Command\CommandInterface;
 
-class SetUserAsAdminCommand implements CommandInterface
+readonly class SetUserAsAdminCommand implements CommandInterface
 {
     public function __construct(
-        public readonly User $user,
+        public User $user,
     ) {
     }
 }

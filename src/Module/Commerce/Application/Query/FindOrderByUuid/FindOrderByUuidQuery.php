@@ -6,10 +6,10 @@ namespace App\Module\Commerce\Application\Query\FindOrderByUuid;
 
 use App\Common\Application\Query\QueryInterface;
 
-class FindOrderByUuidQuery implements QueryInterface
+readonly class FindOrderByUuidQuery implements QueryInterface
 {
     public function __construct(
-        public readonly string $email,
+        public string $email,
     ) {
     }
 }

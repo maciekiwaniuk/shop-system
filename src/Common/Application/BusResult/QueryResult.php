@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Common\Application\BusResult;
 
-class QueryResult implements BusResultInterface
+readonly class QueryResult implements BusResultInterface
 {
     public function __construct(
-        public readonly bool $success,
-        public readonly int $statusCode,
-        public readonly mixed $data = null,
+        public bool $success,
+        public int $statusCode,
+        public mixed $data = null,
     ) {
     }
 }

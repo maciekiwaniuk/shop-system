@@ -14,12 +14,12 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 
 #[AsMessageHandler]
-class FindProductByIdQueryHandler implements QueryHandlerInterface
+readonly class FindProductByIdQueryHandler implements QueryHandlerInterface
 {
     public function __construct(
-        protected readonly ProductRepository $productRepository,
-        protected readonly JsonSerializer $serializer,
-        protected readonly LoggerInterface $logger,
+        protected ProductRepository $productRepository,
+        protected JsonSerializer $serializer,
+        protected LoggerInterface $logger,
     ) {
     }
 

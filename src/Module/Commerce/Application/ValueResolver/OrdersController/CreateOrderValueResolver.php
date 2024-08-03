@@ -12,10 +12,10 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AsTargetedValueResolver('create_order_dto')]
-class CreateOrderValueResolver implements ValueResolverInterface
+readonly class CreateOrderValueResolver implements ValueResolverInterface
 {
     public function __construct(
-        protected readonly ValidatorInterface $validator,
+        protected ValidatorInterface $validator,
     ) {
     }
 

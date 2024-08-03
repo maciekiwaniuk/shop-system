@@ -13,10 +13,10 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AsTargetedValueResolver('change_order_status_dto')]
-class ChangeOrderStatusValueResolver implements ValueResolverInterface
+readonly class ChangeOrderStatusValueResolver implements ValueResolverInterface
 {
     public function __construct(
-        protected readonly ValidatorInterface $validator,
+        protected ValidatorInterface $validator,
     ) {
     }
 

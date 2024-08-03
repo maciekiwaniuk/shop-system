@@ -17,14 +17,14 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 
 #[AsMessageHandler]
-class UpdateProductCommandHandler implements CommandInterface
+readonly class UpdateProductCommandHandler implements CommandInterface
 {
-    protected readonly CacheProxy $cache;
+    protected CacheProxy $cache;
 
     public function __construct(
-        protected readonly ProductRepository $productRepository,
-        protected readonly EntityManagerInterface $entityManager,
-        protected readonly LoggerInterface $logger,
+        protected ProductRepository $productRepository,
+        protected EntityManagerInterface $entityManager,
+        protected LoggerInterface $logger,
         CacheCreator $cacheCreator,
     ) {
         $this->cache = $cacheCreator->create('query.products.findProductBySlugQuery.');

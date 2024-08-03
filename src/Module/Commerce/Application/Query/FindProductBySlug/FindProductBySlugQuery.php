@@ -6,10 +6,10 @@ namespace App\Module\Commerce\Application\Query\FindProductBySlug;
 
 use App\Common\Application\Query\QueryInterface;
 
-class FindProductBySlugQuery implements QueryInterface
+readonly class FindProductBySlugQuery implements QueryInterface
 {
     public function __construct(
-        public readonly string $slug,
+        public string $slug,
     ) {
     }
 }

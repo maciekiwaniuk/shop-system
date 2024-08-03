@@ -8,11 +8,11 @@ use App\Module\Commerce\Application\DTO\ChangeOrderStatusDTO;
 use App\Module\Commerce\Domain\Enum\OrderStatus;
 use App\Common\Application\Command\CommandInterface;
 
-class ChangeOrderStatusCommand implements CommandInterface
+readonly class ChangeOrderStatusCommand implements CommandInterface
 {
     public function __construct(
-        public readonly ChangeOrderStatusDTO $dto,
-        public readonly string $uuid,
+        public ChangeOrderStatusDTO $dto,
+        public string $uuid,
     ) {
     }
 }

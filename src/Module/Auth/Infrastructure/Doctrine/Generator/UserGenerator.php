@@ -7,10 +7,10 @@ namespace App\Module\Auth\Infrastructure\Doctrine\Generator;
 use App\Module\Auth\Domain\Entity\User;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class UserGenerator
+readonly class UserGenerator
 {
     public function __construct(
-        protected readonly UserPasswordHasherInterface $passwordHasher,
+        protected UserPasswordHasherInterface $passwordHasher,
     ) {
     }
 

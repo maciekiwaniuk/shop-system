@@ -15,12 +15,12 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Throwable;
 
 #[AsMessageHandler]
-class CreateUserCommandHandler implements CommandHandlerInterface
+readonly class CreateUserCommandHandler implements CommandHandlerInterface
 {
     public function __construct(
-        protected readonly UserRepository $userRepository,
-        protected readonly LoggerInterface $logger,
-        protected readonly UserPasswordHasherInterface $passwordHasher,
+        protected UserRepository $userRepository,
+        protected LoggerInterface $logger,
+        protected UserPasswordHasherInterface $passwordHasher,
     ) {
     }
 

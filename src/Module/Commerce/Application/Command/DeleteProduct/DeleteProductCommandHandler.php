@@ -15,13 +15,13 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 
 #[AsMessageHandler]
-class DeleteProductCommandHandler implements CommandHandlerInterface
+readonly class DeleteProductCommandHandler implements CommandHandlerInterface
 {
-    protected readonly CacheProxy $cache;
+    protected CacheProxy $cache;
 
     public function __construct(
-        protected readonly ProductRepository $productRepository,
-        protected readonly LoggerInterface $logger,
+        protected ProductRepository $productRepository,
+        protected LoggerInterface $logger,
         CacheCreator $cacheCreator,
     ) {
         $this->cache = $cacheCreator->create('query.products.findProductBySlugQuery.');

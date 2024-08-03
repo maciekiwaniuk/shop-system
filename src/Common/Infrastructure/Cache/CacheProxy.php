@@ -8,12 +8,12 @@ use Psr\Log\LoggerInterface;
 use Redis;
 use Throwable;
 
-class CacheProxy
+readonly class CacheProxy
 {
     public function __construct(
-        protected readonly Redis $cache,
-        protected readonly LoggerInterface $logger,
-        protected readonly string $prefix,
+        protected Redis $cache,
+        protected LoggerInterface $logger,
+        protected string $prefix,
     ) {
     }
 

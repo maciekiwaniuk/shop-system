@@ -14,12 +14,12 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 
 #[AsMessageHandler]
-class FindUserByEmailQueryHandler implements QueryHandlerInterface
+readonly class FindUserByEmailQueryHandler implements QueryHandlerInterface
 {
     public function __construct(
-        protected readonly UserRepositoryInterface $userRepository,
-        protected readonly JsonSerializer $serializer,
-        protected readonly LoggerInterface $logger,
+        protected UserRepositoryInterface $userRepository,
+        protected JsonSerializer $serializer,
+        protected LoggerInterface $logger,
     ) {
     }
 

@@ -15,11 +15,11 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 
 #[AsMessageHandler]
-class SetUserAsAdminCommandHandler implements CommandInterface
+readonly class SetUserAsAdminCommandHandler implements CommandInterface
 {
     public function __construct(
-        protected readonly EntityManagerInterface $entityManager,
-        protected readonly LoggerInterface $logger,
+        protected EntityManagerInterface $entityManager,
+        protected LoggerInterface $logger,
     ) {
     }
 

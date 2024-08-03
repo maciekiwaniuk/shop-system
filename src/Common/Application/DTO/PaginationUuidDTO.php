@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints\Sequentially;
 
 class PaginationUuidDTO extends AbstractDTO
 {
+    // TODO: validation
     public readonly ?string $cursor;
 
     #[Sequentially([

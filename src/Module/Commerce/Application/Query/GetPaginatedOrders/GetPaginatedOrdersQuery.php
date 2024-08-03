@@ -6,11 +6,11 @@ namespace App\Module\Commerce\Application\Query\GetPaginatedOrders;
 
 use App\Common\Application\Query\QueryInterface;
 
-class GetPaginatedOrdersQuery implements QueryInterface
+readonly class GetPaginatedOrdersQuery implements QueryInterface
 {
     public function __construct(
-        public readonly ?string $cursor,
-        public readonly int $limit,
+        public ?string $cursor,
+        public int $limit,
     ) {
     }
 }

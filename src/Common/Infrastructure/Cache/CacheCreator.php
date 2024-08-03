@@ -8,11 +8,11 @@ use Psr\Log\LoggerInterface;
 use Redis;
 use Symfony\Component\Cache\Adapter\RedisAdapter;
 
-class CacheCreator
+readonly class CacheCreator
 {
     public function __construct(
-        protected readonly LoggerInterface $logger,
-        protected readonly string $redisUrl,
+        protected LoggerInterface $logger,
+        protected string $redisUrl,
     ) {
     }
 

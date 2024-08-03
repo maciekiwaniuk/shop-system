@@ -14,12 +14,12 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 
 #[AsMessageHandler]
-class GetPaginatedOrdersQueryHandler implements QueryHandlerInterface
+readonly class GetPaginatedOrdersQueryHandler implements QueryHandlerInterface
 {
     public function __construct(
-        protected readonly OrderRepositoryInterface $orderRepository,
-        protected readonly JsonSerializer $serializer,
-        protected readonly LoggerInterface $logger,
+        protected OrderRepositoryInterface $orderRepository,
+        protected JsonSerializer $serializer,
+        protected LoggerInterface $logger,
     ) {
     }
 

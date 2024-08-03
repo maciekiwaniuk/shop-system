@@ -6,10 +6,10 @@ namespace App\Module\Auth\Application\Query\FindUserByEmail;
 
 use App\Common\Application\Query\QueryInterface;
 
-class FindUserByEmailQuery implements QueryInterface
+readonly class FindUserByEmailQuery implements QueryInterface
 {
     public function __construct(
-        public readonly string $email,
+        public string $email,
     ) {
     }
 }
