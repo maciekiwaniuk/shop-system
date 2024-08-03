@@ -17,9 +17,9 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 
 class CommandBusTest extends AbstractUnitTestCase
 {
-    protected readonly MessageBusInterface $bus;
-    protected readonly LoggerInterface $logger;
-    protected readonly CommandBusInterface $commandBus;
+    protected MessageBusInterface $bus;
+    protected LoggerInterface $logger;
+    protected CommandBusInterface $commandBus;
 
     protected function setUp(): void
     {

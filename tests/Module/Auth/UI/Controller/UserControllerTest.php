@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 class UserControllerTest extends AbstractApplicationTestCase
 {
     protected string $url = '/api/v1';
-    protected readonly UserRepositoryInterface $userRepository;
+    protected UserRepositoryInterface $userRepository;
 
     protected function setUp(): void
     {

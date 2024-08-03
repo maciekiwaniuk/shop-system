@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class PaginationIdDTOTest extends AbstractIntegrationTestCase
 {
-    protected readonly ValidatorInterface $validator;
+    protected ValidatorInterface $validator;
     protected int $exampleValidOffset = 1;
     protected int $exampleValidLimit = 10;
 

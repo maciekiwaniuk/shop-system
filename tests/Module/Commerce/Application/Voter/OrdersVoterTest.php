@@ -12,10 +12,10 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class OrdersVoterTest extends AbstractUnitTestCase
 {
-    protected readonly OrdersVoter $voter;
-    protected readonly TokenInterface $token;
-    protected readonly User $user;
-    protected readonly User $admin;
+    protected OrdersVoter $voter;
+    protected TokenInterface $token;
+    protected User $user;
+    protected User $admin;
 
     protected function setUp(): void
     {
@@ -144,7 +144,7 @@ class OrdersVoterTest extends AbstractUnitTestCase
         );
     }
 
-    public function testUsercanCreate(): void
+    public function testUserCanCreate(): void
     {
         $this->token
             ->method('getUser')

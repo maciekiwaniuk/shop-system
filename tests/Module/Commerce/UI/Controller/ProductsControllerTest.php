@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ProductsControllerTest extends AbstractApplicationTestCase
 {
     protected string $url = '/api/v1/products';
-    protected readonly ProductRepositoryInterface $productRepository;
+    protected ProductRepositoryInterface $productRepository;
 
     protected function setUp(): void
     {

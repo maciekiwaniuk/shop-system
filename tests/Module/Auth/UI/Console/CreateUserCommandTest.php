@@ -16,8 +16,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CreateUserCommandTest extends AbstractIntegrationTestCase
 {
-    protected readonly UserRepositoryInterface $userRepository;
-    protected readonly Application $application;
+    protected UserRepositoryInterface $userRepository;
+    protected Application $application;
 
     protected function setUp(): void
     {
