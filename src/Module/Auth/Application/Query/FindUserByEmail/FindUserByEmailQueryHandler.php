@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Application\Query\FindUserByEmail;
 
+use App\Common\Domain\Serializer\JsonSerializerInterface;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Common\Application\BusResult\QueryResult;
 use App\Common\Application\Query\QueryHandlerInterface;
-use App\Common\Infrastructure\Serializer\JsonSerializer;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -18,7 +18,7 @@ readonly class FindUserByEmailQueryHandler implements QueryHandlerInterface
 {
     public function __construct(
         protected UserRepositoryInterface $userRepository,
-        protected JsonSerializer $serializer,
+        protected JsonSerializerInterface $serializer,
         protected LoggerInterface $logger,
     ) {
     }

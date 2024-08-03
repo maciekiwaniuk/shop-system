@@ -6,50 +6,49 @@ parameters:
     layers:
         - name: Domain
           collectors:
-              - type: className
-                regex: ^App\\Module\\(?:Auth|Commerce)\\Domain\\.*
-              - type: className
-                regex: ^App\\Shared\\Domain\\.*
+              - type: classLike
+                value: ^App\\Module\\(?:Auth|Commerce)\\Domain\\.*
+              - type: classLike
+                value: ^App\\Common\\Domain\\.*
         - name: Application
           collectors:
-              - type: className
-                regex: ^App\\Module\\(?:Auth|Commerce)\\Application\\.*
-              - type: className
-                regex: ^App\\Shared\\Application\\.*
+              - type: classLike
+                value: ^App\\Module\\(?:Auth|Commerce)\\Application\\.*
+              - type: classLike
+                value: ^App\\Common\\Application\\.*
         - name: Infrastructure
           collectors:
-              - type: className
-                regex: ^App\\Module\\(?:Auth|Commerce)\\Infrastructure\\.*
-              - type: className
-                regex: ^App\\Shared\\Infrastructure\\.*
-        - name: UI
-          collectors:
-              - type: className
-                regex: ^App\\UI\\.*
+              - type: classLike
+                value: ^App\\Module\\(?:Auth|Commerce)\\Infrastructure\\.*
+              - type: classLike
+                value: ^App\\Common\\Infrastructure\\.*
+#        - name: UI
+#          collectors:
+#              - type: classLike
+#                value: ^App\\UI\\.*
         - name: Vendor
           collectors:
               - type: bool
                 must:
-                    - type: className
-                      regex: .+\\.*
+                    - type: classLike
+                      value: .+\\.*
                 must_not:
-                    - type: className
-                      regex: ^App\\.*
-                    - type: className
-                      regex: Doctrine\\Common\\Collections\\.*
+                    - type: classLike
+                      value: ^App\\.*
+                    - type: classLike
+                      value: Doctrine\\Common\\Collections\\.*
     ruleset:
         Domain:
             - Vendor
         Application:
             - Domain
-            - Infrastructure
             - Vendor
         Infrastructure:
             - Domain
             - Application
             - Vendor
-        UI:
-            - Application
-            - Infrastructure
-            - Domain
-            - Vendor
+#        UI:
+#            - Application
+#            - Infrastructure
+#            - Domain
+#            - Vendor

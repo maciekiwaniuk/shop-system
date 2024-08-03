@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Module\Auth\Application\Command\CreateUser;
 
 use App\Module\Auth\Domain\Entity\User;
-use App\Module\Auth\Infrastructure\Doctrine\Repository\UserRepository;
+use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Common\Application\BusResult\CommandResult;
 use App\Common\Application\Command\CommandHandlerInterface;
 use Psr\Log\LoggerInterface;
@@ -18,7 +18,7 @@ use Throwable;
 readonly class CreateUserCommandHandler implements CommandHandlerInterface
 {
     public function __construct(
-        protected UserRepository $userRepository,
+        protected UserRepositoryInterface $userRepository,
         protected LoggerInterface $logger,
         protected UserPasswordHasherInterface $passwordHasher,
     ) {

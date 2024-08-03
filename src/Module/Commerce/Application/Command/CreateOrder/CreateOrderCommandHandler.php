@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Module\Commerce\Application\Command\CreateOrder;
 
 use App\Module\Commerce\Domain\Entity\Order;
-use App\Module\Commerce\Infrastructure\Doctrine\Repository\OrderRepository;
+use App\Module\Commerce\Domain\Repository\OrderRepositoryInterface;
 use App\Module\Commerce\Domain\Entity\Product;
 use App\Module\Auth\Domain\Entity\User;
 use App\Common\Application\BusResult\CommandResult;
@@ -21,7 +21,7 @@ use Throwable;
 readonly class CreateOrderCommandHandler implements CommandHandlerInterface
 {
     public function __construct(
-        protected OrderRepository $orderRepository,
+        protected OrderRepositoryInterface $orderRepository,
         protected EntityManagerInterface $entityManager,
         protected LoggerInterface $logger,
         protected TokenStorageInterface $tokenStorage,

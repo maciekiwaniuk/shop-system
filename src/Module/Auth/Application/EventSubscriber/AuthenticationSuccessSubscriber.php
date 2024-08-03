@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Module\Auth\Application\EventSubscriber;
 
 use App\Module\Auth\Domain\Entity\User;
-use App\Module\Auth\Infrastructure\Doctrine\Repository\UserRepository;
+use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use DateTimeImmutable;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
@@ -18,7 +18,7 @@ class AuthenticationSuccessSubscriber implements EventSubscriberInterface
     protected Request $request;
 
     public function __construct(
-        protected readonly UserRepository $userRepository,
+        protected readonly UserRepositoryInterface $userRepository,
     ) {
     }
 

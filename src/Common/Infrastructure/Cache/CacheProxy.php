@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Common\Infrastructure\Cache;
 
+use App\Common\Domain\Cache\CacheProxyInterface;
 use Psr\Log\LoggerInterface;
 use Redis;
 use Throwable;
 
-readonly class CacheProxy
+readonly class CacheProxy implements CacheProxyInterface
 {
     public function __construct(
         protected Redis $cache,

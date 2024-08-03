@@ -38,21 +38,16 @@ class JsonSerializer
     /**
      * @param array{groups: array<string>} $context
      */
-    public function serialize(
-        mixed $data,
-        array $context = ['groups' => ['default']],
-    ): string {
+    public function serialize(mixed $data, array $context = ['groups' => ['default']]): string
+    {
         return $this->serializer->serialize($data, 'json', $context);
     }
 
     /**
      * @param array{groups: array<string>} $context
      */
-    public function deserialize(
-        mixed $data,
-        string $type,
-        array $context = ['groups' => ['default']],
-    ): mixed {
+    public function deserialize(mixed $data, string $type, array $context = ['groups' => ['default']]): mixed
+    {
         return $this->serializer->deserialize($data, $type, 'json', $context);
     }
 }

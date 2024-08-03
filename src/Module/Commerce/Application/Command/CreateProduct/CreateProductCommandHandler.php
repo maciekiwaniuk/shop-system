@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Module\Commerce\Application\Command\CreateProduct;
 
 use App\Module\Commerce\Domain\Entity\Product;
-use App\Module\Commerce\Infrastructure\Doctrine\Repository\ProductRepository;
+use App\Module\Commerce\Domain\Repository\ProductRepositoryInterface;
 use App\Common\Application\BusResult\CommandResult;
 use App\Common\Application\Command\CommandHandlerInterface;
 use Psr\Log\LoggerInterface;
@@ -17,7 +17,7 @@ use Throwable;
 readonly class CreateProductCommandHandler implements CommandHandlerInterface
 {
     public function __construct(
-        protected ProductRepository $productRepository,
+        protected ProductRepositoryInterface $productRepository,
         protected LoggerInterface $logger,
     ) {
     }
