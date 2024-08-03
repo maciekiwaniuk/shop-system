@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Module\Auth\Application\DTO;
 
 use App\Module\Auth\Domain\Entity\User;
-use App\Shared\Application\Constraint\UniqueFieldInEntity;
-use App\Shared\Application\DTO\AbstractDTO;
+use App\Common\Application\Constraint\UniqueFieldInEntity;
+use App\Common\Application\DTO\AbstractDTO;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;

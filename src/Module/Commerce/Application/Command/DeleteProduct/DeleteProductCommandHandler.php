@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Module\Commerce\Application\Command\DeleteProduct;
 
 use App\Module\Commerce\Infrastructure\Doctrine\Repository\ProductRepository;
-use App\Shared\Application\BusResult\CommandResult;
-use App\Shared\Application\Command\CommandHandlerInterface;
-use App\Shared\Infrastructure\Cache\CacheCreator;
-use App\Shared\Infrastructure\Cache\CacheProxy;
+use App\Common\Application\BusResult\CommandResult;
+use App\Common\Application\Command\CommandHandlerInterface;
+use App\Common\Infrastructure\Cache\CacheCreator;
+use App\Common\Infrastructure\Cache\CacheProxy;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;

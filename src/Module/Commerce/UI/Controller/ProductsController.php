@@ -14,9 +14,9 @@ use App\Module\Commerce\Application\Query\FindProductBySlug\FindProductBySlugQue
 use App\Module\Commerce\Application\Query\GetPaginatedProducts\GetPaginatedProductsQuery;
 use App\Module\Commerce\Application\Voter\ProductsVoter;
 use App\Module\Commerce\Domain\Entity\Product;
-use App\Shared\Application\Bus\CommandBus\CommandBusInterface;
-use App\Shared\Application\Bus\QueryBus\QueryBusInterface;
-use App\Shared\Application\DTO\PaginationIdDTO;
+use App\Common\Application\Bus\CommandBus\CommandBusInterface;
+use App\Common\Application\Bus\QueryBus\QueryBusInterface;
+use App\Common\Application\DTO\PaginationIdDTO;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;

@@ -8,8 +8,8 @@ use App\Module\Auth\Application\Command\CreateUser\CreateUserCommand as CreateUs
 use App\Module\Auth\Application\DTO\CreateUserDTO;
 use App\Module\Auth\Application\Query\FindUserByEmail\FindUserByEmailQuery;
 use App\Module\Auth\Domain\Entity\User;
-use App\Shared\Application\Bus\CommandBus\CommandBusInterface;
-use App\Shared\Application\Bus\QueryBus\QueryBusInterface;
+use App\Common\Application\Bus\CommandBus\CommandBusInterface;
+use App\Common\Application\Bus\QueryBus\QueryBusInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;

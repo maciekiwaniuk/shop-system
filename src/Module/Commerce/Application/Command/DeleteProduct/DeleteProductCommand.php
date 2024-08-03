@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Module\Commerce\Application\Command\DeleteProduct;
 
 use App\Module\Commerce\Domain\Entity\Product;
-use App\Shared\Application\Command\CommandInterface;
+use App\Common\Application\Command\CommandInterface;
 
 class DeleteProductCommand implements CommandInterface
 {

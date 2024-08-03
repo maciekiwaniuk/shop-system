@@ -6,8 +6,8 @@ namespace App\Module\Auth\Application\Command\CreateUser;
 
 use App\Module\Auth\Domain\Entity\User;
 use App\Module\Auth\Infrastructure\Doctrine\Repository\UserRepository;
-use App\Shared\Application\BusResult\CommandResult;
-use App\Shared\Application\Command\CommandHandlerInterface;
+use App\Common\Application\BusResult\CommandResult;
+use App\Common\Application\Command\CommandHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Module\Commerce\Application\Command\CreateProduct;
 
 use App\Module\Commerce\Application\DTO\CreateProductDTO;
-use App\Shared\Application\Command\CommandInterface;
+use App\Common\Application\Command\CommandInterface;
 
 class CreateProductCommand implements CommandInterface
 {

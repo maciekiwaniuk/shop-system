@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Module\Auth\Application\Command\SetUserAsAdmin;
 
 use App\Module\Auth\Domain\Entity\User;
-use App\Shared\Application\Command\CommandInterface;
+use App\Common\Application\Command\CommandInterface;
 
 class SetUserAsAdminCommand implements CommandInterface
 {

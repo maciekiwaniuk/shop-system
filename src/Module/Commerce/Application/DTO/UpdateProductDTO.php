@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\Commerce\Application\DTO;
 
-use App\Shared\Application\DTO\AbstractDTO;
+use App\Common\Application\DTO\AbstractDTO;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;

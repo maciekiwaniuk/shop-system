@@ -6,7 +6,7 @@ namespace App\Module\Commerce\Application\Command\ChangeOrderStatus;
 
 use App\Module\Commerce\Application\DTO\ChangeOrderStatusDTO;
 use App\Module\Commerce\Domain\Enum\OrderStatus;
-use App\Shared\Application\Command\CommandInterface;
+use App\Common\Application\Command\CommandInterface;
 
 class ChangeOrderStatusCommand implements CommandInterface
 {

@@ -6,8 +6,8 @@ namespace App\Module\Commerce\Application\Command\CreateProduct;
 
 use App\Module\Commerce\Domain\Entity\Product;
 use App\Module\Commerce\Infrastructure\Doctrine\Repository\ProductRepository;
-use App\Shared\Application\BusResult\CommandResult;
-use App\Shared\Application\Command\CommandHandlerInterface;
+use App\Common\Application\BusResult\CommandResult;
+use App\Common\Application\Command\CommandHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Module\Auth\Application\Query\FindUserByEmail;
 
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
-use App\Shared\Application\BusResult\QueryResult;
-use App\Shared\Application\Query\QueryHandlerInterface;
-use App\Shared\Infrastructure\Serializer\JsonSerializer;
+use App\Common\Application\BusResult\QueryResult;
+use App\Common\Application\Query\QueryHandlerInterface;
+use App\Common\Infrastructure\Serializer\JsonSerializer;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;

@@ -6,10 +6,10 @@ namespace App\Module\Commerce\Application\Command\UpdateProduct;
 
 use App\Module\Commerce\Domain\Entity\Product;
 use App\Module\Commerce\Infrastructure\Doctrine\Repository\ProductRepository;
-use App\Shared\Application\BusResult\CommandResult;
-use App\Shared\Application\Command\CommandInterface;
-use App\Shared\Infrastructure\Cache\CacheCreator;
-use App\Shared\Infrastructure\Cache\CacheProxy;
+use App\Common\Application\BusResult\CommandResult;
+use App\Common\Application\Command\CommandInterface;
+use App\Common\Infrastructure\Cache\CacheCreator;
+use App\Common\Infrastructure\Cache\CacheProxy;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;

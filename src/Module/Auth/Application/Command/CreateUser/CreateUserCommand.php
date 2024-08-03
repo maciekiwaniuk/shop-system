@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Module\Auth\Application\Command\CreateUser;
 
 use App\Module\Auth\Application\DTO\CreateUserDTO;
-use App\Shared\Application\Command\CommandInterface;
+use App\Common\Application\Command\CommandInterface;
 
 class CreateUserCommand implements CommandInterface
 {

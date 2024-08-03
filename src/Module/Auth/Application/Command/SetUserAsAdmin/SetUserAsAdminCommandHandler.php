@@ -6,8 +6,8 @@ namespace App\Module\Auth\Application\Command\SetUserAsAdmin;
 
 use App\Module\Auth\Domain\Entity\User;
 use App\Module\Auth\Domain\Enum\UserRole;
-use App\Shared\Application\BusResult\CommandResult;
-use App\Shared\Application\Command\CommandInterface;
+use App\Common\Application\BusResult\CommandResult;
+use App\Common\Application\Command\CommandInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
