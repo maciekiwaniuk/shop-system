@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Common\Infrastructure\Serializer;
 
+use App\Common\Domain\Serializer\JsonSerializerInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
@@ -12,7 +13,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class JsonSerializer
+class JsonSerializer implements JsonSerializerInterface
 {
     protected SerializerInterface $serializer;
 

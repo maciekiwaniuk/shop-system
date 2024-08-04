@@ -29,6 +29,6 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
-    App\Shared\Infrastructure\Cache\CacheCreator:
+    App\Common\Infrastructure\Cache\CacheCreator:
         arguments:
             $redisUrl: '%redis_url%'
