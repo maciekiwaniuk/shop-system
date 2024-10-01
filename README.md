@@ -1,4 +1,4 @@
-# Shop system
+# Shop system - description below is not up to date, project is being rebuilt
 
 > ### Project of the backend of shop
 

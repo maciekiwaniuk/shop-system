@@ -2,23 +2,51 @@ services:
     nginx:
         build:
             context: ./docker/nginx
-        volumes:
-            - ./:/var/www/symfony:cached
+            args:
+                BUILD_ARGUMENT_ENV: dev
+        restart: always
         ports:
-            - "80:80"
-
-    php:
+            - "${WEB_PORT_HTTP}:80"
+            - "${WEB_PORT_SSL}:443"
+        volumes:
+            - ./:/var/www/html:ro,cached
+        depends_on:
+            - php
+        networks:
+            - php
+    php: &php-template
         build:
             context: ./docker/php
+            args:
+                BUILD_ARGUMENT_ENV: dev
+#                HOST_UID: ${HOST_UID}
+#                HOST_GID: ${HOST_GID}
+#                XDEBUG_CONFIG: ${XDEBUG_CONFIG}
+#                XDEBUG_VERSION: ${XDEBUG_VERSION}
         volumes:
-            - ./:/var/www/symfony:cached
+            - ./:/var/www/html:cached
+        depends_on:
+            - mysql
+#            - rabbitmq
+#            - elasticsearch
+            - redis
+#            - mail
+        networks:
+            - php
+              
+#    ### Cron tasks, RabbitMQ consumers
+#    supervisord:
+#        <<: *php-template
+#        expose: [ ]
+#        command: [ "/usr/bin/supervisord" ]
 
-    db:
+    mysql:
         image: mysql:8.0.33
         platform: linux/x86_64
-        command: --default-authentication-plugin=mysql_native_password
+        command: --innodb-use-native-aio=${INNODB_USE_NATIVE_AIO:-1} --sql_mode=${SQL_MODE:-"ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"}
         volumes:
-            - "mysql:/var/lib/mysql"
+            - mysql:/var/lib/mysql
+            - ./docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -26,20 +54,107 @@ services:
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
         ports:
             - "3306:3306"
+        networks:
+            - php
 
-    redis_prod:
-        image: redis:alpine
-        ports:
-            - "6379:6379"
-        profiles:
-            - "prod"
+#    rabbitmq:
+#        image: ${COMPOSE_PROJECT_NAME}-rabbitmq
+#        build:
+#            context: ./docker/rabbitmq/
+#            dockerfile: ./Dockerfile
+#        environment:
+#            RABBITMQ_ERLANG_COOKIE: 7ead507151fc4461b9f45c1161384a04
+#            RABBITMQ_DEFAULT_USER: guest
+#            RABBITMQ_DEFAULT_PASS: guest
+#            RABBITMQ_DEFAULT_VHOST: /
+#        ports:
+#            - "15672:15672"
+#        volumes:
+#            - ./var/rabbitmq:/var/lib/rabbitmq:delegated
+#        networks:
+#            - php
+
+#    elasticsearch:
+#        image: ${COMPOSE_PROJECT_NAME}-elasticsearch
+#        build:
+#            context: ./docker/
+#            args:
+#                ELK_VERSION: ${ELK_VERSION}
+#            dockerfile: ./elasticsearch/Dockerfile
+#        environment:
+#            ES_JAVA_OPTS: "-Xmx1024m -Xms1024m"
+#            ELASTIC_PASSWORD: changeme
+#            # Use single node discovery in order to disable production mode and avoid bootstrap checks
+#            # see https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
+#            discovery.type: single-node
+#        ports:
+#            - "9200:9200"
+#            - "9300:9300"
+#        volumes:
+#            - ./docker/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+#            - ./var/elasticsearch-data:/usr/share/elasticsearch/data:delegated
+#        networks:
+#            - php
+
+#    kibana:
+#        image: ${COMPOSE_PROJECT_NAME}-kibana
+#        platform: linux/x86_64
+#        build:
+#            context: ./docker/
+#            args:
+#                ELK_VERSION: ${ELK_VERSION}
+#            dockerfile: ./kibana/Dockerfile
+#        ports:
+#            - "5601:5601"
+#        volumes:
+#            - ./docker/dev/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+#        depends_on:
+#            - elasticsearch
+#        networks:
+#            - php
 
     redis:
         image: redis:alpine
+        restart: always
         ports:
             - "6379:6379"
-        profiles:
-            - "dev"
+        volumes:
+            - ./var/redis:/data:delegated
+        networks:
+            - php
 
+#    mail:
+#        image: axllent/mailpit:latest
+#        restart: always
+#        ports:
+#            - "8025:8025"
+#            - "1025:1025"
+#        networks:
+#            - php
+
+#    mysql:
+#        image: mysql:8.0.33
+#        platform: linux/x86_64
+#        command: --default-authentication-plugin=mysql_native_password
+#        volumes:
+#            - "mysql:/var/lib/mysql"
+#        environment:
+#            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+#            MYSQL_DATABASE: ${MYSQL_DATABASE}
+#            MYSQL_USER: ${MYSQL_USER}
+#            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+#        ports:
+#            - "3306:3306"
+
+#    redis:
+#        image: redis:alpine
+#        ports:
+#            - "6379:6379"
+#        profiles:
+#            - "dev"
 volumes:
     mysql:
+
+networks:
+    php:
+        name: php

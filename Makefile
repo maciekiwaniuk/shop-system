@@ -30,3 +30,6 @@ fix_codesniffer:
 
 cache_clear:
 	docker compose exec php bin/console cache:clear
+
+install:
+	docker compose exec php composer install --optimize-autoloader --no-interaction --no-progress
