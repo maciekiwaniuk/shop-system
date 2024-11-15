@@ -52,18 +52,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['default'])]
     private array $roles;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['default'])]
-    private ?string $lastLoginIp;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['default'])]
-    private ?DateTimeImmutable $lastLoginTime;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['default'])]
-    private ?string $lastLoginUserAgent;
-
     #[ORM\Column]
     #[Groups(['default'])]
     private DateTimeImmutable $updatedAt;
@@ -84,9 +72,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->name = $name;
         $this->surname = $surname;
         $this->roles = [UserRole::USER->value];
-        $this->lastLoginTime = null;
-        $this->lastLoginIp = null;
-        $this->lastLoginUserAgent = null;
         $this->createdAt = new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
     }
@@ -154,39 +139,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function isAdmin(): bool
     {
         return in_array(UserRole::ADMIN->value, $this->roles);
-    }
-
-    public function getLastLoginIp(): ?string
-    {
-        return $this->lastLoginIp;
-    }
-
-    public function setLastLoginIp(?string $lastLoginIp): self
-    {
-        $this->lastLoginIp = $lastLoginIp;
-        return $this;
-    }
-
-    public function getLastLoginTime(): ?DateTimeImmutable
-    {
-        return $this->lastLoginTime;
-    }
-
-    public function setLastLoginTime(DateTimeImmutable $lastLoginTime): self
-    {
-        $this->lastLoginTime = $lastLoginTime;
-        return $this;
-    }
-
-    public function getLastLoginUserAgent(): ?string
-    {
-        return $this->lastLoginUserAgent;
-    }
-
-    public function setLastLoginUserAgent(string $lastLoginUserAgent): self
-    {
-        $this->lastLoginUserAgent = $lastLoginUserAgent;
-        return $this;
     }
 
     public function getCreatedAt(): DateTimeImmutable
