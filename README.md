@@ -1,7 +1,5 @@
 # Shop system - description below is not up to date, project is being rebuilt
 
-> ### Project of the backend of shop
-
 ![image](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
 ![image](https://img.shields.io/badge/Symfony-000000?style=for-the-badge&logo=Symfony&logoColor=white)
 ![image](https://img.shields.io/badge/redis-%23DD0031.svg?&style=for-the-badge&logo=redis&logoColor=white)
@@ -10,7 +8,6 @@
 
 ## General info
 
-- App is structured using DDD approach, based on the Command Query Responsibility Segregation (CQRS) pattern.
 - Several tools are utilized to facilitate the creation of robust code: phpstan (6 level), deptrac, codesniffer.
 - The application is well-tested, with tests categorized into Application (E2E), Integration, and Unit tests.
 - A caching system based on Redis has been implemented.
