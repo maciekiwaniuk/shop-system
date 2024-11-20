@@ -6,8 +6,6 @@ namespace App\Module\Commerce\Domain\Entity;
 
 use App\Module\Commerce\Domain\Enum\OrderStatus;
 use App\Module\Commerce\Domain\Repository\OrderRepositoryInterface;
-use App\Module\Commerce\Domain\Entity\Product;
-use App\Module\Auth\Domain\Entity\User;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -29,10 +27,10 @@ class Order
     #[Groups(['default'])]
     private readonly string $id;
 
-    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Client::class, cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', nullable: false)]
     #[Groups(['default'])]
-    private readonly User $user;
+    private readonly Client $client;
 
     /**
      * @var Collection<int, OrderProduct>
@@ -59,10 +57,10 @@ class Order
     private readonly DateTimeImmutable $createdAt;
 
     public function __construct(
-        User $user,
+        Client $client,
     ) {
         $this->id = (string) Uuid::v1();
-        $this->user = $user;
+        $this->client = $client;
         $this->ordersProducts = new ArrayCollection();
         $this->ordersStatusUpdates = new ArrayCollection();
         $this->ordersStatusUpdates->add(new OrderStatusUpdate($this));
@@ -75,9 +73,9 @@ class Order
         return $this->id;
     }
 
-    public function getUser(): User
+    public function getClient(): Client
     {
-        return $this->user;
+        return $this->client;
     }
 
     /**

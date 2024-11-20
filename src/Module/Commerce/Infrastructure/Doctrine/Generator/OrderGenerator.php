@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\Module\Commerce\Infrastructure\Doctrine\Generator;
 
+use App\Module\Commerce\Domain\Entity\Client;
 use App\Module\Commerce\Domain\Entity\Order;
-use App\Module\Auth\Domain\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class OrderGenerator
 {
     public function generate(
-        User $user,
+        Client $client,
         ArrayCollection $products,
     ): Order {
         $order = new Order(
-            user: $user,
+            client: $client,
         );
 
         foreach ($products as $product) {

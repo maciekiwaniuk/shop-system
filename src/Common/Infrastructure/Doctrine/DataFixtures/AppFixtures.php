@@ -21,36 +21,37 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $user = (new UserGenerator($this->passwordHasher))->generate();
-
-        $productGenerator = new ProductGenerator();
-        $productApple = $productGenerator->generate(
-            name: 'Apple',
-            price: 0.99,
-        );
-        $productBall = $productGenerator->generate(
-            name: 'Ball',
-            price: 30.99,
-        );
-
-        $orderOne = (new OrderGenerator())->generate(
-            user: $user,
-            products: new ArrayCollection([
-                $productApple, $productBall,
-            ]),
-        );
-        $orderTwo = (new OrderGenerator())->generate(
-            user: $user,
-            products: new ArrayCollection([
-                $productBall, $productApple,
-            ]),
-        );
-
-        $manager->persist($user);
-        $manager->persist($productApple);
-        $manager->persist($productBall);
-        $manager->persist($orderOne);
-        $manager->persist($orderTwo);
-        $manager->flush();
+        // TODO:
+//        $user = (new UserGenerator($this->passwordHasher))->generate();
+//
+//        $productGenerator = new ProductGenerator();
+//        $productApple = $productGenerator->generate(
+//            name: 'Apple',
+//            price: 0.99,
+//        );
+//        $productBall = $productGenerator->generate(
+//            name: 'Ball',
+//            price: 30.99,
+//        );
+//
+//        $orderOne = (new OrderGenerator())->generate(
+//            user: $user,
+//            products: new ArrayCollection([
+//                $productApple, $productBall,
+//            ]),
+//        );
+//        $orderTwo = (new OrderGenerator())->generate(
+//            user: $user,
+//            products: new ArrayCollection([
+//                $productBall, $productApple,
+//            ]),
+//        );
+//
+//        $manager->persist($user);
+//        $manager->persist($productApple);
+//        $manager->persist($productBall);
+//        $manager->persist($orderOne);
+//        $manager->persist($orderTwo);
+//        $manager->flush();
     }
 }
