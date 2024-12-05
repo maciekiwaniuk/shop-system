@@ -31,7 +31,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 200, unique: true)]
     #[Groups(['default'])]
-    private string $email;
+    public string $email {
+        get => $this->email;
+    }
 
     #[ORM\Column]
     #[Groups(['user_password'])]
@@ -39,11 +41,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 100)]
     #[Groups(['default'])]
-    private string $name;
+    private string $name {
+        get => $this->name;
+    }
 
     #[ORM\Column(length: 100)]
     #[Groups(['default'])]
-    private string $surname;
+    private string $surname {
+        get => $this->surname;
+    }
 
     /**
      * @var string[]
@@ -54,7 +60,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     #[Groups(['default'])]
-    private DateTimeImmutable $updatedAt;
+    private DateTimeImmutable $updatedAt {
+        get => $this->updatedAt;
+    }
 
     #[ORM\Column]
     #[Groups(['default'])]
@@ -87,11 +95,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
     public function getUserIdentifier(): string
     {
         return $this->email;
@@ -106,16 +109,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getPassword(): string
     {
         return $this->password;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function getSurname(): ?string
-    {
-        return $this->surname;
     }
 
     /**
@@ -144,11 +137,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
-    }
-
-    public function getUpdatedAt(): DateTimeImmutable
-    {
-        return $this->updatedAt;
     }
 
     public function eraseCredentials(): void

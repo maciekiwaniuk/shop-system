@@ -18,9 +18,9 @@ class ProductTest extends AbstractUnitTestCase
 
         $this->assertEquals('exampleName', $product->getName());
         $this->assertEquals(3.21, $product->getPrice());
-        $this->assertNotNull($product->getSlug());
+        $this->assertNotNull($product->slug);
         $this->assertNotNull($product->getCreatedAt());
-        $this->assertNotNull($product->getUpdatedAt());
-        $this->assertNull($product->getDeletedAt());
+        $this->assertNotNull($product->updatedAt);
+        $this->assertNull($product->deletedAt);
     }
 }

@@ -32,7 +32,9 @@ class Product
 
     #[ORM\Column(length: 200)]
     #[Groups(['default'])]
-    private string $slug;
+    public string $slug {
+        get => $this->slug;
+    }
 
     #[ORM\Column(length: 200)]
     #[Groups(['default'])]
@@ -40,11 +42,15 @@ class Product
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['product_deleted_at'])]
-    private ?DateTimeImmutable $deletedAt;
+    public ?DateTimeImmutable $deletedAt {
+        get => $this->deletedAt;
+    }
 
     #[ORM\Column]
     #[Groups(['default'])]
-    private DateTimeImmutable $updatedAt;
+    public DateTimeImmutable $updatedAt {
+        get => $this->updatedAt;
+    }
 
     #[ORM\Column]
     #[Groups(['default'])]
@@ -83,7 +89,7 @@ class Product
     private function generateSlug(string $name): string
     {
         return strtolower(
-            (new AsciiSlugger())->slug($name) . '-' . substr((string) Uuid::v1(), 0, 8),
+            new AsciiSlugger()->slug($name) . '-' . substr((string) Uuid::v1(), 0, 8),
         );
     }
 
@@ -92,29 +98,14 @@ class Product
         return $this->name;
     }
 
-    public function getSlug(): string
-    {
-        return $this->slug;
-    }
-
     public function getPrice(): float
     {
         return $this->price;
     }
 
-    public function getDeletedAt(): ?DateTimeImmutable
-    {
-        return $this->deletedAt;
-    }
-
     public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
-    }
-
-    public function getUpdatedAt(): DateTimeImmutable
-    {
-        return $this->updatedAt;
     }
 
     public function setName(string $name): self

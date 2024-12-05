@@ -124,7 +124,7 @@ class AbstractApplicationTestCase extends WebTestCase
                 'CONTENT_TYPE' => 'application/json',
             ],
             content: json_encode([
-                'email' => $user->getEmail(),
+                'email' => $user->email,
                 'password' => $unhashedPassword,
             ]),
         );
@@ -164,7 +164,7 @@ class AbstractApplicationTestCase extends WebTestCase
                 'CONTENT_TYPE' => 'application/json',
             ],
             content: json_encode([
-                'email' => $admin->getEmail(),
+                'email' => $admin->email,
                 'password' => $unhashedPassword,
             ]),
         );

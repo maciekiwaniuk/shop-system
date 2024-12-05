@@ -33,7 +33,7 @@ readonly class UpdateProductCommandHandler implements CommandInterface
     public function __invoke(UpdateProductCommand $command): CommandResult
     {
         try {
-            $this->cache->delByKeys([$command->product->getSlug()]);
+            $this->cache->delByKeys([$command->product]);
 
             $user = $this->entityManager->getReference(Product::class, $command->product->getId());
             $user

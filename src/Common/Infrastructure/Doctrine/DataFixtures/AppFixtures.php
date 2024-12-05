@@ -34,13 +34,13 @@ class AppFixtures extends Fixture
 //            price: 30.99,
 //        );
 //
-//        $orderOne = (new OrderGenerator())->generate(
+//        $orderOne = new OrderGenerator()->generate(
 //            user: $user,
 //            products: new ArrayCollection([
 //                $productApple, $productBall,
 //            ]),
 //        );
-//        $orderTwo = (new OrderGenerator())->generate(
+//        $orderTwo = new OrderGenerator()->generate(
 //            user: $user,
 //            products: new ArrayCollection([
 //                $productBall, $productApple,

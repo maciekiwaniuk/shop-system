@@ -28,19 +28,27 @@ class Client
 
     #[ORM\Column(length: 200, unique: true)]
     #[Groups(['default'])]
-    private string $email;
+    private string $email {
+        get => $this->email;
+    }
 
     #[ORM\Column(length: 100)]
     #[Groups(['default'])]
-    private string $name;
+    private string $name {
+        get => $this->name;
+    }
 
     #[ORM\Column(length: 100)]
     #[Groups(['default'])]
-    private string $surname;
+    private string $surname {
+        get => $this->surname;
+    }
 
     #[ORM\Column]
     #[Groups(['default'])]
-    private DateTimeImmutable $updatedAt;
+    private DateTimeImmutable $updatedAt {
+        get => $this->updatedAt;
+    }
 
     #[ORM\Column]
     #[Groups(['default'])]
@@ -70,28 +78,9 @@ class Client
         return $this->id;
     }
 
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function getSurname(): ?string
-    {
-        return $this->surname;
-    }
-
     public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
 }

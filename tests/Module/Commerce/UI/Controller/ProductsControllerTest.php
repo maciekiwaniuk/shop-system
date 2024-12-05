@@ -72,7 +72,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         $client = $this->getUserClient();
         $client->request(
             method: Request::METHOD_GET,
-            uri: $this->url . '/show/' . $product->getSlug(),
+            uri: $this->url . '/show/' . $product->slug,
         );
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
@@ -117,7 +117,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         );
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
-        $deletedProduct = $this->productRepository->findBySlug($product->getSlug());
+        $deletedProduct = $this->productRepository->findBySlug($product->slug);
 
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
