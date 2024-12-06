@@ -18,22 +18,40 @@ doctrine:
         validate_xml_mapping: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
         auto_mapping: true
-        mappings:
-            Order:
-                is_bundle: false
-                dir: '%kernel.project_dir%/src/Module/Commerce/Domain/Entity'
-                prefix: 'App\Module\Commerce\Domain\Entity'
-                alias: Order
-            Product:
-                is_bundle: false
-                dir: '%kernel.project_dir%/src/Module/Commerce/Domain/Entity'
-                prefix: 'App\Module\Commerce\Domain\Entity'
-                alias: Product
-            User:
-                is_bundle: false
-                dir: '%kernel.project_dir%/src/Module/Auth/Domain/Entity'
-                prefix: 'App\Module\Auth\Domain\Entity'
-                alias: User
+        default_entity_manager: 'auth'
+        entity_managers:
+            auth:
+                User:
+                    is_bundle: false
+                    dir: '%kernel.project_dir%/src/Module/Auth/Domain/Entity'
+                    prefix: 'App\Module\Auth\Domain\Entity'
+                    alias: User
+            commerce:
+                Client:
+                    is_bundle: false
+                    dir: '%kernel.project_dir%/src/Module/Commerce/Domain/Entity'
+                    prefix: 'App\Module\Commerce\Domain\Entity'
+                    alias: Client
+                Order:
+                    is_bundle: false
+                    dir: '%kernel.project_dir%/src/Module/Commerce/Domain/Entity'
+                    prefix: 'App\Module\Commerce\Domain\Entity'
+                    alias: Order
+                OrderProduct:
+                    is_bundle: false
+                    dir: '%kernel.project_dir%/src/Module/Commerce/Domain/Entity'
+                    prefix: 'App\Module\Commerce\Domain\Entity'
+                    alias: OrderProduct
+                OrderStatusUpdate:
+                    is_bundle: false
+                    dir: '%kernel.project_dir%/src/Module/Commerce/Domain/Entity'
+                    prefix: 'App\Module\Commerce\Domain\Entity'
+                    alias: OrderStatusUpdate
+                Product:
+                    is_bundle: false
+                    dir: '%kernel.project_dir%/src/Module/Commerce/Domain/Entity'
+                    prefix: 'App\Module\Commerce\Domain\Entity'
+                    alias: Product
 
 when@test:
     doctrine:

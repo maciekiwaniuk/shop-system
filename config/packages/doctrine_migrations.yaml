@@ -3,3 +3,4 @@ doctrine_migrations:
         'AuthModuleDoctrineMigrations': '%kernel.project_dir%/src/Module/Auth/Infrastructure/Doctrine/Migrations'
         'CommerceModuleDoctrineMigrations': '%kernel.project_dir%/src/Module/Commerce/Infrastructure/Doctrine/Migrations'
     enable_profiler: false
+    em: 'auth'
