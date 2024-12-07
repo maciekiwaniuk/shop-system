@@ -23,7 +23,7 @@ use Symfony\Component\Uid\Uuid;
 class Order
 {
     #[ORM\Id]
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     #[Groups(['default'])]
     private readonly string $id;
 
@@ -35,7 +35,7 @@ class Order
     /**
      * @var Collection<int, OrderProduct>
      */
-    #[ORM\OneToMany(mappedBy: 'order', targetEntity: OrderProduct::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: OrderProduct::class, mappedBy: 'order', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'id', referencedColumnName: 'order_id', nullable: false)]
     #[Groups(['default'])]
     public Collection $ordersProducts {
@@ -45,7 +45,7 @@ class Order
     /**
      * @var Collection<int, OrderStatusUpdate>
      */
-    #[ORM\OneToMany(mappedBy: 'order', targetEntity: OrderStatusUpdate::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: OrderStatusUpdate::class, mappedBy: 'order', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'id', referencedColumnName: 'order_id', nullable: false)]
     #[Groups(['default'])]
     public Collection $ordersStatusUpdates {
@@ -56,7 +56,7 @@ class Order
     #[Groups(['default'])]
     private ?DateTimeImmutable $completedAt;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     #[Groups(['default'])]
     private readonly DateTimeImmutable $createdAt;
 

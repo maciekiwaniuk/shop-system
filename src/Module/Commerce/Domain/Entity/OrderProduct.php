@@ -14,13 +14,13 @@ class OrderProduct
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     /**
      * @phpstan-ignore-next-line
      */
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Order::class)]
+    #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'ordersProducts')]
     #[ORM\JoinColumn(name: 'order_id', referencedColumnName: 'id', nullable: false)]
     #[Groups(['order'])]
     private readonly Order $order;
@@ -30,11 +30,11 @@ class OrderProduct
     #[Groups(['default'])]
     private readonly Product $product;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     #[Groups(['default'])]
     private readonly int $productQuantity;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     #[Groups(['default'])]
     private readonly float $productPricePerPiece;
 

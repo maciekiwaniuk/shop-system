@@ -33,3 +33,9 @@ cache_clear:
 
 install:
 	docker compose exec php composer install --optimize-autoloader --no-interaction --no-progress
+
+diff:
+	bin/console doctrine:migrations:diff --em=commerce --namespace=DoctrineMigrationsCommerce
+
+schema_update:
+	bin/console doctrine:schema:update --force --em=database2

@@ -5,53 +5,44 @@ doctrine:
                 url: '%env(resolve:AUTH_DATABASE_URL)%'
             commerce:
                 url: '%env(resolve:COMMERCE_DATABASE_URL)%'
-
-        # IMPORTANT: You MUST configure your server version,
-        # either here or in the DATABASE_URL env var (see .env file)
-        #server_version: '15'
-
-        profiling_collect_backtrace: '%kernel.debug%'
     orm:
-        auto_generate_proxy_classes: true
-        enable_lazy_ghost_objects: true
-        report_fields_where_declared: true
-        validate_xml_mapping: true
-        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
-        auto_mapping: true
-        default_entity_manager: 'auth'
         entity_managers:
             auth:
-                User:
-                    is_bundle: false
-                    dir: '%kernel.project_dir%/src/Module/Auth/Domain/Entity'
-                    prefix: 'App\Module\Auth\Domain\Entity'
-                    alias: User
+                connection: auth
+                mappings:
+                    User:
+                        is_bundle: false
+                        dir: '%kernel.project_dir%/src/Module/Auth/Domain/Entity'
+                        prefix: 'App\Module\Auth\Domain\Entity'
+                        alias: User
             commerce:
-                Client:
-                    is_bundle: false
-                    dir: '%kernel.project_dir%/src/Module/Commerce/Domain/Entity'
-                    prefix: 'App\Module\Commerce\Domain\Entity'
-                    alias: Client
-                Order:
-                    is_bundle: false
-                    dir: '%kernel.project_dir%/src/Module/Commerce/Domain/Entity'
-                    prefix: 'App\Module\Commerce\Domain\Entity'
-                    alias: Order
-                OrderProduct:
-                    is_bundle: false
-                    dir: '%kernel.project_dir%/src/Module/Commerce/Domain/Entity'
-                    prefix: 'App\Module\Commerce\Domain\Entity'
-                    alias: OrderProduct
-                OrderStatusUpdate:
-                    is_bundle: false
-                    dir: '%kernel.project_dir%/src/Module/Commerce/Domain/Entity'
-                    prefix: 'App\Module\Commerce\Domain\Entity'
-                    alias: OrderStatusUpdate
-                Product:
-                    is_bundle: false
-                    dir: '%kernel.project_dir%/src/Module/Commerce/Domain/Entity'
-                    prefix: 'App\Module\Commerce\Domain\Entity'
-                    alias: Product
+                connection: commerce
+                mappings:
+                    Client:
+                        is_bundle: false
+                        dir: '%kernel.project_dir%/src/Module/Commerce/Domain/Entity'
+                        prefix: 'App\Module\Commerce\Domain\Entity'
+                        alias: Client
+                    Order:
+                        is_bundle: false
+                        dir: '%kernel.project_dir%/src/Module/Commerce/Domain/Entity'
+                        prefix: 'App\Module\Commerce\Domain\Entity'
+                        alias: Order
+                    OrderProduct:
+                        is_bundle: false
+                        dir: '%kernel.project_dir%/src/Module/Commerce/Domain/Entity'
+                        prefix: 'App\Module\Commerce\Domain\Entity'
+                        alias: OrderProduct
+                    OrderStatusUpdate:
+                        is_bundle: false
+                        dir: '%kernel.project_dir%/src/Module/Commerce/Domain/Entity'
+                        prefix: 'App\Module\Commerce\Domain\Entity'
+                        alias: OrderStatusUpdate
+                    Product:
+                        is_bundle: false
+                        dir: '%kernel.project_dir%/src/Module/Commerce/Domain/Entity'
+                        prefix: 'App\Module\Commerce\Domain\Entity'
+                        alias: Product
 
 when@test:
     doctrine:

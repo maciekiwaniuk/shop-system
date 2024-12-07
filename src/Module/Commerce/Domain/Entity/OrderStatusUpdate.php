@@ -15,11 +15,11 @@ use Symfony\Component\Uid\Uuid;
 class OrderStatusUpdate
 {
     #[ORM\Id]
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     #[Groups(['default'])]
     private readonly string $id;
 
-    #[ORM\ManyToOne(targetEntity: Order::class)]
+    #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'ordersStatusUpdates')]
     #[ORM\JoinColumn(name: 'order_id', referencedColumnName: 'id', nullable: false)]
     #[Groups(['order'])]
     private readonly Order $order;
@@ -28,7 +28,7 @@ class OrderStatusUpdate
     #[Groups(['default'])]
     private readonly OrderStatus $status;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     #[Groups(['default'])]
     private readonly DateTimeImmutable $createdAt;
 

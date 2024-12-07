@@ -14,15 +14,15 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: ClientRepositoryInterface::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Index(
-    columns: ['email'],
     name: 'client_search_idx',
+    columns: ['email'],
 )]
 #[ORM\Table(name: '`client`')]
 #[UniqueEntity(fields: ['email'])]
 class Client
 {
     #[ORM\Id]
-    #[ORM\Column]
+    #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['default'])]
     private readonly string $id;
 
@@ -44,13 +44,13 @@ class Client
         get => $this->surname;
     }
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     #[Groups(['default'])]
     private DateTimeImmutable $updatedAt {
         get => $this->updatedAt;
     }
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     #[Groups(['default'])]
     private readonly DateTimeImmutable $createdAt;
 

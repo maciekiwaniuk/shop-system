@@ -22,7 +22,7 @@ class Product
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     #[Groups(['default'])]
     private ?int $id = null;
 
@@ -46,13 +46,13 @@ class Product
         get => $this->deletedAt;
     }
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     #[Groups(['default'])]
     public DateTimeImmutable $updatedAt {
         get => $this->updatedAt;
     }
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     #[Groups(['default'])]
     private readonly DateTimeImmutable $createdAt;
 

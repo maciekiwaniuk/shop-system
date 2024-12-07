@@ -17,15 +17,15 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: UserRepositoryInterface::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Index(
-    columns: ['email'],
     name: 'user_search_idx',
+    columns: ['email'],
 )]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity(fields: ['email'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     #[Groups(['default'])]
     private readonly string $id;
 
@@ -35,7 +35,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         get => $this->email;
     }
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     #[Groups(['user_password'])]
     private string $password;
 
@@ -54,17 +54,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string[]
      */
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     #[Groups(['default'])]
     private array $roles;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     #[Groups(['default'])]
     private DateTimeImmutable $updatedAt {
         get => $this->updatedAt;
     }
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     #[Groups(['default'])]
     private readonly DateTimeImmutable $createdAt;
 
