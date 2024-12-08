@@ -1,4 +1,3 @@
 doctrine_migrations:
     migrations_paths:
-        'DoctrineMigrationsAuth': '%kernel.project_dir%/src/Module/Auth/Infrastructure/Doctrine/Migrations'
-        'DoctrineMigrationsCommerce': '%kernel.project_dir%/src/Module/Commerce/Infrastructure/Doctrine/Migrations'
+        'DoctrineMigrations': '%kernel.project_dir%/migrations'
