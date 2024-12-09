@@ -1,25 +1,4 @@
 services:
-    shop-system-nginx:
-        container_name: shop-system-nginx
-        build:
-            context: ./docker/nginx
-        restart: on-failure
-        volumes:
-            - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
-        depends_on:
-            - shop-system
-
-    shop-system:
-        container_name: shop-system
-        build:
-            context: ./docker/php
-        restart: on-failure
-        volumes:
-            - ./:/var/www/html
-        depends_on:
-            - shop-system-database
-            - shop-system-cache
-
     shop-system-database:
         container_name: shop-system-database
         image: mysql:9.1
@@ -42,6 +21,36 @@ services:
             - "6379:6379"
         volumes:
             - ./var/redis:/data
+            
+    shop-system-message-broker:
+        container_name: shop-system-message-broker
+        image: rabbitmq:4.0.4
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        volumes:
+            - ./docker/rabbitmq/data:/var/lib/rabbitmq
+
+    shop-system:
+        container_name: shop-system
+        build:
+            context: ./docker/php
+        restart: on-failure
+        volumes:
+            - ./:/var/www/html
+        depends_on:
+            - shop-system-database
+            - shop-system-cache
+
+    shop-system-nginx:
+        container_name: shop-system-nginx
+        build:
+            context: ./docker/nginx
+        restart: on-failure
+        volumes:
+            - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+        depends_on:
+            - shop-system
 
 volumes:
     mysql:
