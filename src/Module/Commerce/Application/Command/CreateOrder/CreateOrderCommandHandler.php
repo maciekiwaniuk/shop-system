@@ -17,7 +17,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Throwable;
 
-#[AsMessageHandler]
+#[AsMessageHandler(fromTransport: 'sync')]
 readonly class CreateOrderCommandHandler implements CommandHandlerInterface
 {
     public function __construct(

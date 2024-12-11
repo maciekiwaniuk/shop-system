@@ -14,7 +14,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Throwable;
 
-#[AsMessageHandler]
+#[AsMessageHandler(fromTransport: 'sync')]
 readonly class CreateUserCommandHandler implements CommandHandlerInterface
 {
     public function __construct(

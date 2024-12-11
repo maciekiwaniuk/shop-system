@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 
-#[AsMessageHandler]
+#[AsMessageHandler(fromTransport: 'sync')]
 readonly class UpdateProductCommandHandler implements CommandInterface
 {
     protected CacheProxyInterface $cache;
