@@ -28,17 +28,17 @@ information about success, status codes, and retrieved data.
 indicates its current status.
 
 ### Database
-![](https://github.com/maciekiwaniuk/shop-system/raw/main/public/images/database.jpg)
+![](https://github.com/maciekiwaniuk/shop-system/raw/main/docs/images/database.jpg)
 
 ### API Docs
 
-![](https://github.com/maciekiwaniuk/shop-system/raw/main/public/images/docs.jpg)
+![](https://github.com/maciekiwaniuk/shop-system/raw/main/docs/images/docs.jpg)
 
 ### Structure
-![](https://github.com/maciekiwaniuk/shop-system/raw/main/public/images/modules.jpg)
+![](https://github.com/maciekiwaniuk/shop-system/raw/main/docs/images/modules.jpg)
 
 ### Module
-![](https://github.com/maciekiwaniuk/shop-system/raw/main/public/images/module.jpg)
+![](https://github.com/maciekiwaniuk/shop-system/raw/main/docs/images/module.jpg)
 
 ## Commands using Make
 

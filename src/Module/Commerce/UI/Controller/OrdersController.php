@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\Commerce\UI\Controller;
 
-use App\Module\Commerce\Application\Command\ChangeOrderStatus\ChangeOrderStatusCommand;
-use App\Module\Commerce\Application\Command\CreateOrder\CreateOrderCommand;
+use App\Module\Commerce\Application\SyncCommand\ChangeOrderStatus\ChangeOrderStatusCommand;
+use App\Module\Commerce\Application\SyncCommand\CreateOrder\CreateOrderCommand;
 use App\Module\Commerce\Application\DTO\ChangeOrderStatusDTO;
 use App\Module\Commerce\Application\DTO\CreateOrderDTO;
 use App\Module\Commerce\Application\Query\FindOrderByUuid\FindOrderByUuidQuery;

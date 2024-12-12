@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Commerce\Application\Command\ChangeOrderStatus;
+namespace App\Module\Commerce\Application\SyncCommand\ChangeOrderStatus;
 
 use App\Module\Commerce\Domain\Entity\Order;
 use App\Module\Commerce\Domain\Entity\OrderStatusUpdate;
 use App\Module\Commerce\Domain\Repository\OrderStatusUpdateRepositoryInterface;
 use App\Common\Application\BusResult\CommandResult;
-use App\Common\Application\Command\CommandHandlerInterface;
+use App\Common\Application\SyncCommand\SyncCommandHandlerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +16,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 
 #[AsMessageHandler(fromTransport: 'sync')]
-readonly class ChangeOrderStatusCommandHandler implements CommandHandlerInterface
+readonly class ChangeOrderStatusCommandHandler implements SyncCommandHandlerInterface
 {
     public function __construct(
         protected OrderStatusUpdateRepositoryInterface $orderStatusUpdateRepository,

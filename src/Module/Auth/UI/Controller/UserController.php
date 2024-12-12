@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\UI\Controller;
 
-use App\Module\Auth\Application\Command\CreateUser\CreateUserCommand as CreateUserCommandEvent;
+use App\Module\Auth\Application\SyncCommand\CreateUser\CreateUserCommand as CreateUserCommandEvent;
 use App\Module\Auth\Application\DTO\CreateUserDTO;
 use App\Module\Auth\Application\Query\FindUserByEmail\FindUserByEmailQuery;
 use App\Module\Auth\Domain\Entity\User;

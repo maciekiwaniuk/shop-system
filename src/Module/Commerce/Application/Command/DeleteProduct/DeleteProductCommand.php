@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Commerce\Application\Command\DeleteProduct;
+namespace App\Module\Commerce\Application\SyncCommand\DeleteProduct;
 
 use App\Module\Commerce\Domain\Entity\Product;
-use App\Common\Application\Command\CommandInterface;
+use App\Common\Application\SyncCommand\SyncCommandInterface;
 
-readonly class DeleteProductCommand implements CommandInterface
+readonly class DeleteProductCommand implements SyncCommandInterface
 {
     public function __construct(
         public Product $product,

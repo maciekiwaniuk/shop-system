@@ -2,20 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Auth\Application\Command\CreateUser;
+namespace App\Module\Auth\Application\SyncCommand\CreateUser;
 
 use App\Module\Auth\Domain\Entity\User;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Common\Application\BusResult\CommandResult;
-use App\Common\Application\Command\CommandHandlerInterface;
+use App\Common\Application\SyncCommand\SyncCommandHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Throwable;
 
 #[AsMessageHandler(fromTransport: 'sync')]
-readonly class CreateUserCommandHandler implements CommandHandlerInterface
+readonly class CreateUserCommandHandler implements SyncCommandHandlerInterface
 {
     public function __construct(
         protected UserRepositoryInterface $userRepository,

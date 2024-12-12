@@ -7,7 +7,7 @@ namespace App\Tests\Common\Application\Bus\CommandBus;
 use App\Common\Application\Bus\CommandBus\CommandBus;
 use App\Common\Application\Bus\CommandBus\CommandBusInterface;
 use App\Common\Application\BusResult\CommandResult;
-use App\Common\Application\Command\CommandInterface;
+use App\Common\Application\SyncCommand\SyncCommandInterface;
 use App\Tests\AbstractUnitTestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,7 +53,7 @@ class CommandBusTest extends AbstractUnitTestCase
             ->willReturn($envelope);
 
         $commandResult = $this->commandBus->handle(
-            new class implements CommandInterface {
+            new class implements SyncCommandInterface {
             },
         );
 
@@ -82,7 +82,7 @@ class CommandBusTest extends AbstractUnitTestCase
             ->willReturn($envelope);
 
         $commandResult = $this->commandBus->handle(
-            new class implements CommandInterface {
+            new class implements SyncCommandInterface {
             },
         );
 
@@ -109,7 +109,7 @@ class CommandBusTest extends AbstractUnitTestCase
             ->willReturn($envelope);
 
         $commandResult = $this->commandBus->handle(
-            new class implements CommandInterface {
+            new class implements SyncCommandInterface {
             },
         );
 

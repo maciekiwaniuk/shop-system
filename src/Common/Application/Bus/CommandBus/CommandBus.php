@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Common\Application\Bus\CommandBus;
 
 use App\Common\Application\BusResult\CommandResult;
-use App\Common\Application\Command\CommandInterface;
+use App\Common\Application\SyncCommand\SyncCommandInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -19,7 +19,7 @@ readonly class CommandBus implements CommandBusInterface
     ) {
     }
 
-    public function handle(CommandInterface $command): CommandResult
+    public function handle(SyncCommandInterface $command): CommandResult
     {
         $handledStamps = ($this->bus->dispatch($command))
             ->all(HandledStamp::class);

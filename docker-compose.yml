@@ -20,7 +20,7 @@ services:
         ports:
             - "6379:6379"
         volumes:
-            - ./var/redis:/data
+            - ./docker/redis/data:/data
             
     shop-system-message-broker:
         container_name: shop-system-message-broker

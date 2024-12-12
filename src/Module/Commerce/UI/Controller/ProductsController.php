@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\Commerce\UI\Controller;
 
-use App\Module\Commerce\Application\Command\CreateProduct\CreateProductCommand;
-use App\Module\Commerce\Application\Command\DeleteProduct\DeleteProductCommand;
-use App\Module\Commerce\Application\Command\UpdateProduct\UpdateProductCommand;
+use App\Module\Commerce\Application\SyncCommand\CreateProduct\CreateProductCommand;
+use App\Module\Commerce\Application\SyncCommand\DeleteProduct\DeleteProductCommand;
+use App\Module\Commerce\Application\SyncCommand\UpdateProduct\UpdateProductCommand;
 use App\Module\Commerce\Application\DTO\CreateProductDTO;
 use App\Module\Commerce\Application\DTO\UpdateProductDTO;
 use App\Module\Commerce\Application\Query\FindProductById\FindProductByIdQuery;
