@@ -9,7 +9,7 @@ use App\Module\Auth\Application\SyncCommand\SetUserAsAdmin\SetUserAsAdminCommand
 use App\Module\Auth\Application\DTO\CreateUserDTO;
 use App\Module\Auth\Application\Query\FindUserByEmail\FindUserByEmailQuery;
 use App\Module\Auth\Domain\Entity\User;
-use App\Common\Application\Bus\CommandBus\CommandBusInterface;
+use App\Common\Application\Bus\SyncCommandBus\SyncCommandBusInterface;
 use App\Common\Application\Bus\QueryBus\QueryBusInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -27,7 +27,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 final class CreateUserCommand extends Command
 {
     public function __construct(
-        protected readonly CommandBusInterface $commandBus,
+        protected readonly SyncCommandBusInterface $syncCommandBus,
         protected readonly QueryBusInterface $queryBus,
         protected readonly ValidatorInterface $validator,
         protected readonly EntityManagerInterface $entityManager,
@@ -63,14 +63,14 @@ final class CreateUserCommand extends Command
             return Command::FAILURE;
         }
 
-        $commandResult = $this->commandBus->handle(new CreateUserCommandEvent($dto));
+        $commandResult = $this->syncCommandBus->handle(new CreateUserCommandEvent($dto));
         if ($commandResult->success) {
             $output->writeln('Successfully created user.');
 
             $queryResult = $this->queryBus->handle(new FindUserByEmailQuery($dto->email));
             if (array_key_exists('id', $queryResult->data)) {
                 $user = $this->entityManager->getReference(User::class, $queryResult->data['id']);
-                $commandResult = $this->commandBus->handle(new SetUserAsAdminCommand($user));
+                $commandResult = $this->syncCommandBus->handle(new SetUserAsAdminCommand($user));
 
                 if ($commandResult->success) {
                     $output->writeln('Successfully set user as admin.');

@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Common\Application\Bus\CommandBus;
+namespace App\Common\Application\Bus\AsyncCommandBus;
 
-use App\Common\Application\BusResult\CommandResult;
-use App\Common\Application\SyncCommand\AsyncCommandInterface;
+use App\Common\Application\AsyncCommand\AsyncCommandInterface;
 
 interface AsyncCommandBusInterface
 {

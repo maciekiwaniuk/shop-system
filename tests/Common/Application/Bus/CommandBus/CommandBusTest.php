@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Common\Application\Bus\CommandBus;
+namespace App\Tests\Common\Application\Bus\SyncCommandBus;
 
-use App\Common\Application\Bus\CommandBus\CommandBus;
-use App\Common\Application\Bus\CommandBus\CommandBusInterface;
+use App\Common\Application\Bus\SyncCommandBus\SyncCommandBus;
+use App\Common\Application\Bus\SyncCommandBus\SyncCommandBusInterface;
 use App\Common\Application\BusResult\CommandResult;
 use App\Common\Application\SyncCommand\SyncCommandInterface;
 use App\Tests\AbstractUnitTestCase;
@@ -15,18 +15,18 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 
-class CommandBusTest extends AbstractUnitTestCase
+class SyncCommandBusTest extends AbstractUnitTestCase
 {
     protected MessageBusInterface $bus;
     protected LoggerInterface $logger;
-    protected CommandBusInterface $commandBus;
+    protected SyncCommandBusInterface $syncCommandBus;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->bus = $this->createMock(MessageBusInterface::class);
         $this->logger = $this->createMock(LoggerInterface::class);
-        $this->commandBus = new CommandBus(
+        $this->syncCommandBus = new SyncCommandBus(
             $this->bus,
             $this->logger,
         );
@@ -52,7 +52,7 @@ class CommandBusTest extends AbstractUnitTestCase
             ->method('dispatch')
             ->willReturn($envelope);
 
-        $commandResult = $this->commandBus->handle(
+        $commandResult = $this->syncCommandBus->handle(
             new class implements SyncCommandInterface {
             },
         );
@@ -81,7 +81,7 @@ class CommandBusTest extends AbstractUnitTestCase
             ->method('dispatch')
             ->willReturn($envelope);
 
-        $commandResult = $this->commandBus->handle(
+        $commandResult = $this->syncCommandBus->handle(
             new class implements SyncCommandInterface {
             },
         );
@@ -108,7 +108,7 @@ class CommandBusTest extends AbstractUnitTestCase
             ->method('dispatch')
             ->willReturn($envelope);
 
-        $commandResult = $this->commandBus->handle(
+        $commandResult = $this->syncCommandBus->handle(
             new class implements SyncCommandInterface {
             },
         );

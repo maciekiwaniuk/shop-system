@@ -16,8 +16,8 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: OrderRepositoryInterface::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Index(
-    columns: ['id'],
     name: 'order_search_idx',
+    columns: ['id'],
 )]
 #[ORM\Table(name: '`order`')]
 class Order

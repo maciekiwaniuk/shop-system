@@ -14,7 +14,7 @@ use App\Module\Commerce\Application\Query\FindProductBySlug\FindProductBySlugQue
 use App\Module\Commerce\Application\Query\GetPaginatedProducts\GetPaginatedProductsQuery;
 use App\Module\Commerce\Application\Voter\ProductsVoter;
 use App\Module\Commerce\Domain\Entity\Product;
-use App\Common\Application\Bus\CommandBus\CommandBusInterface;
+use App\Common\Application\Bus\SyncCommandBus\SyncCommandBusInterface;
 use App\Common\Application\Bus\QueryBus\QueryBusInterface;
 use App\Common\Application\DTO\PaginationIdDTO;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,7 +31,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ProductsController extends AbstractController
 {
     public function __construct(
-        protected readonly CommandBusInterface $commandBus,
+        protected readonly SyncCommandBusInterface $syncCommandBus,
         protected readonly QueryBusInterface $queryBus,
         protected readonly EntityManagerInterface $entityManager,
     ) {
@@ -109,7 +109,7 @@ class ProductsController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $commandResult = $this->commandBus->handle(new CreateProductCommand($dto));
+        $commandResult = $this->syncCommandBus->handle(new CreateProductCommand($dto));
 
         $result = match (true) {
             $commandResult->success => [
@@ -184,7 +184,7 @@ class ProductsController extends AbstractController
         $queryResult = $this->queryBus->handle(new FindProductByIdQuery($id));
         if ($queryResult->data !== null) {
             $product = $this->entityManager->getReference(Product::class, $queryResult->data['id']);
-            $commandResult = $this->commandBus->handle(new UpdateProductCommand($product, $dto));
+            $commandResult = $this->syncCommandBus->handle(new UpdateProductCommand($product, $dto));
         }
 
         $result = match (true) {
@@ -221,7 +221,7 @@ class ProductsController extends AbstractController
         $queryResult = $this->queryBus->handle(new FindProductByIdQuery($id));
         if ($queryResult->data !== null) {
             $product = $this->entityManager->getReference(Product::class, $queryResult->data['id']);
-            $commandResult = $this->commandBus->handle(new DeleteProductCommand($product));
+            $commandResult = $this->syncCommandBus->handle(new DeleteProductCommand($product));
         }
 
         $result = match (true) {

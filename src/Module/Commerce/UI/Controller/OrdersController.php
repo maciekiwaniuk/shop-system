@@ -12,7 +12,7 @@ use App\Module\Commerce\Application\Query\FindOrderByUuid\FindOrderByUuidQuery;
 use App\Module\Commerce\Application\Query\GetPaginatedOrders\GetPaginatedOrdersQuery;
 use App\Module\Commerce\Application\Voter\OrdersVoter;
 use App\Module\Commerce\Domain\Entity\Order;
-use App\Common\Application\Bus\CommandBus\CommandBusInterface;
+use App\Common\Application\Bus\SyncCommandBus\SyncCommandBusInterface;
 use App\Common\Application\Bus\QueryBus\QueryBusInterface;
 use App\Common\Application\DTO\PaginationUuidDTO;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,7 +29,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class OrdersController extends AbstractController
 {
     public function __construct(
-        protected readonly CommandBusInterface $commandBus,
+        protected readonly SyncCommandBusInterface $syncCommandBus,
         protected readonly QueryBusInterface $queryBus,
         protected readonly EntityManagerInterface $entityManager,
     ) {
@@ -144,7 +144,7 @@ class OrdersController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $commandResult = $this->commandBus->handle(new CreateOrderCommand($dto));
+        $commandResult = $this->syncCommandBus->handle(new CreateOrderCommand($dto));
 
         $result = match (true) {
             $commandResult->success => [
@@ -172,7 +172,7 @@ class OrdersController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $commandResult = $this->commandBus->handle(new ChangeOrderStatusCommand($dto, $uuid));
+        $commandResult = $this->syncCommandBus->handle(new ChangeOrderStatusCommand($dto, $uuid));
 
         $result = match (true) {
             $commandResult->success => [

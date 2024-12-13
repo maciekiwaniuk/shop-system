@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\UI\Controller;
 
-use App\Module\Auth\Application\SyncCommand\CreateUser\CreateUserCommand as CreateUserCommandEvent;
+use App\Module\Auth\Application\SyncCommand\CreateUser\CreateUserCommand;
 use App\Module\Auth\Application\DTO\CreateUserDTO;
 use App\Module\Auth\Application\Query\FindUserByEmail\FindUserByEmailQuery;
 use App\Module\Auth\Domain\Entity\User;
-use App\Common\Application\Bus\CommandBus\CommandBusInterface;
+use App\Common\Application\Bus\SyncCommandBus\SyncCommandBusInterface;
 use App\Common\Application\Bus\QueryBus\QueryBusInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     public function __construct(
-        protected readonly CommandBusInterface $commandBus,
+        protected readonly SyncCommandBusInterface $syncCommandBus,
         protected readonly QueryBusInterface $queryBus,
         protected readonly JWTTokenManagerInterface $JWTTokenManager,
         protected readonly EntityManagerInterface $entityManager,
@@ -57,7 +57,7 @@ class UserController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $commandResult = $this->commandBus->handle(new CreateUserCommandEvent($dto));
+        $commandResult = $this->syncCommandBus->handle(new CreateUserCommand($dto));
         $queryResult = $this->queryBus->handle(new FindUserByEmailQuery($dto->email));
         if ($queryResult->data !== null) {
             $user = $this->entityManager->getReference(User::class, $queryResult->data['id']);

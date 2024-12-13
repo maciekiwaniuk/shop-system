@@ -7,7 +7,7 @@ namespace App\Tests\Module\Auth\UI\Console;
 use App\Module\Auth\Domain\Enum\UserRole;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\UI\Console\CreateUserCommand;
-use App\Common\Application\Bus\CommandBus\CommandBusInterface;
+use App\Common\Application\Bus\SyncCommandBus\SyncCommandBusInterface;
 use App\Common\Application\Bus\QueryBus\QueryBusInterface;
 use App\Tests\AbstractIntegrationTestCase;
 use Symfony\Component\Console\Application;
@@ -24,8 +24,8 @@ class CreateUserCommandTest extends AbstractIntegrationTestCase
         parent::setUp();
         $container = self::getContainer();
 
-        /** @var CommandBusInterface $commandBus */
-        $commandBus = $container->get(CommandBusInterface::class);
+        /** @var SyncCommandBusInterface $syncCommandBus */
+        $syncCommandBus = $container->get(SyncCommandBusInterface::class);
 
         /** @var QueryBusInterface $queryBus */
         $queryBus = $container->get(QueryBusInterface::class);
@@ -38,7 +38,7 @@ class CreateUserCommandTest extends AbstractIntegrationTestCase
         $this->application = new Application();
         $this->application->add(
             new CreateUserCommand(
-                commandBus: $commandBus,
+                SyncCommandBus: $syncCommandBus,
                 queryBus: $queryBus,
                 validator: $validator,
                 entityManager: $this->entityManager,

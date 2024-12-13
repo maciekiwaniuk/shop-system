@@ -2,23 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\Common\Application\Bus\CommandBus;
+namespace App\Common\Application\Bus\AsyncCommandBus;
 
-use App\Common\Application\SyncCommand\AsyncCommandInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Response;
+use App\Common\Application\AsyncCommand\AsyncCommandInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Messenger\Stamp\HandledStamp;
 
 readonly class AsyncCommandBus implements AsyncCommandBusInterface
 {
     public function __construct(
-        protected MessageBusInterface $bus,
+        protected MessageBusInterface $messageBus
     ) {
     }
 
     public function handle(AsyncCommandInterface $command): void
     {
-        $this->bus->dispatch($command);
+        $this->messageBus->dispatch($command);
     }
 }
