@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Auth\Application\SyncCommand\CreateUser;
+namespace App\Module\Auth\Application\Command\CreateUser;
 
 use App\Module\Auth\Domain\Entity\User;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Throwable;
 
-#[AsMessageHandler(fromTransport: 'sync')]
 readonly class CreateUserCommandHandler implements SyncCommandHandlerInterface
 {
     public function __construct(

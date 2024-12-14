@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Module\Commerce\Application\Voter;
 
 use App\Module\Commerce\Domain\Entity\Order;
-use App\Module\Auth\Domain\Entity\User;
 use Exception;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -29,7 +28,6 @@ class OrdersVoter extends Voter
      */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        /** @var User $user */
         $user = $token->getUser();
         if (!$user instanceof UserInterface) {
             return false;
@@ -44,15 +42,15 @@ class OrdersVoter extends Voter
         };
     }
 
-    private function canGetPaginated(User $user): bool
+    private function canGetPaginated(UserInterface $user): bool
     {
         return $user->isAdmin();
     }
 
-    private function canShow(Order $order, User $user): bool
+    private function canShow(Order $order, UserInterface $user): bool
     {
         return $user->isAdmin()
-            || $order->getUser() === $user;
+            || $order->getClient()->getId() === $user->getUserIdentifier();
     }
 
     private function canCreate(): bool
@@ -60,7 +58,7 @@ class OrdersVoter extends Voter
         return true;
     }
 
-    private function canUpdateStatus(User $user): bool
+    private function canUpdateStatus(UserInterface $user): bool
     {
         return $user->isAdmin();
     }

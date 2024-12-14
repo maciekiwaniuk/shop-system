@@ -2,22 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Commerce\Application\SyncCommand\CreateOrder;
+namespace App\Module\Commerce\Application\Command\CreateOrder;
 
+use App\Module\Commerce\Domain\Entity\Client;
 use App\Module\Commerce\Domain\Entity\Order;
 use App\Module\Commerce\Domain\Repository\OrderRepositoryInterface;
 use App\Module\Commerce\Domain\Entity\Product;
-use App\Module\Auth\Domain\Entity\User;
 use App\Common\Application\BusResult\CommandResult;
 use App\Common\Application\SyncCommand\SyncCommandHandlerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Throwable;
 
-#[AsMessageHandler(fromTransport: 'sync')]
 readonly class CreateOrderCommandHandler implements SyncCommandHandlerInterface
 {
     public function __construct(
@@ -30,11 +28,10 @@ readonly class CreateOrderCommandHandler implements SyncCommandHandlerInterface
 
     public function __invoke(CreateOrderCommand $command): CommandResult
     {
-        /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
         try {
             $order = new Order(
-                user: $user,
+                $this->entityManager->getReference(Client::class, $user->getUserIdentifier())
             );
             foreach ($command->dto->products as $product) {
                 $order->createAndAddOrderProduct(

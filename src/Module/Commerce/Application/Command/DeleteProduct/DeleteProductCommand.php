@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Commerce\Application\SyncCommand\DeleteProduct;
+namespace App\Module\Commerce\Application\Command\DeleteProduct;
 
 use App\Module\Commerce\Domain\Entity\Product;
 use App\Common\Application\SyncCommand\SyncCommandInterface;

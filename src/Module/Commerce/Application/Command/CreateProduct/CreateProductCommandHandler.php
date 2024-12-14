@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Commerce\Application\SyncCommand\CreateProduct;
+namespace App\Module\Commerce\Application\Command\CreateProduct;
 
 use App\Module\Commerce\Domain\Entity\Product;
 use App\Module\Commerce\Domain\Repository\ProductRepositoryInterface;
@@ -10,10 +10,8 @@ use App\Common\Application\BusResult\CommandResult;
 use App\Common\Application\SyncCommand\SyncCommandHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 
-#[AsMessageHandler(fromTransport: 'sync')]
 readonly class CreateProductCommandHandler implements SyncCommandHandlerInterface
 {
     public function __construct(

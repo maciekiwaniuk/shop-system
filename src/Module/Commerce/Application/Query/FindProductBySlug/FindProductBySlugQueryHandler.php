@@ -13,10 +13,8 @@ use App\Common\Application\BusResult\QueryResult;
 use App\Common\Application\Query\QueryHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 
-#[AsMessageHandler(fromTransport: 'sync')]
 readonly class FindProductBySlugQueryHandler implements QueryHandlerInterface
 {
     protected CacheProxyInterface $cache;

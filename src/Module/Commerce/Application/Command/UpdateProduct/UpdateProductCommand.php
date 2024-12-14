@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Commerce\Application\SyncCommand\UpdateProduct;
+namespace App\Module\Commerce\Application\Command\UpdateProduct;
 
 use App\Module\Commerce\Application\DTO\UpdateProductDTO;
 use App\Module\Commerce\Domain\Entity\Product;

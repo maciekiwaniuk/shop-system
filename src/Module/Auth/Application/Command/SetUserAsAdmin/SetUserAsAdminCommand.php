@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Auth\Application\SyncCommand\SetUserAsAdmin;
+namespace App\Module\Auth\Application\Command\SetUserAsAdmin;
 
 use App\Module\Auth\Domain\Entity\User;
 use App\Common\Application\SyncCommand\SyncCommandInterface;

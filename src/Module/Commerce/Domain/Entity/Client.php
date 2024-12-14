@@ -82,5 +82,4 @@ class Client
     {
         return $this->createdAt;
     }
-
 }
