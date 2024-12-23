@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Auth\UI\Console;
+namespace App\Module\Auth\Interface\Console;
 
 use App\Module\Auth\Application\Command\CreateUser\CreateUserCommand as CreateUserCommandEvent;
 use App\Module\Auth\Application\Command\SetUserAsAdmin\SetUserAsAdminCommand;

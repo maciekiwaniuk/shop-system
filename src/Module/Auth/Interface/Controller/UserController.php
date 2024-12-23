@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Auth\UI\Controller;
+namespace App\Module\Auth\Interface\Controller;
 
 use App\Module\Auth\Application\Command\CreateUser\CreateUserCommand;
 use App\Module\Auth\Application\DTO\CreateUserDTO;

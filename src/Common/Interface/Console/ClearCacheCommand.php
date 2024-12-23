@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Common\UI\Console;
+namespace App\Common\Interface\Console;
 
 use App\Common\Domain\Cache\CacheCreatorInterface;
 use App\Common\Domain\Cache\CacheProxyInterface;

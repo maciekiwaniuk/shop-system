@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Module\Auth\UI\Controller;
+namespace App\Tests\Module\Auth\Interface\Controller;
 
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Tests\AbstractApplicationTestCase;

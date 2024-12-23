@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Module\Commerce\UI\Controller;
+namespace App\Tests\Module\Commerce\Interface\Controller;
 
 use App\Module\Commerce\Domain\Repository\ProductRepositoryInterface;
 use App\Module\Commerce\Domain\Entity\Order;

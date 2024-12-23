@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Module\Auth\UI\Console;
+namespace App\Tests\Module\Auth\Interface\Console;
 
 use App\Module\Auth\Domain\Enum\UserRole;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
-use App\Module\Auth\UI\Console\CreateUserCommand;
+use App\Module\Auth\Interface\Console\CreateUserCommand;
 use App\Common\Application\Bus\SyncCommandBus\SyncCommandBusInterface;
 use App\Common\Application\Bus\QueryBus\QueryBusInterface;
 use App\Tests\AbstractIntegrationTestCase;

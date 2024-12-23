@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Common\UI\Console;
+namespace App\Tests\Common\Interface\Console;
 
 use App\Common\Infrastructure\Cache\CacheCreator;
-use App\Common\UI\Console\ClearCacheCommand;
+use App\Common\Interface\Console\ClearCacheCommand;
 use App\Tests\AbstractIntegrationTestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;

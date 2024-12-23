@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Commerce\UI\Controller;
+namespace App\Module\Commerce\Interface\Controller;
 
 use App\Module\Commerce\Application\Command\ChangeOrderStatus\ChangeOrderStatusCommand;
 use App\Module\Commerce\Application\Command\CreateOrder\CreateOrderCommand;
