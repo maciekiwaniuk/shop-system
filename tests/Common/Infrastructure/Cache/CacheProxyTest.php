@@ -12,8 +12,8 @@ use Redis;
 
 class CacheProxyTest extends AbstractUnitTestCase
 {
-    protected Redis $cache;
-    protected LoggerInterface $logger;
+    private Redis $cache;
+    private LoggerInterface $logger;
 
     protected function setUp(): void
     {

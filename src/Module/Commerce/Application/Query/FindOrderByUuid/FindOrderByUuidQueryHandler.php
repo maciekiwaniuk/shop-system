@@ -15,9 +15,9 @@ use Throwable;
 readonly class FindOrderByUuidQueryHandler implements QueryHandlerInterface
 {
     public function __construct(
-        protected OrderRepositoryInterface $orderRepository,
-        protected JsonSerializerInterface $serializer,
-        protected LoggerInterface $logger,
+        private OrderRepositoryInterface $orderRepository,
+        private JsonSerializerInterface $serializer,
+        private LoggerInterface $logger,
     ) {
     }
 

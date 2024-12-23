@@ -12,9 +12,9 @@ use Throwable;
 readonly class CacheProxy implements CacheProxyInterface
 {
     public function __construct(
-        protected Redis $cache,
-        protected LoggerInterface $logger,
-        protected string $prefix,
+        private Redis $cache,
+        private LoggerInterface $logger,
+        private string $prefix,
     ) {
     }
 

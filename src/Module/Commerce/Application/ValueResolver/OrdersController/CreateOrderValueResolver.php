@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 readonly class CreateOrderValueResolver implements ValueResolverInterface
 {
     public function __construct(
-        protected ValidatorInterface $validator,
+        private ValidatorInterface $validator,
     ) {
     }
 

@@ -11,8 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ProductsControllerTest extends AbstractApplicationTestCase
 {
-    protected string $url = '/api/v1/products';
-    protected ProductRepositoryInterface $productRepository;
+    private string $url = '/api/v1/products';
+    private ProductRepositoryInterface $productRepository;
 
     protected function setUp(): void
     {

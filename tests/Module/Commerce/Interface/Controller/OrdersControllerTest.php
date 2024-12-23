@@ -21,10 +21,10 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class OrdersControllerTest extends AbstractApplicationTestCase
 {
-    protected string $url = '/api/v1/orders';
-    protected UserRepositoryInterface $userRepository;
-    protected OrderRepositoryInterface $orderRepository;
-    protected ProductRepositoryInterface $productRepository;
+    private string $url = '/api/v1/orders';
+    private UserRepositoryInterface $userRepository;
+    private OrderRepositoryInterface $orderRepository;
+    private ProductRepositoryInterface $productRepository;
 
     protected function setUp(): void
     {

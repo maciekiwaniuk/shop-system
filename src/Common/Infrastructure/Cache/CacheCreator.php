@@ -13,8 +13,8 @@ use Symfony\Component\Cache\Adapter\RedisAdapter;
 readonly class CacheCreator implements CacheCreatorInterface
 {
     public function __construct(
-        protected LoggerInterface $logger,
-        protected string $redisUrl,
+        private LoggerInterface $logger,
+        private string $redisUrl,
     ) {
     }
 

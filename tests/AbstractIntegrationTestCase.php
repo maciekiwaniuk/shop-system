@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class AbstractIntegrationTestCase extends KernelTestCase
 {
-    protected EntityManagerInterface $entityManager;
+    private EntityManagerInterface $entityManager;
 
     protected function setUp(): void
     {
@@ -45,7 +45,7 @@ class AbstractIntegrationTestCase extends KernelTestCase
         $purger->purge();
     }
 
-    protected function clearCache(): void
+    private function clearCache(): void
     {
         /** @var CacheCreator $cacheCreator */
         $cacheCreator = self::getContainer()->get(CacheCreator::class);

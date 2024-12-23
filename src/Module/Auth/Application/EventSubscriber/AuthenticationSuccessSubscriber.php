@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class AuthenticationSuccessSubscriber implements EventSubscriberInterface
 {
-    protected Request $request;
+    private Request $request;
 
     public function onKernelRequest(RequestEvent $event): void
     {

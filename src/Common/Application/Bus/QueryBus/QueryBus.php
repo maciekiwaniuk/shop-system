@@ -14,8 +14,8 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 readonly class QueryBus implements QueryBusInterface
 {
     public function __construct(
-        protected MessageBusInterface $bus,
-        protected LoggerInterface $logger,
+        private MessageBusInterface $bus,
+        private LoggerInterface $logger,
     ) {
     }
 

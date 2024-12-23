@@ -19,10 +19,10 @@ use Throwable;
 readonly class CreateOrderCommandHandler implements SyncCommandHandlerInterface
 {
     public function __construct(
-        protected OrderRepositoryInterface $orderRepository,
-        protected EntityManagerInterface $entityManager,
-        protected LoggerInterface $logger,
-        protected TokenStorageInterface $tokenStorage,
+        private OrderRepositoryInterface $orderRepository,
+        private EntityManagerInterface $entityManager,
+        private LoggerInterface $logger,
+        private TokenStorageInterface $tokenStorage,
     ) {
     }
 

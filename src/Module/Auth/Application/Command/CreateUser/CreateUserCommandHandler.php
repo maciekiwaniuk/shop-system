@@ -16,9 +16,9 @@ use Throwable;
 readonly class CreateUserCommandHandler implements SyncCommandHandlerInterface
 {
     public function __construct(
-        protected UserRepositoryInterface $userRepository,
-        protected LoggerInterface $logger,
-        protected UserPasswordHasherInterface $passwordHasher,
+        private UserRepositoryInterface $userRepository,
+        private LoggerInterface $logger,
+        private UserPasswordHasherInterface $passwordHasher,
     ) {
     }
 

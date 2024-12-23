@@ -17,9 +17,9 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 
 class SyncCommandBusTest extends AbstractUnitTestCase
 {
-    protected MessageBusInterface $bus;
-    protected LoggerInterface $logger;
-    protected SyncCommandBusInterface $syncCommandBus;
+    private MessageBusInterface $bus;
+    private LoggerInterface $logger;
+    private SyncCommandBusInterface $syncCommandBus;
 
     protected function setUp(): void
     {

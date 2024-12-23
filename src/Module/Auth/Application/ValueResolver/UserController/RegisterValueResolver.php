@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 readonly class RegisterValueResolver implements ValueResolverInterface
 {
     public function __construct(
-        protected ValidatorInterface $validator,
+        private ValidatorInterface $validator,
     ) {
     }
 

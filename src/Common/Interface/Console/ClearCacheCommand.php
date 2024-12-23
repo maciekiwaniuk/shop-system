@@ -18,7 +18,7 @@ use Throwable;
 )]
 final class ClearCacheCommand extends Command
 {
-    protected readonly CacheProxyInterface $cache;
+    private readonly CacheProxyInterface $cache;
 
     public function __construct(
         CacheCreatorInterface $cacheCreator,
@@ -27,12 +27,12 @@ final class ClearCacheCommand extends Command
         $this->cache = $cacheCreator->create('');
     }
 
-    protected function configure(): void
+    private function configure(): void
     {
         $this->setHelp('Clears cache');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    private function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
             $this->cache->delByKeys(

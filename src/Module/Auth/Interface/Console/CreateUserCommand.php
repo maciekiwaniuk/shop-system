@@ -27,15 +27,15 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 final class CreateUserCommand extends Command
 {
     public function __construct(
-        protected readonly SyncCommandBusInterface $syncCommandBus,
-        protected readonly QueryBusInterface $queryBus,
-        protected readonly ValidatorInterface $validator,
-        protected readonly EntityManagerInterface $entityManager,
+        private readonly SyncCommandBusInterface $syncCommandBus,
+        private readonly QueryBusInterface $queryBus,
+        private readonly ValidatorInterface $validator,
+        private readonly EntityManagerInterface $entityManager,
     ) {
         parent::__construct();
     }
 
-    protected function configure(): void
+    private function configure(): void
     {
         $this
             ->setHelp('Creates user')
@@ -46,7 +46,7 @@ final class CreateUserCommand extends Command
             ->addArgument('isAdmin', InputArgument::OPTIONAL, 'Is admin | 1 to set it');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    private function execute(InputInterface $input, OutputInterface $output): int
     {
         $dto = new CreateUserDTO(
             email: $input->getArgument('email'),
@@ -83,7 +83,7 @@ final class CreateUserCommand extends Command
         return Command::FAILURE;
     }
 
-    protected function validationErrorsToString(ConstraintViolationListInterface $errors): string
+    private function validationErrorsToString(ConstraintViolationListInterface $errors): string
     {
         $errorsArray = [];
         foreach ($errors as $error) {

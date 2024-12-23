@@ -10,9 +10,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class PaginationUuidDTOTest extends AbstractIntegrationTestCase
 {
-    protected ValidatorInterface $validator;
-    protected string $exampleValidCursor = 'exampleUuidCursor';
-    protected int $exampleValidLimit = 10;
+    private ValidatorInterface $validator;
+    private string $exampleValidCursor = 'exampleUuidCursor';
+    private int $exampleValidLimit = 10;
 
     protected function setUp(): void
     {

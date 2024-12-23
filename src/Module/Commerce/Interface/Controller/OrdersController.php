@@ -29,9 +29,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class OrdersController extends AbstractController
 {
     public function __construct(
-        protected readonly SyncCommandBusInterface $syncCommandBus,
-        protected readonly QueryBusInterface $queryBus,
-        protected readonly EntityManagerInterface $entityManager,
+        private readonly SyncCommandBusInterface $syncCommandBus,
+        private readonly QueryBusInterface $queryBus,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 

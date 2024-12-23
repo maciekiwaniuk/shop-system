@@ -24,10 +24,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     public function __construct(
-        protected readonly SyncCommandBusInterface $syncCommandBus,
-        protected readonly QueryBusInterface $queryBus,
-        protected readonly JWTTokenManagerInterface $JWTTokenManager,
-        protected readonly EntityManagerInterface $entityManager,
+        private readonly SyncCommandBusInterface $syncCommandBus,
+        private readonly QueryBusInterface $queryBus,
+        private readonly JWTTokenManagerInterface $JWTTokenManager,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 

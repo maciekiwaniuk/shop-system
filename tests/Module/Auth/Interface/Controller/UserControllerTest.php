@@ -10,8 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class UserControllerTest extends AbstractApplicationTestCase
 {
-    protected string $url = '/api/v1';
-    protected UserRepositoryInterface $userRepository;
+    private string $url = '/api/v1';
+    private UserRepositoryInterface $userRepository;
 
     protected function setUp(): void
     {

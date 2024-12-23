@@ -15,11 +15,11 @@ use Throwable;
 
 readonly class DeleteProductCommandHandler implements SyncCommandHandlerInterface
 {
-    protected CacheProxyInterface $cache;
+    private CacheProxyInterface $cache;
 
     public function __construct(
-        protected ProductRepositoryInterface $productRepository,
-        protected LoggerInterface $logger,
+        private ProductRepositoryInterface $productRepository,
+        private LoggerInterface $logger,
         CacheCreatorInterface $cacheCreator,
     ) {
         $this->cache = $cacheCreator->create('query.products.findProductBySlugQuery.');

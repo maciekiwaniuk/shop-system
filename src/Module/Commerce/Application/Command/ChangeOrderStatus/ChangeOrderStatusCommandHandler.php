@@ -17,9 +17,9 @@ use Throwable;
 readonly class ChangeOrderStatusCommandHandler implements SyncCommandHandlerInterface
 {
     public function __construct(
-        protected OrderStatusUpdateRepositoryInterface $orderStatusUpdateRepository,
-        protected EntityManagerInterface $entityManager,
-        protected LoggerInterface $logger,
+        private OrderStatusUpdateRepositoryInterface $orderStatusUpdateRepository,
+        private EntityManagerInterface $entityManager,
+        private LoggerInterface $logger,
     ) {
     }
 

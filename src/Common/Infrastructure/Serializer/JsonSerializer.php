@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class JsonSerializer implements JsonSerializerInterface
 {
-    protected SerializerInterface $serializer;
+    private SerializerInterface $serializer;
 
     public function __construct()
     {

@@ -15,9 +15,9 @@ use Throwable;
 readonly class FindUserByEmailQueryHandler implements QueryHandlerInterface
 {
     public function __construct(
-        protected UserRepositoryInterface $userRepository,
-        protected JsonSerializerInterface $serializer,
-        protected LoggerInterface $logger,
+        private UserRepositoryInterface $userRepository,
+        private JsonSerializerInterface $serializer,
+        private LoggerInterface $logger,
     ) {
     }
 

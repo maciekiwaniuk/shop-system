@@ -15,8 +15,8 @@ use Throwable;
 readonly class CreateProductCommandHandler implements SyncCommandHandlerInterface
 {
     public function __construct(
-        protected ProductRepositoryInterface $productRepository,
-        protected LoggerInterface $logger,
+        private ProductRepositoryInterface $productRepository,
+        private LoggerInterface $logger,
     ) {
     }
 

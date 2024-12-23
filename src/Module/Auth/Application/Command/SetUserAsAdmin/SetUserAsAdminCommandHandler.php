@@ -16,8 +16,8 @@ use Throwable;
 readonly class SetUserAsAdminCommandHandler implements SyncCommandInterface
 {
     public function __construct(
-        protected EntityManagerInterface $entityManager,
-        protected LoggerInterface $logger,
+        private EntityManagerInterface $entityManager,
+        private LoggerInterface $logger,
     ) {
     }
 

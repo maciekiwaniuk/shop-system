@@ -15,9 +15,9 @@ use Throwable;
 readonly class GetPaginatedProductsQueryHandler implements QueryHandlerInterface
 {
     public function __construct(
-        protected ProductRepositoryInterface $productRepository,
-        protected JsonSerializerInterface $serializer,
-        protected LoggerInterface $logger,
+        private ProductRepositoryInterface $productRepository,
+        private JsonSerializerInterface $serializer,
+        private LoggerInterface $logger,
     ) {
     }
 

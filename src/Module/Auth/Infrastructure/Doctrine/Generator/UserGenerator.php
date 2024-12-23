@@ -10,7 +10,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 readonly class UserGenerator
 {
     public function __construct(
-        protected UserPasswordHasherInterface $passwordHasher,
+        private UserPasswordHasherInterface $passwordHasher,
     ) {
     }
 

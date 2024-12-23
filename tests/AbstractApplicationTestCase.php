@@ -21,8 +21,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AbstractApplicationTestCase extends WebTestCase
 {
-    protected KernelBrowser $client;
-    protected EntityManagerInterface $entityManager;
+    private KernelBrowser $client;
+    private EntityManagerInterface $entityManager;
 
     protected function setUp(): void
     {
@@ -62,7 +62,7 @@ class AbstractApplicationTestCase extends WebTestCase
         $purger->purge();
     }
 
-    protected function clearCache(): void
+    private function clearCache(): void
     {
         /** @var CacheCreator $cacheCreator */
         $cacheCreator = self::getContainer()->get(CacheCreator::class);

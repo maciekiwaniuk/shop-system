@@ -17,12 +17,12 @@ use Throwable;
 
 readonly class UpdateProductCommandHandler implements SyncCommandInterface
 {
-    protected CacheProxyInterface $cache;
+    private CacheProxyInterface $cache;
 
     public function __construct(
-        protected ProductRepositoryInterface $productRepository,
-        protected EntityManagerInterface $entityManager,
-        protected LoggerInterface $logger,
+        private ProductRepositoryInterface $productRepository,
+        private EntityManagerInterface $entityManager,
+        private LoggerInterface $logger,
         CacheCreatorInterface $cacheCreator,
     ) {
         $this->cache = $cacheCreator->create('query.products.findProductBySlugQuery.');

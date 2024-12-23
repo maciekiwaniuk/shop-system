@@ -12,11 +12,11 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CreateUserDTOTest extends AbstractIntegrationTestCase
 {
-    protected ValidatorInterface $validator;
-    protected string $exampleValidEmail = 'example@email.com';
-    protected string $exampleValidPassword = 'example123';
-    protected string $exampleValidName = 'John';
-    protected string $exampleValidSurname = 'Muller';
+    private ValidatorInterface $validator;
+    private string $exampleValidEmail = 'example@email.com';
+    private string $exampleValidPassword = 'example123';
+    private string $exampleValidName = 'John';
+    private string $exampleValidSurname = 'Muller';
 
     protected function setUp(): void
     {

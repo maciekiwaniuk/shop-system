@@ -17,12 +17,12 @@ use Throwable;
 
 readonly class FindProductBySlugQueryHandler implements QueryHandlerInterface
 {
-    protected CacheProxyInterface $cache;
+    private CacheProxyInterface $cache;
 
     public function __construct(
-        protected ProductRepositoryInterface $productRepository,
-        protected JsonSerializerInterface $serializer,
-        protected LoggerInterface $logger,
+        private ProductRepositoryInterface $productRepository,
+        private JsonSerializerInterface $serializer,
+        private LoggerInterface $logger,
         CacheCreatorInterface $cacheCreator,
     ) {
         $this->cache = $cacheCreator->create('query.products.findProductBySlugQuery.');
@@ -57,7 +57,7 @@ readonly class FindProductBySlugQueryHandler implements QueryHandlerInterface
         );
     }
 
-    protected function findBySlugReturnAndCache(string $slug): ?Product
+    private function findBySlugReturnAndCache(string $slug): ?Product
     {
         $product = $this->productRepository->findBySlug($slug);
 
