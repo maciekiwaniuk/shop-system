@@ -14,7 +14,7 @@ class AbstractUnitTestCase extends KernelTestCase
         self::bootKernel();
     }
 
-    private function useMethod(mixed $object, string $method, array $args = []): mixed
+    protected function useMethod(mixed $object, string $method, array $args = []): mixed
     {
         return (new ReflectionMethod($object, $method))
             ->invokeArgs($object, $args);

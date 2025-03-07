@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Shared\Application\DTO;
+namespace App\Tests\Common\Application\DTO;
 
 use App\Common\Application\DTO\PaginationUuidDTO;
 use App\Tests\AbstractIntegrationTestCase;
