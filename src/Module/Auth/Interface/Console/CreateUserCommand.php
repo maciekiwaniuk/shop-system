@@ -35,7 +35,7 @@ final class CreateUserCommand extends Command
         parent::__construct();
     }
 
-    private function configure(): void
+    protected function configure(): void
     {
         $this
             ->setHelp('Creates user')
@@ -46,7 +46,7 @@ final class CreateUserCommand extends Command
             ->addArgument('isAdmin', InputArgument::OPTIONAL, 'Is admin | 1 to set it');
     }
 
-    private function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $dto = new CreateUserDTO(
             email: $input->getArgument('email'),

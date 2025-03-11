@@ -35,20 +35,19 @@ services:
         container_name: shop-system
         build:
             context: ./docker/php
-        restart: on-failure
+        restart: always
         volumes:
-            - ./:/var/www/html
+            - .:/var/www/html
         depends_on:
             - shop-system-database
             - shop-system-cache
 
     shop-system-nginx:
         container_name: shop-system-nginx
-        build:
-            context: ./docker/nginx
-        restart: on-failure
+        image: nginx:latest
         volumes:
-            - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+            - .:/var/www:rw,cached
+            - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
         depends_on:
             - shop-system
 

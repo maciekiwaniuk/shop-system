@@ -17,7 +17,7 @@ class OrdersVoter extends Voter
     public const string CREATE = 'CREATE_ORDER';
     public const string UPDATE_STATUS = 'UPDATE_STATUS_ORDER';
 
-    private function supports(string $attribute, mixed $subject): bool
+    protected function supports(string $attribute, mixed $subject): bool
     {
         return in_array($attribute, [self::GET_PAGINATED, self::SHOW, self::CREATE, self::UPDATE_STATUS])
             && ($subject instanceof Order || $subject === null);
@@ -26,7 +26,7 @@ class OrdersVoter extends Voter
     /**
      * @param Order $subject
      */
-    private function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
         if (!$user instanceof UserInterface) {

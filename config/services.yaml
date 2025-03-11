@@ -32,3 +32,7 @@ services:
     App\Common\Infrastructure\Cache\CacheCreator:
         arguments:
             $redisUrl: '%redis_url%'
+
+imports:
+    - { resource: 'services/commands.yaml' }
+    - { resource: 'services/queries.yaml' }

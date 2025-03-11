@@ -1,0 +1,7 @@
+services:
+    App\Module\Auth\Application\Query\FindUserByEmail\FindUserByEmailQueryHandler:
+        tags:
+            - { name: 'messenger.message_handler', handles: 'App\Module\Auth\Application\Query\FindUserByEmail\FindUserByEmailQuery' }
+
+
+

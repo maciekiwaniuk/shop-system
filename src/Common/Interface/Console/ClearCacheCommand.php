@@ -27,12 +27,12 @@ final class ClearCacheCommand extends Command
         $this->cache = $cacheCreator->create('');
     }
 
-    private function configure(): void
+    protected function configure(): void
     {
         $this->setHelp('Clears cache');
     }
 
-    private function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
             $this->cache->delByKeys(

@@ -19,7 +19,7 @@ class ProductsVoter extends Voter
     public const string UPDATE = 'UPDATE_PRODUCT';
     public const string DELETE = 'DELETE_PRODUCT';
 
-    private function supports(string $attribute, mixed $subject): bool
+    protected function supports(string $attribute, mixed $subject): bool
     {
         return in_array($attribute, [self::GET_PAGINATED, self::CREATE, self::SHOW, self::UPDATE, self::DELETE])
             && ($subject instanceof Product || $subject === null);
@@ -28,7 +28,7 @@ class ProductsVoter extends Voter
     /**
      * @param Product $subject
      */
-    private function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         /** @var User $user */
         $user = $token->getUser();

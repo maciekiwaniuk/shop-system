@@ -1,9 +1,9 @@
 controllers_auth:
-    resource: ../src/Module/Auth/UI/Controller
+    resource: ../src/Module/Auth/Interface/Controller
     type: attribute
 
 controllers_commerce:
-    resource: ../src/Module/Commerce/UI/Controller
+    resource: ../src/Module/Commerce/Interface/Controller
     type: attribute
 
 kernel:

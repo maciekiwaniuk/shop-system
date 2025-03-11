@@ -1,0 +1,10 @@
+services:
+    App\Module\Auth\Application\Command\CreateUser\CreateUserCommandHandler:
+        tags:
+            - { name: 'messenger.message_handler', handles: 'App\Module\Auth\Application\Command\CreateUser\CreateUserCommand' }
+    App\Module\Auth\Application\Command\SetUserAsAdmin\SetUserAsAdminCommandHandler:
+        tags:
+            - { name: 'messenger.message_handler', handles: 'App\Module\Auth\Application\Command\SetUserAsAdmin\SetUserAsAdminCommand' }
+
+
+
