@@ -31,6 +31,12 @@ class UserController extends AbstractController
     ) {
     }
 
+    #[Route('/test', methods: ['POST'])]
+    public function test(): Response
+    {
+        return $this->json(['test'], 200);
+    }
+
     #[OA\Response(
         response: Response::HTTP_OK,
         description: 'Register user',
