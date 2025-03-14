@@ -82,7 +82,7 @@ class Order
         return $this->client;
     }
 
-    public function createAndAddOrderProduct(
+    public function addProduct(
         Product $product,
         int $productQuantity,
         float $productPricePerPiece,

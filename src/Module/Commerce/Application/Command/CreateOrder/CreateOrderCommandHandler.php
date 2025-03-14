@@ -34,7 +34,7 @@ readonly class CreateOrderCommandHandler implements SyncCommandHandlerInterface
                 $this->entityManager->getReference(Client::class, $user->getUserIdentifier())
             );
             foreach ($command->dto->products as $product) {
-                $order->createAndAddOrderProduct(
+                $order->addProduct(
                     $this->entityManager->getReference(Product::class, $product['id']),
                     $product['quantity'],
                     $product['pricePerPiece'],

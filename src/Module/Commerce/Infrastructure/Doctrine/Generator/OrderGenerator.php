@@ -19,7 +19,7 @@ class OrderGenerator
         );
 
         foreach ($products as $product) {
-            $order->createAndAddOrderProduct(
+            $order->addProduct(
                 product: $product,
                 productQuantity: mt_rand(1, 30),
                 productPricePerPiece: 1 + mt_rand() / mt_getrandmax() * (100 - 1),
