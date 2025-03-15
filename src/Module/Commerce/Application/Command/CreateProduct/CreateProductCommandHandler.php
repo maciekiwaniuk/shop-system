@@ -10,8 +10,10 @@ use App\Common\Application\BusResult\CommandResult;
 use App\Common\Application\SyncCommand\SyncCommandHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 
+#[AsMessageHandler]
 readonly class CreateProductCommandHandler implements SyncCommandHandlerInterface
 {
     public function __construct(
