@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Interface\Console;
 
+use App\Common\Application\Bus\QueryBus\QueryBusInterface;
+use App\Common\Application\Bus\SyncCommandBus\SyncCommandBusInterface;
 use App\Module\Auth\Application\Command\CreateUser\CreateUserCommand as CreateUserCommandEvent;
 use App\Module\Auth\Application\Command\SetUserAsAdmin\SetUserAsAdminCommand;
-use App\Module\Auth\Application\DTO\CreateUserDTO;
+use App\Module\Auth\Application\DTO\Validation\CreateUserDTO;
 use App\Module\Auth\Application\Query\FindUserByEmail\FindUserByEmailQuery;
 use App\Module\Auth\Domain\Entity\User;
-use App\Common\Application\Bus\SyncCommandBus\SyncCommandBusInterface;
-use App\Common\Application\Bus\QueryBus\QueryBusInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;

@@ -7,7 +7,7 @@ namespace App\Common\Application\DTO;
 use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
-abstract class AbstractDTO
+abstract class AbstractValidationDTO
 {
     #[Ignore]
     private ConstraintViolationListInterface $errors;

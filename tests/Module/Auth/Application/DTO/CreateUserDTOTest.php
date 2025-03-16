@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Module\Auth\Application\DTO;
 
-use App\Module\Auth\Application\DTO\CreateUserDTO;
+use App\Module\Auth\Application\DTO\Validation\CreateUserDTO;
 use App\Module\Auth\Domain\Entity\User;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Tests\AbstractIntegrationTestCase;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Application\ValueResolver\UserController;
 
-use App\Module\Auth\Application\DTO\CreateUserDTO;
+use App\Module\Auth\Application\DTO\Validation\CreateUserDTO;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsTargetedValueResolver;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;

@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Commerce\Application\DTO;
+namespace App\Module\Commerce\Application\DTO\Validation;
 
-use App\Common\Application\DTO\AbstractDTO;
+use App\Common\Application\DTO\AbstractValidationDTO;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
 use Symfony\Component\Validator\Constraints\Sequentially;
 
-class UpdateProductDTO extends AbstractDTO
+class UpdateProductDTO extends AbstractValidationDTO
 {
     #[Sequentially([
         new NotBlank(['message' => 'Name cannot be blank.']),

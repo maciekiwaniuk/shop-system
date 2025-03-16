@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Auth\Application\DTO;
+namespace App\Module\Auth\Application\DTO\Validation;
 
-use App\Module\Auth\Domain\Entity\User;
 use App\Common\Application\Constraint\UniqueFieldInEntity;
-use App\Common\Application\DTO\AbstractDTO;
+use App\Common\Application\DTO\AbstractValidationDTO;
+use App\Module\Auth\Domain\Entity\User;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Sequentially;
 
-class CreateUserDTO extends AbstractDTO
+class CreateUserDTO extends AbstractValidationDTO
 {
     #[Sequentially([
         new NotBlank(['message' => 'Email cannot be blank.']),

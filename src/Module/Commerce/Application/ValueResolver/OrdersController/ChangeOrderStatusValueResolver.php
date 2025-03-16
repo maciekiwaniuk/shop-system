@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\Commerce\Application\ValueResolver\OrdersController;
 
-use App\Module\Commerce\Application\DTO\ChangeOrderStatusDTO;
+use App\Module\Commerce\Application\DTO\Validation\ChangeOrderStatusDTO;
 use App\Module\Commerce\Domain\Enum\OrderStatus;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsTargetedValueResolver;

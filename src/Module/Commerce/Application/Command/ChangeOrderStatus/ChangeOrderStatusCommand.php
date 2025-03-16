@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\Commerce\Application\Command\ChangeOrderStatus;
 
-use App\Module\Commerce\Application\DTO\ChangeOrderStatusDTO;
-use App\Module\Commerce\Domain\Enum\OrderStatus;
 use App\Common\Application\SyncCommand\SyncCommandInterface;
+use App\Module\Commerce\Application\DTO\Validation\ChangeOrderStatusDTO;
 
 readonly class ChangeOrderStatusCommand implements SyncCommandInterface
 {

@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
 use Symfony\Component\Validator\Constraints\Sequentially;
 
-class PaginationUuidDTO extends AbstractDTO
+class PaginationUuidDTO extends AbstractValidationDTO
 {
     // TODO: validation
     public readonly ?string $cursor;

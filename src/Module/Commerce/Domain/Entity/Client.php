@@ -55,11 +55,12 @@ class Client
     private readonly DateTimeImmutable $createdAt;
 
     public function __construct(
+        string $id,
         string $email,
         string $name,
         string $surname,
     ) {
-        $this->id = (string) Uuid::v1();
+        $this->id = $id;
         $this->email = $email;
         $this->name = $name;
         $this->surname = $surname;

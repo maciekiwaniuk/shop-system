@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\Commerce\Application\ValueResolver\ProductsController;
 
-use App\Module\Commerce\Application\DTO\CreateProductDTO;
+use App\Module\Commerce\Application\DTO\Validation\CreateProductDTO;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsTargetedValueResolver;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;

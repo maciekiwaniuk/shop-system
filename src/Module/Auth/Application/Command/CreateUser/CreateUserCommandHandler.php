@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Application\Command\CreateUser;
 
+use App\Module\Auth\Application\DTO\Communication\UserRegisteredDTO;
 use App\Module\Auth\Domain\Entity\User;
+use App\Module\Auth\Domain\Event\UserRegisteredEvent;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Common\Application\BusResult\CommandResult;
 use App\Common\Application\SyncCommand\SyncCommandHandlerInterface;
@@ -12,6 +14,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Throwable;
 
 #[AsMessageHandler]
@@ -21,6 +24,7 @@ readonly class CreateUserCommandHandler implements SyncCommandHandlerInterface
         private UserRepositoryInterface $userRepository,
         private LoggerInterface $logger,
         private UserPasswordHasherInterface $passwordHasher,
+        private EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
@@ -37,6 +41,9 @@ readonly class CreateUserCommandHandler implements SyncCommandHandlerInterface
                 $this->passwordHasher->hashPassword($user, $user->getPassword()),
             );
             $this->userRepository->save($user, true);
+            $this->eventDispatcher->dispatch(
+                new UserRegisteredEvent(UserRegisteredDTO::fromEntity($user))
+            );
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return new CommandResult(success: false, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);

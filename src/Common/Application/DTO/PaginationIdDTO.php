@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
 use Symfony\Component\Validator\Constraints\Sequentially;
 
-class PaginationIdDTO extends AbstractDTO
+class PaginationIdDTO extends AbstractValidationDTO
 {
     #[Sequentially([
         new NotBlank(['message' => 'Offset cannot be blank.']),

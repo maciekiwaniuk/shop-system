@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Module\Commerce\Interface\Controller;
 
+use App\Common\Application\Bus\QueryBus\QueryBusInterface;
+use App\Common\Application\Bus\SyncCommandBus\SyncCommandBusInterface;
+use App\Common\Application\DTO\PaginationUuidDTO;
 use App\Module\Commerce\Application\Command\ChangeOrderStatus\ChangeOrderStatusCommand;
 use App\Module\Commerce\Application\Command\CreateOrder\CreateOrderCommand;
-use App\Module\Commerce\Application\DTO\ChangeOrderStatusDTO;
-use App\Module\Commerce\Application\DTO\CreateOrderDTO;
+use App\Module\Commerce\Application\DTO\Validation\ChangeOrderStatusDTO;
+use App\Module\Commerce\Application\DTO\Validation\CreateOrderDTO;
 use App\Module\Commerce\Application\Query\FindOrderByUuid\FindOrderByUuidQuery;
 use App\Module\Commerce\Application\Query\GetPaginatedOrders\GetPaginatedOrdersQuery;
 use App\Module\Commerce\Application\Voter\OrdersVoter;
 use App\Module\Commerce\Domain\Entity\Order;
-use App\Common\Application\Bus\SyncCommandBus\SyncCommandBusInterface;
-use App\Common\Application\Bus\QueryBus\QueryBusInterface;
-use App\Common\Application\DTO\PaginationUuidDTO;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;

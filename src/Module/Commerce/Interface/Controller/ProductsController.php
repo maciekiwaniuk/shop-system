@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace App\Module\Commerce\Interface\Controller;
 
+use App\Common\Application\Bus\QueryBus\QueryBusInterface;
+use App\Common\Application\Bus\SyncCommandBus\SyncCommandBusInterface;
+use App\Common\Application\DTO\PaginationIdDTO;
 use App\Module\Commerce\Application\Command\CreateProduct\CreateProductCommand;
 use App\Module\Commerce\Application\Command\DeleteProduct\DeleteProductCommand;
 use App\Module\Commerce\Application\Command\UpdateProduct\UpdateProductCommand;
-use App\Module\Commerce\Application\DTO\CreateProductDTO;
-use App\Module\Commerce\Application\DTO\UpdateProductDTO;
+use App\Module\Commerce\Application\DTO\Validation\CreateProductDTO;
+use App\Module\Commerce\Application\DTO\Validation\UpdateProductDTO;
 use App\Module\Commerce\Application\Query\FindProductById\FindProductByIdQuery;
 use App\Module\Commerce\Application\Query\FindProductBySlug\FindProductBySlugQuery;
 use App\Module\Commerce\Application\Query\GetPaginatedProducts\GetPaginatedProductsQuery;
 use App\Module\Commerce\Application\Voter\ProductsVoter;
 use App\Module\Commerce\Domain\Entity\Product;
-use App\Common\Application\Bus\SyncCommandBus\SyncCommandBusInterface;
-use App\Common\Application\Bus\QueryBus\QueryBusInterface;
-use App\Common\Application\DTO\PaginationIdDTO;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Interface\Controller;
 
+use App\Common\Application\Bus\QueryBus\QueryBusInterface;
+use App\Common\Application\Bus\SyncCommandBus\SyncCommandBusInterface;
 use App\Module\Auth\Application\Command\CreateUser\CreateUserCommand;
-use App\Module\Auth\Application\DTO\CreateUserDTO;
+use App\Module\Auth\Application\DTO\Validation\CreateUserDTO;
 use App\Module\Auth\Application\Query\FindUserByEmail\FindUserByEmailQuery;
 use App\Module\Auth\Domain\Entity\User;
-use App\Common\Application\Bus\SyncCommandBus\SyncCommandBusInterface;
-use App\Common\Application\Bus\QueryBus\QueryBusInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -29,12 +29,6 @@ class UserController extends AbstractController
         private readonly JWTTokenManagerInterface $JWTTokenManager,
         private readonly EntityManagerInterface $entityManager,
     ) {
-    }
-
-    #[Route('/test', methods: ['POST'])]
-    public function test(): Response
-    {
-        return $this->json(['test'], 200);
     }
 
     #[OA\Response(

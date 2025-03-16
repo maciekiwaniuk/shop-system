@@ -27,13 +27,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\Column(length: 255)]
     #[Groups(['default'])]
-    private readonly string $id;
+    public readonly string $id;
 
     #[ORM\Column(length: 200, unique: true)]
     #[Groups(['default'])]
-    public string $email {
-        get => $this->email;
-    }
+    private readonly string $email;
 
     #[ORM\Column(length: 255)]
     #[Groups(['user_password'])]
@@ -41,15 +39,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 100)]
     #[Groups(['default'])]
-    private string $name {
-        get => $this->name;
-    }
+    private readonly string $name;
 
     #[ORM\Column(length: 100)]
     #[Groups(['default'])]
-    private string $surname {
-        get => $this->surname;
-    }
+    private readonly string $surname;
 
     /**
      * @var string[]
@@ -60,9 +54,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     #[Groups(['default'])]
-    private DateTimeImmutable $updatedAt {
-        get => $this->updatedAt;
-    }
+    private DateTimeImmutable $updatedAt;
 
     #[ORM\Column(length: 255)]
     #[Groups(['default'])]
@@ -95,6 +87,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getSurname(): string
+    {
+        return $this->surname;
+    }
+
     public function getUserIdentifier(): string
     {
         return $this->email;
@@ -125,7 +132,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
-
         return $this;
     }
 
@@ -137,6 +143,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): DateTimeImmutable
+    {
+        return $this->updatedAt;
     }
 
     public function eraseCredentials(): void
