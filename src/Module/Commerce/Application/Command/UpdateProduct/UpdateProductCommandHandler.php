@@ -7,7 +7,6 @@ namespace App\Module\Commerce\Application\Command\UpdateProduct;
 use App\Common\Domain\Cache\CacheCreatorInterface;
 use App\Common\Domain\Cache\CacheProxyInterface;
 use App\Module\Commerce\Domain\Entity\Product;
-use App\Module\Commerce\Domain\Repository\ProductRepositoryInterface;
 use App\Common\Application\BusResult\CommandResult;
 use App\Common\Application\SyncCommand\SyncCommandInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,8 +21,7 @@ readonly class UpdateProductCommandHandler implements SyncCommandInterface
     private CacheProxyInterface $cache;
 
     public function __construct(
-        private ProductRepositoryInterface $productRepository,
-        private EntityManagerInterface $entityManager,
+        private EntityManagerInterface $commerceEntityManager,
         private LoggerInterface $logger,
         CacheCreatorInterface $cacheCreator,
     ) {
@@ -35,11 +33,11 @@ readonly class UpdateProductCommandHandler implements SyncCommandInterface
         try {
             $this->cache->delByKeys([$command->product]);
 
-            $user = $this->entityManager->getReference(Product::class, $command->product->getId());
-            $user
+            $product = $this->commerceEntityManager->getReference(Product::class, $command->product->getId());
+            $product
                 ->setName($command->dto->name)
                 ->setPrice($command->dto->price);
-            $this->entityManager->flush();
+            $this->commerceEntityManager->flush();
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return new CommandResult(success: false, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);

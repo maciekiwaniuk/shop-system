@@ -22,7 +22,7 @@ readonly class CreateOrderCommandHandler implements SyncCommandHandlerInterface
 {
     public function __construct(
         private OrderRepositoryInterface $orderRepository,
-        private EntityManagerInterface $entityManager,
+        private EntityManagerInterface $commerceEntityManager,
         private LoggerInterface $logger,
         private TokenStorageInterface $tokenStorage,
     ) {
@@ -33,11 +33,11 @@ readonly class CreateOrderCommandHandler implements SyncCommandHandlerInterface
         $user = $this->tokenStorage->getToken()->getUser();
         try {
             $order = new Order(
-                $this->entityManager->getReference(Client::class, $user->getUserIdentifier())
+                $this->commerceEntityManager->getReference(Client::class, $user->getUserIdentifier())
             );
             foreach ($command->dto->products as $product) {
                 $order->addProduct(
-                    $this->entityManager->getReference(Product::class, $product['id']),
+                    $this->commerceEntityManager->getReference(Product::class, $product['id']),
                     $product['quantity'],
                     $product['pricePerPiece'],
                 );

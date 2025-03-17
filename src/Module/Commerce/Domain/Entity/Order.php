@@ -38,9 +38,7 @@ class Order
     #[ORM\OneToMany(targetEntity: OrderProduct::class, mappedBy: 'order', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'id', referencedColumnName: 'order_id', nullable: false)]
     #[Groups(['default'])]
-    public Collection $ordersProducts {
-        get => $this->ordersProducts;
-    }
+    private Collection $ordersProducts;
 
     /**
      * @var Collection<int, OrderStatusUpdate>
@@ -48,9 +46,7 @@ class Order
     #[ORM\OneToMany(targetEntity: OrderStatusUpdate::class, mappedBy: 'order', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'id', referencedColumnName: 'order_id', nullable: false)]
     #[Groups(['default'])]
-    public Collection $ordersStatusUpdates {
-        get => $this->ordersStatusUpdates;
-    }
+    private Collection $ordersStatusUpdates;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['default'])]
@@ -80,6 +76,16 @@ class Order
     public function getClient(): Client
     {
         return $this->client;
+    }
+
+    public function getOrdersProducts(): Collection
+    {
+        return $this->ordersProducts;
+    }
+
+    public function getOrdersStatusUpdates(): Collection
+    {
+        return $this->ordersStatusUpdates;
     }
 
     public function addProduct(
