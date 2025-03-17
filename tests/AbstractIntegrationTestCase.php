@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class AbstractIntegrationTestCase extends KernelTestCase
 {
-    private EntityManagerInterface $entityManager;
+    protected EntityManagerInterface $entityManager;
 
     protected function setUp(): void
     {

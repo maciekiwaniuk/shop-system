@@ -38,7 +38,7 @@ class CreateUserCommandTest extends AbstractIntegrationTestCase
         $this->application = new Application();
         $this->application->add(
             new CreateUserCommand(
-                SyncCommandBus: $syncCommandBus,
+                syncCommandBus: $syncCommandBus,
                 queryBus: $queryBus,
                 validator: $validator,
                 entityManager: $this->entityManager,

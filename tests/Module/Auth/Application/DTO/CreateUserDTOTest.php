@@ -146,7 +146,7 @@ class CreateUserDTOTest extends AbstractIntegrationTestCase
         $userRepository->save($user, true);
 
         $dto = new CreateUserDTO(
-            email: $user->email,
+            email: $user->getEmail(),
             password: $this->exampleValidPassword,
             name: $this->exampleValidName,
             surname: $this->exampleValidSurname,
