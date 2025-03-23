@@ -12,7 +12,8 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class ClearCacheCommandTest extends AbstractIntegrationTestCase
 {
-    public function testExecute(): void
+    /** @test */
+    public function will_execute(): void
     {
         $container = self::getContainer();
 

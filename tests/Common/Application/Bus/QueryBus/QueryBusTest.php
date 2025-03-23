@@ -32,7 +32,8 @@ class QueryBusTest extends AbstractUnitTestCase
         );
     }
 
-    public function testSuccessfulHandle(): void
+    /** @test */
+    public function will_handle(): void
     {
         $stamp = new HandledStamp(
             result: new QueryResult(
@@ -61,7 +62,8 @@ class QueryBusTest extends AbstractUnitTestCase
         $this->assertEquals(Response::HTTP_OK, $queryResult->statusCode);
     }
 
-    public function testHandleWhenBusDispatchesMoreThanOneStamp(): void
+    /** @test */
+    public function will_fail_when_bus_dispatches_more_than_one_stamp(): void
     {
         $stamp = new HandledStamp(
             result: new QueryResult(
@@ -90,7 +92,8 @@ class QueryBusTest extends AbstractUnitTestCase
         $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, $queryResult->statusCode);
     }
 
-    public function testHandleWhenQueryResultIsNotProperType(): void
+    /** @test */
+    public function will_fail_when_query_result_is_not_proper_type(): void
     {
         $stamp = new HandledStamp(
             result: new class {

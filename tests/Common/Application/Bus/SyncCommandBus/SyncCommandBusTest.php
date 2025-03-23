@@ -32,7 +32,8 @@ class SyncCommandBusTest extends AbstractUnitTestCase
         );
     }
 
-    public function testSuccessfulHandle(): void
+    /** @test */
+    public function will_handle(): void
     {
         $stamp = new HandledStamp(
             result: new CommandResult(
@@ -61,7 +62,8 @@ class SyncCommandBusTest extends AbstractUnitTestCase
         $this->assertEquals(Response::HTTP_OK, $commandResult->statusCode);
     }
 
-    public function testHandleWhenBusDispatchesMoreThanOneStamp(): void
+    /** @test */
+    public function will_fail_when_bus_dispatches_more_than_one_stamp(): void
     {
         $stamp = new HandledStamp(
             result: new CommandResult(
@@ -90,7 +92,8 @@ class SyncCommandBusTest extends AbstractUnitTestCase
         $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, $commandResult->statusCode);
     }
 
-    public function testHandleWhenCommandResultIsNotProperType(): void
+    /** @test */
+    public function will_fail_when_command_bus_is_not_proper_type(): void
     {
         $stamp = new HandledStamp(
             result: new class {
