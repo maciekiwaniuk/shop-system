@@ -4,45 +4,58 @@ declare(strict_types=1);
 
 namespace App\Tests\Module\Commerce\Application\Voter;
 
+use App\Common\Application\Security\UserContextInterface;
 use App\Module\Commerce\Application\Voter\OrdersVoter;
+use App\Module\Commerce\Domain\Entity\Client;
 use App\Module\Commerce\Domain\Entity\Order;
-use App\Module\Auth\Domain\Entity\User;
 use App\Tests\AbstractUnitTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class OrdersVoterTest extends AbstractUnitTestCase
 {
-    private OrdersVoter $voter;
     private TokenInterface $token;
-    private User $user;
-    private User $admin;
+    private string $clientOneId;
+    private string $clientTwoId;
+    private OrdersVoter $clientOneVoter;
+    private OrdersVoter $adminVoter;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->voter = new OrdersVoter();
         $this->token = $this->createMock(TokenInterface::class);
 
-        $this->user = $this->createMock(User::class);
-        $this->user
+        $this->clientOneId = 'clientOneId';
+        $clientOne = $this->createMock(UserContextInterface::class);
+        $clientOne
             ->method('isAdmin')
             ->willReturn(false);
+        $clientOne
+            ->method('getUserIdentifier')
+            ->willReturn($this->clientOneId);
+        $this->clientOneVoter = new OrdersVoter($clientOne);
 
-        $this->admin = $this->createMock(User::class);
-        $this->admin
+        $this->clientTwoId = 'clientTwoId';
+        $clientTwo = $this->createMock(UserContextInterface::class);
+        $clientTwo
+            ->method('isAdmin')
+            ->willReturn(false);
+        $clientTwo
+            ->method('getUserIdentifier')
+            ->willReturn($this->clientTwoId);
+
+        $admin = $this->createMock(UserContextInterface::class);
+        $admin
             ->method('isAdmin')
             ->willReturn(true);
+        $this->adminVoter = new OrdersVoter($admin);
     }
 
-    public function testUserCantGetPaginated(): void
+    /** @test */
+    public function it_should_allow_client_to_get_paginated_orders(): void
     {
-        $this->token
-            ->method('getUser')
-            ->willReturn($this->user);
-
-        $this->assertFalse(
+        $this->assertTrue(
             $this->useMethod(
-                object: $this->voter,
+                object: $this->clientOneVoter,
                 method: 'voteOnAttribute',
                 args: [
                     OrdersVoter::GET_PAGINATED,
@@ -53,39 +66,21 @@ class OrdersVoterTest extends AbstractUnitTestCase
         );
     }
 
-    public function testAdminCanGetPaginated(): void
+    /** @test */
+    public function it_should_not_allow_client_to_show_somebody_else_order(): void
     {
-        $this->token
-            ->method('getUser')
-            ->willReturn($this->admin);
-
-        $this->assertTrue(
-            $this->useMethod(
-                object: $this->voter,
-                method: 'voteOnAttribute',
-                args: [
-                    OrdersVoter::GET_PAGINATED,
-                    null,
-                    $this->token,
-                ],
-            ),
-        );
-    }
-
-    public function testUserNotOwningOrderCantShow(): void
-    {
+        $clientTwo = $this->createMock(Client::class);
+        $clientTwo
+            ->method('getId')
+            ->willReturn($this->clientTwoId);
         $order = $this->createMock(Order::class);
         $order
-            ->method('getUser')
-            ->willReturn($this->admin);
-
-        $this->token
-            ->method('getUser')
-            ->willReturn($this->user);
+            ->method('getClient')
+            ->willReturn($clientTwo);
 
         $this->assertFalse(
             $this->useMethod(
-                object: $this->voter,
+                object: $this->clientOneVoter,
                 method: 'voteOnAttribute',
                 args: [
                     OrdersVoter::SHOW,
@@ -96,20 +91,21 @@ class OrdersVoterTest extends AbstractUnitTestCase
         );
     }
 
-    public function testUserOwningOrderCanShow(): void
+    /** @test */
+    public function it_should_allow_client_to_show_owned_order(): void
     {
+        $clientOne = $this->createMock(Client::class);
+        $clientOne
+            ->method('getId')
+            ->willReturn($this->clientOneId);
         $order = $this->createMock(Order::class);
         $order
-            ->method('getUser')
-            ->willReturn($this->user);
-
-        $this->token
-            ->method('getUser')
-            ->willReturn($this->user);
+            ->method('getClient')
+            ->willReturn($clientOne);
 
         $this->assertTrue(
             $this->useMethod(
-                object: $this->voter,
+                object: $this->clientOneVoter,
                 method: 'voteOnAttribute',
                 args: [
                     OrdersVoter::SHOW,
@@ -120,20 +116,21 @@ class OrdersVoterTest extends AbstractUnitTestCase
         );
     }
 
-    public function testAdminShow(): void
+    /** @test */
+    public function it_should_allow_admin_to_show_somebody_else_order(): void
     {
+        $clientOne = $this->createMock(Client::class);
+        $clientOne
+            ->method('getId')
+            ->willReturn($this->clientOneId);
         $order = $this->createMock(Order::class);
         $order
-            ->method('getUser')
-            ->willReturn($this->user);
-
-        $this->token
-            ->method('getUser')
-            ->willReturn($this->admin);
+            ->method('getClient')
+            ->willReturn($clientOne);
 
         $this->assertTrue(
             $this->useMethod(
-                object: $this->voter,
+                object: $this->adminVoter,
                 method: 'voteOnAttribute',
                 args: [
                     OrdersVoter::SHOW,
@@ -144,15 +141,12 @@ class OrdersVoterTest extends AbstractUnitTestCase
         );
     }
 
-    public function testUserCanCreate(): void
+    /** @test */
+    public function it_should_allow_to_create_order(): void
     {
-        $this->token
-            ->method('getUser')
-            ->willReturn($this->user);
-
         $this->assertTrue(
             $this->useMethod(
-                object: $this->voter,
+                object: $this->clientOneVoter,
                 method: 'voteOnAttribute',
                 args: [
                     OrdersVoter::CREATE,
@@ -163,48 +157,32 @@ class OrdersVoterTest extends AbstractUnitTestCase
         );
     }
 
-    public function testUserCantUpdateStatus(): void
+    /** @test */
+    public function it_should_not_allow_client_to_update_order_status(): void
     {
-        $order = $this->createMock(Order::class);
-        $order
-            ->method('getUser')
-            ->willReturn($this->user);
-
-        $this->token
-            ->method('getUser')
-            ->willReturn($this->user);
-
         $this->assertFalse(
             $this->useMethod(
-                object: $this->voter,
+                object: $this->clientOneVoter,
                 method: 'voteOnAttribute',
                 args: [
                     OrdersVoter::UPDATE_STATUS,
-                    $order,
+                    null,
                     $this->token,
                 ],
             ),
         );
     }
 
-    public function testAdminCanUpdateStatus(): void
+    /** @test */
+    public function it_should_allow_admin_to_update_order_status(): void
     {
-        $order = $this->createMock(Order::class);
-        $order
-            ->method('getUser')
-            ->willReturn($this->user);
-
-        $this->token
-            ->method('getUser')
-            ->willReturn($this->admin);
-
         $this->assertTrue(
             $this->useMethod(
-                object: $this->voter,
+                object: $this->adminVoter,
                 method: 'voteOnAttribute',
                 args: [
                     OrdersVoter::UPDATE_STATUS,
-                    $order,
+                    null,
                     $this->token,
                 ],
             ),

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Module\Commerce\Application\Voter;
 
+use App\Common\Application\Security\UserContextInterface;
 use App\Module\Commerce\Domain\Entity\Order;
 use Exception;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class OrdersVoter extends Voter
 {
@@ -16,6 +16,11 @@ class OrdersVoter extends Voter
     public const string SHOW = 'SHOW_ORDER';
     public const string CREATE = 'CREATE_ORDER';
     public const string UPDATE_STATUS = 'UPDATE_STATUS_ORDER';
+
+    public function __construct(
+        private readonly UserContextInterface $userContext,
+    ) {
+    }
 
     protected function supports(string $attribute, mixed $subject): bool
     {
@@ -28,29 +33,24 @@ class OrdersVoter extends Voter
      */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        $user = $token->getUser();
-        if (!$user instanceof UserInterface) {
-            return false;
-        }
-
         return match ($attribute) {
-            self::GET_PAGINATED => $this->canGetPaginated($user),
-            self::SHOW => $this->canShow($subject, $user),
+            self::GET_PAGINATED => $this->canGetPaginated(),
+            self::SHOW => $this->canShow($subject, $this->userContext),
             self::CREATE => $this->canCreate(),
-            self::UPDATE_STATUS => $this->canUpdateStatus($user),
+            self::UPDATE_STATUS => $this->canUpdateStatus($this->userContext),
             default => throw new Exception('Invalid attribute.')
         };
     }
 
-    private function canGetPaginated(UserInterface $user): bool
+    private function canGetPaginated(): bool
     {
-        return $user->isAdmin();
+        return true;
     }
 
-    private function canShow(Order $order, UserInterface $user): bool
+    private function canShow(Order $order, UserContextInterface $userContext): bool
     {
-        return $user->isAdmin()
-            || $order->getClient()->getId() === $user->getUserIdentifier();
+        return $userContext->isAdmin()
+            || $order->getClient()->getId() === $userContext->getUserIdentifier();
     }
 
     private function canCreate(): bool
@@ -58,8 +58,8 @@ class OrdersVoter extends Voter
         return true;
     }
 
-    private function canUpdateStatus(UserInterface $user): bool
+    private function canUpdateStatus(UserContextInterface $userContext): bool
     {
-        return $user->isAdmin();
+        return $userContext->isAdmin();
     }
 }

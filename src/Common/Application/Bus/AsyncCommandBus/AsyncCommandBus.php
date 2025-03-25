@@ -10,7 +10,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 readonly class AsyncCommandBus implements AsyncCommandBusInterface
 {
     public function __construct(
-        private MessageBusInterface $messageBus
+        private MessageBusInterface $messageBus,
     ) {
     }
 

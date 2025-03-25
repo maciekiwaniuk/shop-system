@@ -42,12 +42,10 @@ class SyncCommandBusTest extends AbstractUnitTestCase
             ),
             handlerName: 'handlerName',
         );
-
         $envelope = new Envelope(
             message: $stamp,
             stamps: [$stamp],
         );
-
         $this->bus
             ->expects($this->once())
             ->method('dispatch')
@@ -72,12 +70,10 @@ class SyncCommandBusTest extends AbstractUnitTestCase
             ),
             handlerName: 'exampleHandlerName',
         );
-
         $envelope = new Envelope(
             message: $stamp,
             stamps: [$stamp, $stamp],
         );
-
         $this->bus
             ->expects($this->once())
             ->method('dispatch')
@@ -100,12 +96,10 @@ class SyncCommandBusTest extends AbstractUnitTestCase
             },
             handlerName: 'exampleHandlerName',
         );
-
         $envelope = new Envelope(
             message: $stamp,
             stamps: [$stamp],
         );
-
         $this->bus
             ->expects($this->once())
             ->method('dispatch')

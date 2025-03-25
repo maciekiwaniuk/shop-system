@@ -16,8 +16,8 @@ class OrderTest extends AbstractUnitTestCase
 
         $this->assertNotNull($order->getId());
         $this->assertNotNull($order->getClient());
-        $this->assertNotNull($order->ordersProducts);
-        $this->assertFalse($order->ordersStatusUpdates->isEmpty());
+        $this->assertNotNull($order->getOrdersProducts());
+        $this->assertTrue($order->getOrdersProducts()->isEmpty());
         $this->assertNotNull($order->getCreatedAt());
         $this->assertNull($order->getCompletedAt());
     }
