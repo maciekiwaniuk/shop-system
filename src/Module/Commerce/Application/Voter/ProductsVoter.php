@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Module\Commerce\Application\Voter;
 
+use App\Common\Application\Security\UserContextInterface;
 use App\Module\Commerce\Domain\Entity\Product;
-use App\Module\Auth\Domain\Entity\User;
 use Exception;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class ProductsVoter extends Voter
 {
@@ -18,6 +17,11 @@ class ProductsVoter extends Voter
     public const string SHOW = 'SHOW_PRODUCT';
     public const string UPDATE = 'UPDATE_PRODUCT';
     public const string DELETE = 'DELETE_PRODUCT';
+
+    public function __construct(
+        private readonly UserContextInterface $userContext,
+    ) {
+    }
 
     protected function supports(string $attribute, mixed $subject): bool
     {
@@ -30,18 +34,12 @@ class ProductsVoter extends Voter
      */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        /** @var User $user */
-        $user = $token->getUser();
-        if (!$user instanceof UserInterface) {
-            return false;
-        }
-
         return match ($attribute) {
             self::GET_PAGINATED => $this->canGetPaginated(),
-            self::CREATE => $this->canCreate($user),
+            self::CREATE => $this->canCreate($this->userContext),
             self::SHOW => $this->canShow(),
-            self::UPDATE => $this->canUpdate($user),
-            self::DELETE => $this->canDelete($user),
+            self::UPDATE => $this->canUpdate($this->userContext),
+            self::DELETE => $this->canDelete($this->userContext),
             default => throw new Exception('Invalid attribute.')
         };
     }
@@ -51,9 +49,9 @@ class ProductsVoter extends Voter
         return true;
     }
 
-    private function canCreate(User $user): bool
+    private function canCreate(UserContextInterface $userContext): bool
     {
-        return $user->isAdmin();
+        return $userContext->isAdmin();
     }
 
     private function canShow(): bool
@@ -61,13 +59,13 @@ class ProductsVoter extends Voter
         return true;
     }
 
-    private function canUpdate(User $user): bool
+    private function canUpdate(UserContextInterface $userContext): bool
     {
-        return $user->isAdmin();
+        return $userContext->isAdmin();
     }
 
-    private function canDelete(User $user): bool
+    private function canDelete(UserContextInterface $userContext): bool
     {
-        return $user->isAdmin();
+        return $userContext->isAdmin();
     }
 }

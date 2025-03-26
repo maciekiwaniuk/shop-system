@@ -4,44 +4,41 @@ declare(strict_types=1);
 
 namespace App\Tests\Module\Commerce\Application\Voter;
 
+use App\Common\Application\Security\UserContextInterface;
 use App\Module\Commerce\Application\Voter\ProductsVoter;
-use App\Module\Auth\Domain\Entity\User;
 use App\Tests\AbstractUnitTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class ProductsVoterTest extends AbstractUnitTestCase
 {
-    private ProductsVoter $voter;
     private TokenInterface $token;
-    private User $user;
-    private User $admin;
+    private ProductsVoter $clientVoter;
+    private ProductsVoter $adminVoter;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->voter = new ProductsVoter();
         $this->token = $this->createMock(TokenInterface::class);
 
-        $this->user = $this->createMock(User::class);
-        $this->user
+        $client = $this->createMock(UserContextInterface::class);
+        $client
             ->method('isAdmin')
             ->willReturn(false);
+        $this->clientVoter = new ProductsVoter($client);
 
-        $this->admin = $this->createMock(User::class);
-        $this->admin
+        $admin = $this->createMock(UserContextInterface::class);
+        $admin
             ->method('isAdmin')
             ->willReturn(true);
+        $this->adminVoter = new ProductsVoter($admin);
     }
 
-    public function testUserCanGetPaginated(): void
+    /** @test */
+    public function it_should_allow_client_to_get_paginated_products(): void
     {
-        $this->token
-            ->method('getUser')
-            ->willReturn($this->user);
-
         $this->assertTrue(
             $this->useMethod(
-                object: $this->voter,
+                object: $this->clientVoter,
                 method: 'voteOnAttribute',
                 args: [
                     ProductsVoter::GET_PAGINATED,
@@ -52,15 +49,12 @@ class ProductsVoterTest extends AbstractUnitTestCase
         );
     }
 
-    public function testUserCantNew(): void
+    /** @test */
+    public function it_should_not_allow_client_to_create_product(): void
     {
-        $this->token
-            ->method('getUser')
-            ->willReturn($this->user);
-
         $this->assertFalse(
             $this->useMethod(
-                object: $this->voter,
+                object: $this->clientVoter,
                 method: 'voteOnAttribute',
                 args: [
                     ProductsVoter::CREATE,
@@ -71,15 +65,12 @@ class ProductsVoterTest extends AbstractUnitTestCase
         );
     }
 
-    public function testAdmincanCreate(): void
+    /** @test */
+    public function it_should_allow_admin_to_create_product(): void
     {
-        $this->token
-            ->method('getUser')
-            ->willReturn($this->admin);
-
         $this->assertTrue(
             $this->useMethod(
-                object: $this->voter,
+                object: $this->adminVoter,
                 method: 'voteOnAttribute',
                 args: [
                     ProductsVoter::CREATE,
@@ -90,15 +81,12 @@ class ProductsVoterTest extends AbstractUnitTestCase
         );
     }
 
-    public function testUserCanShow(): void
+    /** @test */
+    public function it_should_allow_client_to_show_product(): void
     {
-        $this->token
-            ->method('getUser')
-            ->willReturn($this->user);
-
         $this->assertTrue(
             $this->useMethod(
-                object: $this->voter,
+                object: $this->clientVoter,
                 method: 'voteOnAttribute',
                 args: [
                     ProductsVoter::SHOW,
@@ -109,15 +97,12 @@ class ProductsVoterTest extends AbstractUnitTestCase
         );
     }
 
-    public function testUserCantUpdate(): void
+    /** @test */
+    public function it_should_not_allow_client_to_update_product(): void
     {
-        $this->token
-            ->method('getUser')
-            ->willReturn($this->user);
-
         $this->assertFalse(
             $this->useMethod(
-                object: $this->voter,
+                object: $this->clientVoter,
                 method: 'voteOnAttribute',
                 args: [
                     ProductsVoter::UPDATE,
@@ -128,15 +113,12 @@ class ProductsVoterTest extends AbstractUnitTestCase
         );
     }
 
-    public function testAdminCanUpdate(): void
+    /** @test */
+    public function it_should_allow_admin_to_update_product(): void
     {
-        $this->token
-            ->method('getUser')
-            ->willReturn($this->admin);
-
         $this->assertTrue(
             $this->useMethod(
-                object: $this->voter,
+                object: $this->adminVoter,
                 method: 'voteOnAttribute',
                 args: [
                     ProductsVoter::UPDATE,
@@ -147,15 +129,12 @@ class ProductsVoterTest extends AbstractUnitTestCase
         );
     }
 
-    public function testUserCantDelete(): void
+    /** @test */
+    public function it_should_not_allow_client_to_delete_product(): void
     {
-        $this->token
-            ->method('getUser')
-            ->willReturn($this->user);
-
         $this->assertFalse(
             $this->useMethod(
-                object: $this->voter,
+                object: $this->clientVoter,
                 method: 'voteOnAttribute',
                 args: [
                     ProductsVoter::DELETE,
@@ -166,15 +145,12 @@ class ProductsVoterTest extends AbstractUnitTestCase
         );
     }
 
-    public function testAdminCanDelete(): void
+    /** @test */
+    public function it_should_allow_admin_to_delete_product(): void
     {
-        $this->token
-            ->method('getUser')
-            ->willReturn($this->admin);
-
         $this->assertTrue(
             $this->useMethod(
-                object: $this->voter,
+                object: $this->adminVoter,
                 method: 'voteOnAttribute',
                 args: [
                     ProductsVoter::DELETE,
