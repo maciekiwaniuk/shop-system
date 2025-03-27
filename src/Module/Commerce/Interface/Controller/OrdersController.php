@@ -31,7 +31,7 @@ class OrdersController extends AbstractController
     public function __construct(
         private readonly SyncCommandBusInterface $syncCommandBus,
         private readonly QueryBusInterface $queryBus,
-        private readonly EntityManagerInterface $entityManager,
+        private readonly EntityManagerInterface $commerceEntityManager,
     ) {
     }
 
@@ -104,7 +104,7 @@ class OrdersController extends AbstractController
     {
         $queryResult = $this->queryBus->handle(new FindOrderByUuidQuery($uuid));
 
-        $order = $this->entityManager->getReference(Order::class, $queryResult->data['id']);
+        $order = $this->commerceEntityManager->getReference(Order::class, $queryResult->data['id']);
         if (!$this->isGranted(OrdersVoter::SHOW, $order)) {
             throw $this->createAccessDeniedException();
         }

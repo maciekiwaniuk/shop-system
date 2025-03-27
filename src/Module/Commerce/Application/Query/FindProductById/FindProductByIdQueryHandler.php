@@ -34,6 +34,7 @@ readonly class FindProductByIdQueryHandler implements QueryHandlerInterface
                 );
             }
         } catch (Throwable $throwable) {
+            var_dump($throwable->getMessage());
             $this->logger->error($throwable->getMessage());
             return new QueryResult(
                 success: false,

@@ -20,7 +20,8 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         $this->productRepository = self::getContainer()->get(ProductRepositoryInterface::class);
     }
 
-    public function testGetPaginatedAsUser(): void
+    /** @test */
+    public function can_get_paginated_products_as_user(): void
     {
         $products = $this->productRepository->getPaginatedById(offset: 1, limit: 10);
 
@@ -41,7 +42,8 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         $this->assertEquals(count($products), count($responseData['data']));
     }
 
-    public function testCreateAsAdmin(): void
+    /** @test */
+    public function can_create_product_as_admin(): void
     {
         $productsCountBeforeAction = count($this->productRepository->getPaginatedById());
 
@@ -66,13 +68,13 @@ class ProductsControllerTest extends AbstractApplicationTestCase
 
     public function testShowAsUser(): void
     {
-        $product = (new ProductGenerator())->generate();
+        $product = new ProductGenerator()->generate();
         $this->productRepository->save($product, true);
 
         $client = $this->getUserClient();
         $client->request(
             method: Request::METHOD_GET,
-            uri: $this->url . '/show/' . $product->slug,
+            uri: $this->url . '/show/' . $product->getSlug(),
         );
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
@@ -83,7 +85,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
 
     public function testUpdateAsAdmin(): void
     {
-        $product = (new ProductGenerator())->generate();
+        $product = new ProductGenerator()->generate();
         $this->productRepository->save($product, true);
 
         $client = $this->getAdminClient();
@@ -107,7 +109,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
 
     public function testDeleteAsAdmin(): void
     {
-        $product = (new ProductGenerator())->generate();
+        $product = new ProductGenerator()->generate();
         $this->productRepository->save($product, true);
 
         $client = $this->getAdminClient();
@@ -117,7 +119,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         );
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
-        $deletedProduct = $this->productRepository->findBySlug($product->slug);
+        $deletedProduct = $this->productRepository->findBySlug($product->getSlug());
 
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);

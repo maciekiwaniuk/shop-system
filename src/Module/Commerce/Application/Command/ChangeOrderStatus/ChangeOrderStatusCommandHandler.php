@@ -20,7 +20,7 @@ readonly class ChangeOrderStatusCommandHandler implements SyncCommandHandlerInte
 {
     public function __construct(
         private OrderStatusUpdateRepositoryInterface $orderStatusUpdateRepository,
-        private EntityManagerInterface $entityManager,
+        private EntityManagerInterface $commerceEntityManager,
         private LoggerInterface $logger,
     ) {
     }
@@ -29,7 +29,7 @@ readonly class ChangeOrderStatusCommandHandler implements SyncCommandHandlerInte
     {
         try {
             $changeOrderStatus = new OrderStatusUpdate(
-                order: $this->entityManager->getReference(Order::class, $command->uuid),
+                order: $this->commerceEntityManager->getReference(Order::class, $command->uuid),
                 status: $command->dto->status,
             );
             $this->orderStatusUpdateRepository->save($changeOrderStatus, true);

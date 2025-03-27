@@ -41,6 +41,18 @@ services:
         arguments:
             $commerceEntityManager: '@doctrine.orm.commerce_entity_manager'
 
+    App\Module\Commerce\Application\Command\ChangeOrderStatus\ChangeOrderStatusCommandHandler:
+        arguments:
+            $commerceEntityManager: '@doctrine.orm.commerce_entity_manager'
+
+    App\Module\Commerce\Interface\Controller\ProductsController:
+        arguments:
+            $commerceEntityManager: '@doctrine.orm.commerce_entity_manager'
+
+    App\Module\Commerce\Interface\Controller\OrdersController:
+        arguments:
+            $commerceEntityManager: '@doctrine.orm.commerce_entity_manager'
+
 imports:
     - { resource: 'services/commands.yaml' }
     - { resource: 'services/queries.yaml' }

@@ -33,7 +33,7 @@ class ProductsController extends AbstractController
     public function __construct(
         private readonly SyncCommandBusInterface $syncCommandBus,
         private readonly QueryBusInterface $queryBus,
-        private readonly EntityManagerInterface $entityManager,
+        private readonly EntityManagerInterface $commerceEntityManager,
     ) {
     }
 
@@ -183,7 +183,7 @@ class ProductsController extends AbstractController
 
         $queryResult = $this->queryBus->handle(new FindProductByIdQuery($id));
         if ($queryResult->data !== null) {
-            $product = $this->entityManager->getReference(Product::class, $queryResult->data['id']);
+            $product = $this->commerceEntityManager->getReference(Product::class, $queryResult->data['id']);
             $commandResult = $this->syncCommandBus->handle(new UpdateProductCommand($product, $dto));
         }
 
@@ -220,7 +220,7 @@ class ProductsController extends AbstractController
     {
         $queryResult = $this->queryBus->handle(new FindProductByIdQuery($id));
         if ($queryResult->data !== null) {
-            $product = $this->entityManager->getReference(Product::class, $queryResult->data['id']);
+            $product = $this->commerceEntityManager->getReference(Product::class, $queryResult->data['id']);
             $commandResult = $this->syncCommandBus->handle(new DeleteProductCommand($product));
         }
 
