@@ -35,7 +35,7 @@ readonly class FindProductBySlugQueryHandler implements QueryHandlerInterface
         try {
             $product = match (true) {
                 $this->cache->exists($query->slug) => $this->cache->get($query->slug),
-                default => $this->findBySlugReturnAndCache($query->slug)
+                default => $this->findBySlugAndCacheIt($query->slug)
             };
             if ($product === null) {
                 return new QueryResult(
@@ -59,7 +59,7 @@ readonly class FindProductBySlugQueryHandler implements QueryHandlerInterface
         );
     }
 
-    private function findBySlugReturnAndCache(string $slug): ?Product
+    private function findBySlugAndCacheIt(string $slug): ?Product
     {
         $product = $this->productRepository->findBySlug($slug);
 

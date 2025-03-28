@@ -7,6 +7,7 @@ framework:
                 dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
 
         routing:
+            'App\Module\Auth\Application\Command\SendWelcomeEmail\SendWelcomeEmailCommand': async
             'App\Module\Auth\Application\Command\SetUserAsAdmin\SetUserAsAdminCommand': sync
             'App\Module\Auth\Application\Command\CreateUser\CreateUserCommand': sync
             'App\Module\Auth\Application\Query\FindUserByEmail\FindUserByEmailQuery': sync

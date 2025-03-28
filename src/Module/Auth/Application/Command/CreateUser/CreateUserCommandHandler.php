@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\Auth\Application\Command\CreateUser;
 
+use App\Common\Application\Bus\AsyncCommandBus\AsyncCommandBusInterface;
+use App\Module\Auth\Application\Command\SendWelcomeEmail\SendWelcomeEmailCommand;
 use App\Module\Auth\Application\DTO\Communication\UserRegisteredDTO;
 use App\Module\Auth\Domain\Entity\User;
 use App\Module\Auth\Domain\Event\UserRegisteredEvent;
@@ -25,6 +27,7 @@ readonly class CreateUserCommandHandler implements SyncCommandHandlerInterface
         private LoggerInterface $logger,
         private UserPasswordHasherInterface $passwordHasher,
         private EventDispatcherInterface $eventDispatcher,
+        private AsyncCommandBusInterface $asyncCommandBus
     ) {
     }
 
@@ -44,6 +47,7 @@ readonly class CreateUserCommandHandler implements SyncCommandHandlerInterface
             $this->eventDispatcher->dispatch(
                 new UserRegisteredEvent(UserRegisteredDTO::fromEntity($user))
             );
+            $this->asyncCommandBus->handle(SendWelcomeEmailCommand::class);
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return new CommandResult(success: false, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
