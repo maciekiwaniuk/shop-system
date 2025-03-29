@@ -20,7 +20,8 @@ class UpdateProductDTOTest extends AbstractIntegrationTestCase
         $this->validator = self::getContainer()->get(ValidatorInterface::class);
     }
 
-    public function testValidData(): void
+    /** @test */
+    public function it_should_pass_validation_when_data_is_valid(): void
     {
         $dto = new UpdateProductDTO(
             name: $this->exampleValidName,
@@ -34,8 +35,9 @@ class UpdateProductDTOTest extends AbstractIntegrationTestCase
 
     /**
      * @dataProvider invalidNameProvider
+     * @test
      */
-    public function testInvalidName(string $name): void
+    public function it_should_not_pass_validation_when_name_is_invalid(string $name): void
     {
         $dto = new UpdateProductDTO(
             name: $name,
@@ -56,8 +58,9 @@ class UpdateProductDTOTest extends AbstractIntegrationTestCase
 
     /**
      * @dataProvider invalidPriceProvider
+     * @test
      */
-    public function testInvalidPrice(float $price): void
+    public function it_should_not_pass_validation_when_price_is_invalid(float $price): void
     {
         $dto = new UpdateProductDTO(
             name: $this->exampleValidName,

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Module\Commerce\Interface\Controller;
 
+use App\Module\Commerce\Domain\Repository\ClientRepositoryInterface;
 use App\Module\Commerce\Domain\Repository\ProductRepositoryInterface;
 use App\Module\Commerce\Domain\Entity\Order;
 use App\Module\Commerce\Domain\Enum\OrderStatus;
 use App\Module\Commerce\Domain\Repository\OrderRepositoryInterface;
+use App\Module\Commerce\Infrastructure\Doctrine\Generator\ClientGenerator;
 use App\Module\Commerce\Infrastructure\Doctrine\Generator\OrderGenerator;
 use App\Module\Commerce\Domain\Entity\Product;
 use App\Module\Commerce\Infrastructure\Doctrine\Generator\ProductGenerator;
@@ -22,14 +24,14 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class OrdersControllerTest extends AbstractApplicationTestCase
 {
     private string $url = '/api/v1/orders';
-    private UserRepositoryInterface $userRepository;
+    private ClientRepositoryInterface $clientRepository;
     private OrderRepositoryInterface $orderRepository;
     private ProductRepositoryInterface $productRepository;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->userRepository = self::getContainer()->get(UserRepositoryInterface::class);
+        $this->clientRepository = self::getContainer()->get(ClientRepositoryInterface::class);
         $this->orderRepository = self::getContainer()->get(OrderRepositoryInterface::class);
         $this->productRepository = self::getContainer()->get(ProductRepositoryInterface::class);
     }
@@ -76,15 +78,14 @@ class OrdersControllerTest extends AbstractApplicationTestCase
 
     public function testShowAsOwner(): void
     {
-        $user = (new UserGenerator(self::getContainer()->get(UserPasswordHasherInterface::class)))
-            ->generateWithUnhashedPassword(email: 'exampleOrder@email.com');
+        $client = new ClientGenerator()->generate(email: 'exampleOrder@email.com');
         $product = (new ProductGenerator())->generate();
         $order = (new OrderGenerator())->generate(
-            user: $user,
+            user: $client,
             products: new ArrayCollection([$product]),
         );
 
-        $client = $this->getUserClient($user);
+        $client = $this->getUserClient($client);
         $this->productRepository->save($product, true);
         $this->orderRepository->save($order, true);
 
@@ -162,11 +163,11 @@ class OrdersControllerTest extends AbstractApplicationTestCase
 
     public function testChangeStatusAsAdmin(): void
     {
-        $user = (new UserGenerator(self::getContainer()->get(UserPasswordHasherInterface::class)))
+        $client = (new UserGenerator(self::getContainer()->get(UserPasswordHasherInterface::class)))
             ->generate(email: 'exampleOrder@email.com');
         $product = (new ProductGenerator())->generate();
         $order = (new OrderGenerator())->generate(
-            user: $user,
+            user: $client,
             products: new ArrayCollection([$product]),
         );
         $statusBeforeAction = $order->getCurrentStatus();

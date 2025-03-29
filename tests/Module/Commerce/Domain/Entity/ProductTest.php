@@ -9,7 +9,8 @@ use App\Tests\AbstractUnitTestCase;
 
 class ProductTest extends AbstractUnitTestCase
 {
-    public function testCreate(): void
+    /** @test */
+    public function it_should_create_a_product_with_valid_initial_values(): void
     {
         $product = new Product(
             'exampleName',

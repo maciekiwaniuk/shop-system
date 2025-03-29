@@ -46,10 +46,12 @@ class CreateUserCommandTest extends AbstractIntegrationTestCase
         );
     }
 
-    public function testExecute(): void
+    /** @test */
+    public function it_should_create_user_successfully(): void
     {
         $command = $this->application->find('app:create-user');
         $commandTester = new CommandTester($command);
+
         $commandTester->execute([
             'email' => 'example@mail.pl',
             'password' => 'examplePassword',
@@ -63,10 +65,12 @@ class CreateUserCommandTest extends AbstractIntegrationTestCase
         $this->assertNotEmpty($this->userRepository->findUserByEmail('example@mail.pl'));
     }
 
-    public function testExecuteWithIsAdmin(): void
+    /** @test */
+    public function it_should_create_user_and_set_as_admin_when_flag_is_provided(): void
     {
         $command = $this->application->find('app:create-user');
         $commandTester = new CommandTester($command);
+
         $commandTester->execute([
             'email' => 'example@mail.pl',
             'password' => 'examplePassword',

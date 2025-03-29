@@ -10,7 +10,8 @@ use App\Tests\AbstractUnitTestCase;
 
 class OrderTest extends AbstractUnitTestCase
 {
-    public function testCreate(): void
+    /** @test */
+    public function it_should_create_an_order_with_valid_initial_values(): void
     {
         $order = new Order($this->createMock(Client::class));
 

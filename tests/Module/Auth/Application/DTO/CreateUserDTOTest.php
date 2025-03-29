@@ -24,7 +24,8 @@ class CreateUserDTOTest extends AbstractIntegrationTestCase
         $this->validator = self::getContainer()->get(ValidatorInterface::class);
     }
 
-    public function testValidData(): void
+    /** @test */
+    public function it_should_pass_validation_when_data_is_correct(): void
     {
         $dto = new CreateUserDTO(
             email: $this->exampleValidEmail,
@@ -47,8 +48,9 @@ class CreateUserDTOTest extends AbstractIntegrationTestCase
 
     /**
      * @dataProvider invalidEmailProvider
+     * @test
      */
-    public function testInvalidEmail(string $email): void
+    public function it_should_not_pass_validation_when_email_is_invalid(string $email): void
     {
         $dto = new CreateUserDTO(
             email: $email,
@@ -71,8 +73,9 @@ class CreateUserDTOTest extends AbstractIntegrationTestCase
 
     /**
      * @dataProvider invalidPasswordProvider
+     * @test
      */
-    public function testInvalidPassword(string $password): void
+    public function it_should_not_pass_validation_when_password_is_invalid(string $password): void
     {
         $dto = new CreateUserDTO(
             email: $this->exampleValidEmail,
@@ -95,8 +98,9 @@ class CreateUserDTOTest extends AbstractIntegrationTestCase
 
     /**
      * @dataProvider invalidNameProvider
+     * @test
      */
-    public function testInvalidName(string $name): void
+    public function it_should_not_pass_validation_when_name_is_invalid(string $name): void
     {
         $dto = new CreateUserDTO(
             email: $this->exampleValidEmail,
@@ -119,8 +123,9 @@ class CreateUserDTOTest extends AbstractIntegrationTestCase
 
     /**
      * @dataProvider invalidSurnameProvider
+     * @test
      */
-    public function testInvalidSurname(string $surname): void
+    public function it_should_not_pass_validation_when_surname_is_invalid(string $surname): void
     {
         $dto = new CreateUserDTO(
             email: $this->exampleValidEmail,
@@ -134,7 +139,8 @@ class CreateUserDTOTest extends AbstractIntegrationTestCase
         $this->assertCount(1, $errors);
     }
 
-    public function testDuplicateEmail(): void
+    /** @test */
+    public function it_should_not_pass_validation_when_email_is_duplicated(): void
     {
         $user = new User(
             email: 'duplicated@email.com',

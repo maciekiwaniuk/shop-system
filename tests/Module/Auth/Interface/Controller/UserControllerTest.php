@@ -19,7 +19,8 @@ class UserControllerTest extends AbstractApplicationTestCase
         $this->userRepository = self::getContainer()->get(UserRepositoryInterface::class);
     }
 
-    public function testRegister(): void
+    /** @test */
+    public function it_should_register_new_user_successfully(): void
     {
         $usersBeforeAction = count($this->userRepository->findAll());
 
