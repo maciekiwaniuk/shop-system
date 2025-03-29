@@ -22,7 +22,8 @@ class CacheProxyTest extends AbstractUnitTestCase
         $this->logger = $this->createMock(LoggerInterface::class);
     }
 
-    public function testExists(): void
+    /** @test */
+    public function it_should_return_true_when_key_exists(): void
     {
         $this->cache
             ->expects($this->once())
@@ -35,7 +36,6 @@ class CacheProxyTest extends AbstractUnitTestCase
         $this->logger
             ->expects($this->never())
             ->method('error');
-
         $cacheProxy = new CacheProxy(
             $this->cache,
             $this->logger,
@@ -44,13 +44,11 @@ class CacheProxyTest extends AbstractUnitTestCase
 
         $exists = $cacheProxy->exists('key');
 
-        $this->assertEquals(
-            true,
-            $exists,
-        );
+        $this->assertTrue($exists);
     }
 
-    public function testExistsThrowException(): void
+    /** @test */
+    public function it_should_return_false_and_log_error_when_exists_throws_exception(): void
     {
         $this->cache
             ->expects($this->once())
@@ -59,7 +57,6 @@ class CacheProxyTest extends AbstractUnitTestCase
         $this->logger
             ->expects($this->once())
             ->method('error');
-
         $cacheProxy = new CacheProxy(
             $this->cache,
             $this->logger,
@@ -68,9 +65,6 @@ class CacheProxyTest extends AbstractUnitTestCase
 
         $exists = $cacheProxy->exists('key');
 
-        $this->assertEquals(
-            false,
-            $exists,
-        );
+        $this->assertFalse($exists);
     }
 }

@@ -20,7 +20,8 @@ class PaginationIdDTOTest extends AbstractIntegrationTestCase
         $this->validator = self::getContainer()->get(ValidatorInterface::class);
     }
 
-    public function testValidData(): void
+    /** @test */
+    public function it_can_pass_valid_data(): void
     {
         $dto = new PaginationIdDTO(
             offset: $this->exampleValidOffset,
@@ -40,8 +41,9 @@ class PaginationIdDTOTest extends AbstractIntegrationTestCase
 
     /**
      * @dataProvider invalidOffsetProvider
+     * @test
      */
-    public function testInvalidOffset(int $offset): void
+    public function it_can_detect_invalid_offset(int $offset): void
     {
         $dto = new PaginationIdDTO(
             offset: $offset,
@@ -61,8 +63,9 @@ class PaginationIdDTOTest extends AbstractIntegrationTestCase
 
     /**
      * @dataProvider invalidLimitProvider
+     * @test
      */
-    public function testInvalidLimit(int $limit): void
+    public function it_can_detect_invalid_limit(int $limit): void
     {
         $dto = new PaginationIdDTO(
             offset: $this->exampleValidOffset,

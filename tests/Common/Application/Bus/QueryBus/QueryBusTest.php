@@ -105,7 +105,6 @@ class QueryBusTest extends AbstractUnitTestCase
             message: $stamp,
             stamps: [$stamp],
         );
-
         $this->bus
             ->expects($this->once())
             ->method('dispatch')

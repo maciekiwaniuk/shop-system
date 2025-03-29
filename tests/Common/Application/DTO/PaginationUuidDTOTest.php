@@ -20,7 +20,8 @@ class PaginationUuidDTOTest extends AbstractIntegrationTestCase
         $this->validator = self::getContainer()->get(ValidatorInterface::class);
     }
 
-    public function testValidData(): void
+    /** @test */
+    public function it_can_pass_valid_data(): void
     {
         $dto = new PaginationUuidDTO(
             cursor: $this->exampleValidCursor,
@@ -40,8 +41,9 @@ class PaginationUuidDTOTest extends AbstractIntegrationTestCase
 
     /**
      * @dataProvider invalidLimitProvider
+     * @test
      */
-    public function testInvalidLimit(int $limit): void
+    public function it_can_detect_invalid_limit(int $limit): void
     {
         $dto = new PaginationUuidDTO(
             cursor: $this->exampleValidCursor,

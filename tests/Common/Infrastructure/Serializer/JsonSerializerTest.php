@@ -19,7 +19,8 @@ class JsonSerializerTest extends AbstractUnitTestCase
         $this->serializer = self::getContainer()->get(JsonSerializer::class);
     }
 
-    public function testSerializeWithDefaultGroup(): void
+    /** @test */
+    public function it_should_serialize_object_with_default_group(): void
     {
         $object = new class ('exampleName') {
             #[Groups('default')]
@@ -39,7 +40,8 @@ class JsonSerializerTest extends AbstractUnitTestCase
         );
     }
 
-    public function testSerializeWithExistingGroup(): void
+    /** @test */
+    public function it_should_serialize_object_with_existing_group(): void
     {
         $object = new class ('exampleName') {
             #[Groups('example-group')]
@@ -59,7 +61,8 @@ class JsonSerializerTest extends AbstractUnitTestCase
         );
     }
 
-    public function testSerializeWithNonExistingGroup(): void
+    /** @test */
+    public function it_should_return_empty_array_when_serializing_object_with_non_existing_group(): void
     {
         $object = new class ('exampleName') {
             #[Groups('non-existing-group')]
@@ -79,7 +82,8 @@ class JsonSerializerTest extends AbstractUnitTestCase
         );
     }
 
-    public function testDeserializeWithDefaultGroup(): void
+    /** @test */
+    public function it_should_deserialize_object_with_default_group(): void
     {
         $object = new class ('exampleName') {
             #[Groups(['default'])]
@@ -102,7 +106,8 @@ class JsonSerializerTest extends AbstractUnitTestCase
         );
     }
 
-    public function testDeserializeWithExistingGroup(): void
+    /** @test */
+    public function it_should_deserialize_object_with_existing_group(): void
     {
         $object = new class ('exampleName') {
             #[Groups(['existing-group'])]
@@ -126,7 +131,8 @@ class JsonSerializerTest extends AbstractUnitTestCase
         );
     }
 
-    public function testDeserializeWithNonExistingGroup(): void
+    /** @test */
+    public function it_should_throw_exception_when_deserializing_object_with_non_existing_group(): void
     {
         $object = new class ('exampleName') {
             #[Groups(['non-existing-group'])]
