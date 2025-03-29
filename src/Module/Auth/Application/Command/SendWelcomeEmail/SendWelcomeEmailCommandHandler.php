@@ -12,4 +12,9 @@ class SendWelcomeEmailCommandHandler implements AsyncCommandHandlerInterface
 
     ) {
     }
+
+    public function __invoke(SendWelcomeEmailCommand $command)
+    {
+        // sending welcome email
+    }
 }
