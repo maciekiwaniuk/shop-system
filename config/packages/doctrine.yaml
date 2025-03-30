@@ -47,7 +47,11 @@ doctrine:
 when@test:
     doctrine:
         dbal:
-            url: "sqlite:///%kernel.project_dir%/var/app.db"
+            connections:
+                auth:
+                    url: '%env(resolve:AUTH_DATABASE_TEST_URL)%'
+                commerce:
+                    url: '%env(resolve:COMMERCE_DATABASE_TEST_URL)%'
 
 when@prod:
     doctrine:

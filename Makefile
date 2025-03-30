@@ -33,3 +33,11 @@ diff:
 
 schema_update:
 	bin/console doctrine:schema:update --force --em=database2
+
+clear_database:
+	sudo chmod -R 777 docker/mysql/data
+	sudo rm -R docker/mysql/data
+	docker compose up -d shop-system-database --build --force-recreate
+
+simple_migration_of_all_databases:
+	docker compose exec shop-system php bin/console doctrine:migrations:migrate

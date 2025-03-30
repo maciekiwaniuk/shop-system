@@ -17,12 +17,16 @@ RUN apt-get update && apt-get install -y \
     libicu-dev  \
     libonig-dev \
     libxslt1-dev \
-    acl
+    acl \
+    librabbitmq-dev
 
 RUN apt-get update && apt-get install -y \
     redis-server \
     && pecl install redis \
     && docker-php-ext-enable redis
+
+RUN pecl install amqp \
+    && docker-php-ext-enable amqp
 
 RUN docker-php-ext-install \
     pdo pdo_mysql zip xsl gd intl opcache exif mbstring
