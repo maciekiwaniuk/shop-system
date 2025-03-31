@@ -7,9 +7,10 @@ namespace App\Tests\Module\Commerce\Interface\Controller;
 use App\Module\Commerce\Domain\Repository\ProductRepositoryInterface;
 use App\Module\Commerce\Infrastructure\Doctrine\Generator\ProductGenerator;
 use App\Tests\AbstractApplicationTestCase;
+use App\Tests\Module\Commerce\AbstractApplicationCommerceTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-class ProductsControllerTest extends AbstractApplicationTestCase
+class ProductsControllerTest extends AbstractApplicationCommerceTestCase
 {
     private string $url = '/api/v1/products';
     private ProductRepositoryInterface $productRepository;
@@ -25,7 +26,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
     {
         $products = $this->productRepository->getPaginatedById(offset: 1, limit: 10);
 
-        $client = $this->getUserClient();
+        $client = $this->getClientBrowser();
         $client->request(
             method: Request::METHOD_GET,
             uri: $this->url . '/get-paginated',
@@ -47,7 +48,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
     {
         $productsCountBeforeAction = count($this->productRepository->getPaginatedById());
 
-        $client = $this->getAdminClient();
+        $client = $this->getAdminBrowser();
         $client->request(
             method: Request::METHOD_POST,
             uri: $this->url . '/create',
@@ -71,7 +72,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         $product = new ProductGenerator()->generate();
         $this->productRepository->save($product, true);
 
-        $client = $this->getUserClient();
+        $client = $this->getClient();
         $client->request(
             method: Request::METHOD_GET,
             uri: $this->url . '/show/' . $product->getSlug(),
@@ -88,7 +89,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         $product = new ProductGenerator()->generate();
         $this->productRepository->save($product, true);
 
-        $client = $this->getAdminClient();
+        $client = $this->getAdminBrowser();
         $client->request(
             method: Request::METHOD_PUT,
             uri: $this->url . '/update/' . $product->getId(),
@@ -112,7 +113,7 @@ class ProductsControllerTest extends AbstractApplicationTestCase
         $product = new ProductGenerator()->generate();
         $this->productRepository->save($product, true);
 
-        $client = $this->getAdminClient();
+        $client = $this->getAdminBrowser();
         $client->request(
             method: Request::METHOD_DELETE,
             uri: $this->url . '/delete/' . $product->getId(),

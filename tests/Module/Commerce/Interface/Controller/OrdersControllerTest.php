@@ -16,22 +16,21 @@ use App\Module\Commerce\Infrastructure\Doctrine\Generator\ProductGenerator;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Module\Auth\Infrastructure\Doctrine\Generator\UserGenerator;
 use App\Tests\AbstractApplicationTestCase;
+use App\Tests\Module\Commerce\AbstractApplicationCommerceTestCase;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class OrdersControllerTest extends AbstractApplicationTestCase
+class OrdersControllerTest extends AbstractApplicationCommerceTestCase
 {
     private string $url = '/api/v1/orders';
-    private ClientRepositoryInterface $clientRepository;
     private OrderRepositoryInterface $orderRepository;
     private ProductRepositoryInterface $productRepository;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->clientRepository = self::getContainer()->get(ClientRepositoryInterface::class);
         $this->orderRepository = self::getContainer()->get(OrderRepositoryInterface::class);
         $this->productRepository = self::getContainer()->get(ProductRepositoryInterface::class);
     }
@@ -40,7 +39,7 @@ class OrdersControllerTest extends AbstractApplicationTestCase
     {
         $orders = $this->orderRepository->getPaginatedByUuid(limit: 10);
 
-        $client = $this->getAdminClient();
+        $client = $this->getAdminBrowser();
         $client->request(
             method: Request::METHOD_GET,
             uri: $this->url . '/get-paginated',
@@ -60,7 +59,7 @@ class OrdersControllerTest extends AbstractApplicationTestCase
         $orders = $this->orderRepository->getPaginatedByUuid(limit: 10);
         $firstOrder = $orders[0];
 
-        $client = $this->getAdminClient();
+        $client = $this->getAdminBrowser();
         $client->request(
             method: Request::METHOD_GET,
             uri: $this->url . '/get-paginated',
@@ -81,11 +80,11 @@ class OrdersControllerTest extends AbstractApplicationTestCase
         $client = new ClientGenerator()->generate(email: 'exampleOrder@email.com');
         $product = (new ProductGenerator())->generate();
         $order = (new OrderGenerator())->generate(
-            user: $client,
+            client: $client,
             products: new ArrayCollection([$product]),
         );
 
-        $client = $this->getUserClient($client);
+        $client = $this->getClientBrowser($client);
         $this->productRepository->save($product, true);
         $this->orderRepository->save($order, true);
 
@@ -112,7 +111,7 @@ class OrdersControllerTest extends AbstractApplicationTestCase
         /** @var Order $order */
         $order = $this->orderRepository->getPaginatedByUuid(limit: 10)[0];
 
-        $client = $this->getAdminClient();
+        $client = $this->getAdminBrowser();
         $client->request(
             method: Request::METHOD_GET,
             uri: $this->url . '/show/' . $order->getId(),
@@ -137,7 +136,7 @@ class OrdersControllerTest extends AbstractApplicationTestCase
         $product = $this->productRepository->getPaginatedById()[0];
         $ordersCountBeforeAction = count($this->orderRepository->getPaginatedByUuid());
 
-        $client = $this->getAdminClient();
+        $client = $this->getAdminBrowser();
         $client->request(
             method: Request::METHOD_POST,
             uri: $this->url . '/create',
@@ -163,16 +162,15 @@ class OrdersControllerTest extends AbstractApplicationTestCase
 
     public function testChangeStatusAsAdmin(): void
     {
-        $client = (new UserGenerator(self::getContainer()->get(UserPasswordHasherInterface::class)))
-            ->generate(email: 'exampleOrder@email.com');
+        $client = new ClientGenerator()->generate(email: 'exampleOrder@email.com');
         $product = (new ProductGenerator())->generate();
         $order = (new OrderGenerator())->generate(
-            user: $client,
+            client: $client,
             products: new ArrayCollection([$product]),
         );
         $statusBeforeAction = $order->getCurrentStatus();
 
-        $client = $this->getAdminClient();
+        $client = $this->getAdminBrowser();
         $this->productRepository->save($product, true);
         $this->orderRepository->save($order, true);
 

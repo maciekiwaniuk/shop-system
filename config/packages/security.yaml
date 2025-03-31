@@ -26,11 +26,6 @@ security:
                 provider: null
                 authenticator: lexik_jwt_authentication.security.jwt_authenticator
 
-    access_control:
-        - { path: ^/api/v1/register, roles: PUBLIC_ACCESS }
-        - { path: ^/api/v1/login, roles: PUBLIC_ACCESS }
-        - { path: ^/api/v1, roles: ROLE_USER }
-
 when@test:
     security:
         password_hashers:

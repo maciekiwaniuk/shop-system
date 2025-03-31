@@ -4,6 +4,26 @@ nelmio_api_doc:
             title: Shop system
             description: Backend of basic shop system
             version: 1.0.0
-    areas: # to filter documented areas
+        paths:
+            /api/v1/login:
+                post:
+                    requestBody:
+                        description: 'Login'
+                        content:
+                            application/json:
+                                schema:
+                                    type: object
+                                    properties:
+                                        email:
+                                            type: string
+                                        password:
+                                            type: string
+                                    required:
+                                        - email
+                                        - password
+                    responses:
+                        401:
+                            description: Invalid credentials
+    areas:
         path_patterns:
-            - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
+            - ^/api(?!/doc$)

@@ -24,7 +24,7 @@ class UserControllerTest extends AbstractApplicationTestCase
     {
         $usersBeforeAction = count($this->userRepository->findAll());
 
-        $client = $this->getGuestClient();
+        $client = $this->getGuestBrowser();
         $client->request(
             method: Request::METHOD_POST,
             uri: $this->url . '/register',
