@@ -6,9 +6,6 @@ namespace App\Tests;
 
 use App\Common\Infrastructure\Cache\CacheCreator;
 use App\Common\Infrastructure\Doctrine\DataFixtures\AppFixtures;
-use App\Module\Auth\Domain\Entity\User;
-use App\Module\Auth\Domain\Enum\UserRole;
-use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
@@ -22,33 +19,44 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class AbstractApplicationTestCase extends WebTestCase
 {
     protected KernelBrowser $client;
-    protected EntityManagerInterface $entityManager;
+    protected EntityManagerInterface $authEntityManager;
+    protected EntityManagerInterface $commerceEntityManager;
 
     protected function setUp(): void
     {
+        self::bootKernel();
         self::ensureKernelShutdown();
-        $this->client = self::createClient();
 
         if ('test' !== self::$kernel->getEnvironment()) {
-            throw new LogicException('Execution only in Test environment possible!');
+            throw new LogicException('Execution is possible only in test environment');
         }
 
-        $this->entityManager = self::$kernel
+        $this->client = self::createClient();
+
+        $this->authEntityManager = self::$kernel
             ->getContainer()
             ->get('doctrine')
-            ->getManager();
-
-        $schemaTool = new SchemaTool($this->entityManager);
+            ->getManager('auth');
+        $schemaTool = new SchemaTool($this->authEntityManager);
         $schemaTool->updateSchema(
-            $this->entityManager->getMetadataFactory()->getAllMetadata(),
+            $this->authEntityManager->getMetadataFactory()->getAllMetadata(),
         );
 
-        $this->addFixture(
-            className: AppFixtures::class,
-            classesToInjectToFixture: [
-                UserPasswordHasherInterface::class,
-            ],
+        $this->commerceEntityManager = self::$kernel
+            ->getContainer()
+            ->get('doctrine')
+            ->getManager('commerce');
+        $schemaTool = new SchemaTool($this->commerceEntityManager);
+        $schemaTool->updateSchema(
+            $this->commerceEntityManager->getMetadataFactory()->getAllMetadata(),
         );
+
+//        $this->addFixture(
+//            className: AppFixtures::class,
+//            classesToInjectToFixture: [
+//                UserPasswordHasherInterface::class,
+//            ],
+//        );
     }
 
     public function tearDown(): void
@@ -57,8 +65,12 @@ class AbstractApplicationTestCase extends WebTestCase
 
         $this->clearCache();
 
-        $purger = new ORMPurger($this->entityManager);
-        $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);
+        $purger = new ORMPurger($this->authEntityManager);
+        $purger->setPurgeMode(ORMPurger::PURGE_MODE_DELETE);
+        $purger->purge();
+
+        $purger = new ORMPurger($this->commerceEntityManager);
+        $purger->setPurgeMode(ORMPurger::PURGE_MODE_DELETE);
         $purger->purge();
     }
 
@@ -88,8 +100,8 @@ class AbstractApplicationTestCase extends WebTestCase
             new $className(...$instancesOfClassesToInject),
         );
 
-        $purger = new ORMPurger($this->entityManager);
-        $executor = new ORMExecutor($this->entityManager, $purger);
+        $purger = new ORMPurger($this->authEntityManager);
+        $executor = new ORMExecutor($this->authEntityManager, $purger);
         $executor->execute($loader->getFixtures());
     }
 

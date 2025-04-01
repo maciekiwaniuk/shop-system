@@ -37,6 +37,12 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
 
     public function testGetPaginatedWithoutPassedCursorAsAdmin(): void
     {
+        $client = new ClientGenerator()->generate(email: 'exampleOrder@email.com');
+        $product = new ProductGenerator()->generate();
+        new OrderGenerator()->generate(
+            client: $client,
+            products: new ArrayCollection([$product]),
+        );
         $orders = $this->orderRepository->getPaginatedByUuid(limit: 10);
 
         $client = $this->getAdminBrowser();
@@ -56,6 +62,12 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
 
     public function testGetPaginatedWithPassedCursorAsAdmin(): void
     {
+        $client = new ClientGenerator()->generate(email: 'exampleOrder@email.com');
+        $product = new ProductGenerator()->generate();
+        new OrderGenerator()->generate(
+            client: $client,
+            products: new ArrayCollection([$product]),
+        );
         $orders = $this->orderRepository->getPaginatedByUuid(limit: 10);
         $firstOrder = $orders[0];
 
@@ -78,7 +90,7 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
     public function testShowAsOwner(): void
     {
         $client = new ClientGenerator()->generate(email: 'exampleOrder@email.com');
-        $product = (new ProductGenerator())->generate();
+        $product = new ProductGenerator()->generate();
         $order = (new OrderGenerator())->generate(
             client: $client,
             products: new ArrayCollection([$product]),
@@ -108,6 +120,12 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
 
     public function testShowAsAdmin(): void
     {
+        $client = new ClientGenerator()->generate(email: 'exampleOrder@email.com');
+        $product = new ProductGenerator()->generate();
+        new OrderGenerator()->generate(
+            client: $client,
+            products: new ArrayCollection([$product]),
+        );
         /** @var Order $order */
         $order = $this->orderRepository->getPaginatedByUuid(limit: 10)[0];
 
@@ -132,6 +150,12 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
 
     public function testCreateAsUser(): void
     {
+        $client = new ClientGenerator()->generate(email: 'exampleOrder@email.com');
+        $product = new ProductGenerator()->generate();
+        new OrderGenerator()->generate(
+            client: $client,
+            products: new ArrayCollection([$product]),
+        );
         /** @var Product $product */
         $product = $this->productRepository->getPaginatedById()[0];
         $ordersCountBeforeAction = count($this->orderRepository->getPaginatedByUuid());
@@ -163,8 +187,8 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
     public function testChangeStatusAsAdmin(): void
     {
         $client = new ClientGenerator()->generate(email: 'exampleOrder@email.com');
-        $product = (new ProductGenerator())->generate();
-        $order = (new OrderGenerator())->generate(
+        $product = new ProductGenerator()->generate();
+        $order = new OrderGenerator()->generate(
             client: $client,
             products: new ArrayCollection([$product]),
         );

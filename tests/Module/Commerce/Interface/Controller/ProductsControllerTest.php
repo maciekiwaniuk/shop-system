@@ -24,6 +24,8 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
     /** @test */
     public function can_get_paginated_products_as_user(): void
     {
+        $product = new ProductGenerator()->generate();
+        $this->productRepository->save($product, true);
         $products = $this->productRepository->getPaginatedById(offset: 1, limit: 10);
 
         $client = $this->getClientBrowser();
