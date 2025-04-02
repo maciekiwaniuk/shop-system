@@ -13,14 +13,10 @@ use App\Module\Commerce\Infrastructure\Doctrine\Generator\ClientGenerator;
 use App\Module\Commerce\Infrastructure\Doctrine\Generator\OrderGenerator;
 use App\Module\Commerce\Domain\Entity\Product;
 use App\Module\Commerce\Infrastructure\Doctrine\Generator\ProductGenerator;
-use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
-use App\Module\Auth\Infrastructure\Doctrine\Generator\UserGenerator;
-use App\Tests\AbstractApplicationTestCase;
 use App\Tests\Module\Commerce\AbstractApplicationCommerceTestCase;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class OrdersControllerTest extends AbstractApplicationCommerceTestCase
 {

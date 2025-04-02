@@ -28,7 +28,7 @@ readonly class CreateUserCommandHandler implements SyncCommandHandlerInterface
         private LoggerInterface $logger,
         private UserPasswordHasherInterface $passwordHasher,
         private EventDispatcherInterface $eventDispatcher,
-        private AsyncCommandBusInterface $asyncCommandBus
+        private AsyncCommandBusInterface $asyncCommandBus,
     ) {
     }
 
@@ -36,6 +36,8 @@ readonly class CreateUserCommandHandler implements SyncCommandHandlerInterface
     {
         try {
             $user = $this->createUser($command);
+
+            // tutaj prawdopodobnie ten event?
 
             $this->eventDispatcher->dispatch(
                 new UserRegisteredEvent(UserRegisteredDTO::fromEntity($user))
