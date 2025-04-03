@@ -16,9 +16,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class ClientController extends AbstractController
 {
     public function __construct(
-        private readonly QueryBusInterface $queryBus
-    )
-    {
+        private readonly QueryBusInterface $queryBus,
+    ) {
     }
 
     #[OA\Response(

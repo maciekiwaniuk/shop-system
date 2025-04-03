@@ -17,6 +17,7 @@ framework:
             'App\Module\Commerce\Application\Command\CreateProduct\CreateProductCommand': sync
             'App\Module\Commerce\Application\Command\DeleteProduct\DeleteProductCommand': sync
             'App\Module\Commerce\Application\Command\UpdateProduct\UpdateProductCommand': sync
+            'App\Module\Commerce\Application\Query\FindClientByEmail\FindClientByEmailQuery': sync
             'App\Module\Commerce\Application\Query\FindOrderByUuid\FindOrderByUuidQuery': sync
             'App\Module\Commerce\Application\Query\FindProductById\FindProductByIdQuery': sync
             'App\Module\Commerce\Application\Query\FindProductBySlug\FindProductBySlugQuery': sync

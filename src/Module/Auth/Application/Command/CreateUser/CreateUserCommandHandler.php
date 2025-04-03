@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
 
 #[AsMessageHandler]
@@ -29,20 +30,19 @@ readonly class CreateUserCommandHandler implements SyncCommandHandlerInterface
         private UserPasswordHasherInterface $passwordHasher,
         private EventDispatcherInterface $eventDispatcher,
         private AsyncCommandBusInterface $asyncCommandBus,
+        private HttpClientInterface $httpClient,
     ) {
     }
 
     public function __invoke(CreateUserCommand $command): CommandResult
     {
         try {
-            $user = $this->createUser($command);
-
-            // tutaj prawdopodobnie ten event?
+            $userUuid = $this->checkIfClientExists($command->dto->email);
+            $user = $this->createUser($command, $userUuid);
 
             $this->eventDispatcher->dispatch(
                 new UserRegisteredEvent(UserRegisteredDTO::fromEntity($user))
             );
-
             $this->asyncCommandBus->handle(
                 new SendWelcomeEmailCommand(SendWelcomeEmailDTO::fromEntity($user))
             );
@@ -53,14 +53,43 @@ readonly class CreateUserCommandHandler implements SyncCommandHandlerInterface
         return new CommandResult(success: true, statusCode: Response::HTTP_CREATED);
     }
 
-    private function createUser(CreateUserCommand $command): User
+    private function checkIfClientExists(string $email): ?string
     {
-        $user = new User(
-            email: $command->dto->email,
-            password: $command->dto->password,
-            name: $command->dto->name,
-            surname: $command->dto->surname,
-        );
+        try {
+            $response = $this->httpClient->request('GET', 'api/v1/client/exists', [
+                'query' => ['email' => $email],
+            ]);
+
+            $data = json_decode($response->getContent(), true);
+
+            if ($data['success'] && $data['data']['exists']) {
+                return $data['data']['id'];
+            }
+        } catch (Throwable $throwable) {
+            $this->logger->error('Failed to check client existence: ' . $throwable->getMessage());
+        }
+
+        return null;
+    }
+
+    private function createUser(CreateUserCommand $command, ?string $userUuid = null): User
+    {
+        if (isset($userUuid)) {
+            $user = new User(
+                email: $command->dto->email,
+                password: $command->dto->password,
+                name: $command->dto->name,
+                surname: $command->dto->surname,
+                id: $userUuid,
+            );
+        } else {
+            $user = new User(
+                email: $command->dto->email,
+                password: $command->dto->password,
+                name: $command->dto->name,
+                surname: $command->dto->surname,
+            );
+        }
         $user->setPassword(
             $this->passwordHasher->hashPassword($user, $user->getPassword()),
         );
