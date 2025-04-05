@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\Module\Commerce;
 
 use App\Module\Commerce\Domain\Entity\Client;
+use App\Module\Commerce\Domain\Entity\Order;
 use App\Module\Commerce\Domain\Entity\Product;
+use App\Module\Commerce\Domain\Repository\ClientRepositoryInterface;
+use App\Module\Commerce\Domain\Repository\OrderRepositoryInterface;
 use App\Module\Commerce\Domain\Repository\ProductRepositoryInterface;
 use App\Tests\AbstractApplicationTestCase;
 use Doctrine\DBAL\Connection;
@@ -99,5 +102,34 @@ class AbstractApplicationCommerceTestCase extends AbstractApplicationTestCase
         $productRepository->save($product, true);
 
         return $product;
+    }
+
+    public function insertClient(?Client $client = null): Client
+    {
+        if ($client === null) {
+            $client = new Client(
+                id: Uuid::v1()->toString(),
+                email: 'example@email.com',
+                name: 'exampleName',
+                surname: 'exampleSurname',
+            );
+        }
+
+        $clientRepository = self::getContainer()->get(ClientRepositoryInterface::class);
+        $clientRepository->save($client, true);
+
+        return $client;
+    }
+
+    public function insertOrder(?Order $order = null, ?Client $client = null): Order
+    {
+        if ($order === null) {
+            $order = new Order($client ?? $this->insertClient());
+        }
+
+        $orderRepository = self::getContainer()->get(OrderRepositoryInterface::class);
+        $orderRepository->save($order, true);
+
+        return $order;
     }
 }
