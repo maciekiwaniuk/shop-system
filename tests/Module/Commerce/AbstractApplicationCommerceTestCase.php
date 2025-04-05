@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace App\Tests\Module\Commerce;
 
 use App\Module\Commerce\Domain\Entity\Client;
+use App\Module\Commerce\Domain\Entity\Product;
+use App\Module\Commerce\Domain\Repository\ProductRepositoryInterface;
 use App\Tests\AbstractApplicationTestCase;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\Uid\Ulid;
+use Symfony\Component\Uid\Uuid;
 
 class AbstractApplicationCommerceTestCase extends AbstractApplicationTestCase
 {
@@ -54,7 +58,6 @@ class AbstractApplicationCommerceTestCase extends AbstractApplicationTestCase
 
         /** @var Connection $connection */
         $connection = self::getContainer()->get(Connection::class);
-
         $connection->executeStatement(
             'UPDATE shop_system_auth_test.user SET roles = :roles WHERE email = :email',
             [
@@ -81,5 +84,20 @@ class AbstractApplicationCommerceTestCase extends AbstractApplicationTestCase
             sprintf('Bearer %s', $data['data']['token']),
         );
         return $this->client;
+    }
+
+    public function insertProduct(?Product $product = null): Product
+    {
+        if ($product === null) {
+            $product = new Product(
+                name: 'productFixtureName-' . substr(Ulid::generate(), 0, 6),
+                price: random_int(1, 100),
+            );
+        }
+
+        $productRepository = self::getContainer()->get(ProductRepositoryInterface::class);
+        $productRepository->save($product, true);
+
+        return $product;
     }
 }

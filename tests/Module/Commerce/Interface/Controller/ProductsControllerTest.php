@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Module\Commerce\Interface\Controller;
 
 use App\Module\Commerce\Domain\Repository\ProductRepositoryInterface;
-use App\Module\Commerce\Infrastructure\Doctrine\Generator\ProductGenerator;
-use App\Tests\AbstractApplicationTestCase;
 use App\Tests\Module\Commerce\AbstractApplicationCommerceTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -24,12 +22,10 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
     /** @test */
     public function can_get_paginated_products_as_user(): void
     {
-        $product = new ProductGenerator()->generate();
-        $this->productRepository->save($product, true);
+        $this->insertProduct();
         $products = $this->productRepository->getPaginatedById(offset: 1, limit: 10);
-
-        $client = $this->getClientBrowser();
-        $client->request(
+        $clientBrowser = $this->getClientBrowser();
+        $clientBrowser->request(
             method: Request::METHOD_GET,
             uri: $this->url . '/get-paginated',
             parameters: [
@@ -37,7 +33,7 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
                 'limit' => 10,
             ],
         );
-        $responseData = json_decode($client->getResponse()->getContent(), true);
+        $responseData = json_decode($clientBrowser->getResponse()->getContent(), true);
 
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
@@ -49,9 +45,8 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
     public function can_create_product_as_admin(): void
     {
         $productsCountBeforeAction = count($this->productRepository->getPaginatedById());
-
-        $client = $this->getAdminBrowser();
-        $client->request(
+        $adminBrowser = $this->getAdminBrowser();
+        $adminBrowser->request(
             method: Request::METHOD_POST,
             uri: $this->url . '/create',
             content: json_encode([
@@ -59,7 +54,7 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
                 'price' => 1999.99,
             ]),
         );
-        $responseData = json_decode($client->getResponse()->getContent(), true);
+        $responseData = json_decode($adminBrowser->getResponse()->getContent(), true);
 
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
@@ -69,30 +64,28 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
         );
     }
 
-    public function testShowAsUser(): void
+    /** @test */
+    public function can_show_product_as_guest(): void
     {
-        $product = new ProductGenerator()->generate();
-        $this->productRepository->save($product, true);
-
-        $client = $this->getClient();
-        $client->request(
+        $product = $this->insertProduct();
+        $guestBrowser = $this->getGuestBrowser();
+        $guestBrowser->request(
             method: Request::METHOD_GET,
             uri: $this->url . '/show/' . $product->getSlug(),
         );
-        $responseData = json_decode($client->getResponse()->getContent(), true);
+        $responseData = json_decode($guestBrowser->getResponse()->getContent(), true);
 
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
         $this->assertEquals($product->getName(), $responseData['data']['name']);
     }
 
-    public function testUpdateAsAdmin(): void
+    /** @test */
+    public function can_update_product_as_admin(): void
     {
-        $product = new ProductGenerator()->generate();
-        $this->productRepository->save($product, true);
-
-        $client = $this->getAdminBrowser();
-        $client->request(
+        $product = $this->insertProduct();
+        $adminBrowser = $this->getAdminBrowser();
+        $adminBrowser->request(
             method: Request::METHOD_PUT,
             uri: $this->url . '/update/' . $product->getId(),
             content: json_encode([
@@ -100,7 +93,7 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
                 'price' => 102.00,
             ]),
         );
-        $responseData = json_decode($client->getResponse()->getContent(), true);
+        $responseData = json_decode($adminBrowser->getResponse()->getContent(), true);
 
         $updatedProduct = $this->productRepository->findById($product->getId());
 
@@ -110,17 +103,16 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
         $this->assertEquals(102.00, $updatedProduct->getPrice());
     }
 
-    public function testDeleteAsAdmin(): void
+    /** @test */
+    public function can_delete_product_as_admin(): void
     {
-        $product = new ProductGenerator()->generate();
-        $this->productRepository->save($product, true);
-
-        $client = $this->getAdminBrowser();
-        $client->request(
+        $product = $this->insertProduct();
+        $adminBrowser = $this->getAdminBrowser();
+        $adminBrowser->request(
             method: Request::METHOD_DELETE,
             uri: $this->url . '/delete/' . $product->getId(),
         );
-        $responseData = json_decode($client->getResponse()->getContent(), true);
+        $responseData = json_decode($adminBrowser->getResponse()->getContent(), true);
 
         $deletedProduct = $this->productRepository->findBySlug($product->getSlug());
 

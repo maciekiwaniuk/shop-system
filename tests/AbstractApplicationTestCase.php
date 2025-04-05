@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests;
 
 use App\Common\Infrastructure\Cache\CacheCreator;
-use App\Common\Infrastructure\Doctrine\DataFixtures\AppFixtures;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
@@ -14,7 +13,6 @@ use Doctrine\ORM\Tools\SchemaTool;
 use LogicException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AbstractApplicationTestCase extends WebTestCase
 {

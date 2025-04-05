@@ -20,9 +20,9 @@ class UserControllerTest extends AbstractApplicationTestCase
     }
 
     /** @test */
-    public function it_should_register_new_user_successfully(): void
+    public function can_register_new_user(): void
     {
-        $usersBeforeAction = count($this->userRepository->findAll());
+        $usersCountBeforeAction = count($this->userRepository->findAll());
 
         $client = $this->getGuestBrowser();
         $client->request(
@@ -41,7 +41,7 @@ class UserControllerTest extends AbstractApplicationTestCase
         $this->assertTrue($responseData['success']);
         $this->assertNotNull($responseData['message']);
         $this->assertCount(
-            $usersBeforeAction + 1,
+            $usersCountBeforeAction + 1,
             $this->userRepository->findAll(),
         );
     }
