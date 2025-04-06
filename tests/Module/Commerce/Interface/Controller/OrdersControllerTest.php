@@ -23,7 +23,8 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
         $this->orderRepository = self::getContainer()->get(OrderRepositoryInterface::class);
     }
 
-    public function testGetPaginatedWithoutPassedCursorAsAdmin(): void
+    /** @test */
+    public function can_get_paginated_data_without_passed_cursor_as_admin(): void
     {
         $this->insertOrder();
         $orders = $this->orderRepository->getPaginatedByUuid(limit: 10);
@@ -43,7 +44,8 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
         $this->assertEquals(count($orders), count($responseData['data']));
     }
 
-    public function testGetPaginatedWithPassedCursorAsAdmin(): void
+    /** @test */
+    public function can_get_paginated_data_with_passed_cursor_as_admin(): void
     {
         $this->insertOrder();
         $orders = $this->orderRepository->getPaginatedByUuid(limit: 10);
@@ -65,7 +67,8 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
         $this->assertEquals(count($orders) - 1, count($responseData['data']));
     }
 
-//    public function testShowAsOwner(): void
+//    /** @test */
+//    public function can_show_order_as_owner(): void
 //    {
 //        $client = new Client(
 //            id: Uuid::v4()->toString(),
@@ -93,7 +96,8 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
 //        );
 //    }
 
-    public function testShowAsAdmin(): void
+    /** @test */
+    public function can_show_order_someones_else_as_admin(): void
     {
         $this->insertOrder();
         $order = $this->orderRepository->getPaginatedByUuid(limit: 10)[0];
@@ -117,7 +121,8 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
         );
     }
 
-//    public function testCreateAsUser(): void
+//    /** @test */
+//    public function can_create_order_as_user(): void
 //    {
 //        $client = new ClientGenerator()->generate(email: 'exampleOrder@email.com');
 //        $product = new ProductGenerator()->generate();
@@ -153,7 +158,8 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
 //        );
 //    }
 
-//    public function testChangeStatusAsAdmin(): void
+//    /** @test */
+//    public function can_change_order_status_as_admin(): void
 //    {
 //        $client = new ClientGenerator()->generate(email: 'exampleOrder@email.com');
 //        $product = new ProductGenerator()->generate();
