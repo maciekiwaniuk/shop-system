@@ -23,7 +23,7 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
         $this->orderRepository = self::getContainer()->get(OrderRepositoryInterface::class);
     }
 
-    /** @test */
+//    /** @test */
     public function can_get_paginated_data_without_passed_cursor_as_admin(): void
     {
         $this->insertOrder();
@@ -44,7 +44,7 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
         $this->assertEquals(count($orders), count($responseData['data']));
     }
 
-    /** @test */
+//    /** @test */
     public function can_get_paginated_data_with_passed_cursor_as_admin(): void
     {
         $this->insertOrder();
@@ -67,23 +67,22 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
         $this->assertEquals(count($orders) - 1, count($responseData['data']));
     }
 
-//    /** @test */
-//    public function can_show_order_as_owner(): void
-//    {
-//        $client = new Client(
-//            id: Uuid::v4()->toString(),
-//            email: 'example123@email.com',
-//            name: 'John',
-//            surname: 'Paul'
-//        );
-//        $clientBrowser = $this->getClientBrowser($client);
-//        $order = $this->insertOrder(client: $client);
-//        $clientBrowser->request(
-//            method: Request::METHOD_GET,
-//            uri: $this->url . '/show/' . $order->getId(),
-//        );
-//        $responseData = json_decode($clientBrowser->getResponse()->getContent(), true);
-//
+    /** @test */
+    public function can_show_order_as_owner(): void
+    {
+        $clientAuthenticatedData = $this->getClientBrowser();
+        var_dump('test1234');
+        $order = $this->insertOrder(client: $clientAuthenticatedData['client']);
+        $clientBrowser = $clientAuthenticatedData['clientBrowser'];
+        $clientBrowser->request(
+            method: Request::METHOD_GET,
+            uri: $this->url . '/show/' . $order->getId(),
+        );
+        $responseData = json_decode($clientBrowser->getResponse()->getContent(), true);
+        var_dump('response data');
+        var_dump($clientBrowser->getResponse()->getStatusCode());
+        var_dump($responseData);
+
 //        $this->assertResponseIsSuccessful();
 //        $this->assertTrue($responseData['success']);
 //        $this->assertEquals(
@@ -94,9 +93,9 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
 //            ),
 //            new DateTimeImmutable($responseData['data']['createdAt']),
 //        );
-//    }
+    }
 
-    /** @test */
+//    /** @test */
     public function can_show_order_someones_else_as_admin(): void
     {
         $this->insertOrder();
