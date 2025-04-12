@@ -33,6 +33,20 @@ class AbstractApplicationCommerceTestCase extends AbstractApplicationTestCase
                 'surname' => 'exampleSurname',
             ]),
         );
+        $email = isset($client) ? $client->getEmail() : 'example@email.com';
+
+        // idk why token is not present in user context after settings token from register request only
+        $this->client->request(
+            method: 'POST',
+            uri: '/api/v1/login',
+            server: [
+                'CONTENT_TYPE' => 'application/json',
+            ],
+            content: json_encode([
+                'email' => $email,
+                'password' => 'examplePassword',
+            ]),
+        );
         $data = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->client->setServerParameter(

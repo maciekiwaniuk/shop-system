@@ -20,7 +20,7 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
     }
 
     /** @test */
-    public function can_get_paginated_products_as_user(): void
+    public function can_get_paginated_products_as_client(): void
     {
         $this->insertProduct();
         $products = $this->productRepository->getPaginatedById(offset: 1, limit: 10);
