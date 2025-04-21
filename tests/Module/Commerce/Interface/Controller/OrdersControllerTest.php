@@ -30,8 +30,8 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
     {
         $this->insertOrder();
         $orders = $this->orderRepository->getPaginatedByUuid(limit: 10);
-
         $adminBrowser = $this->getAdminBrowser();
+
         $adminBrowser->request(
             method: Request::METHOD_GET,
             uri: $this->url . '/get-paginated',
@@ -39,8 +39,8 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
                 'limit' => 10,
             ],
         );
-        $responseData = json_decode($adminBrowser->getResponse()->getContent(), true);
 
+        $responseData = json_decode($adminBrowser->getResponse()->getContent(), true);
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
         $this->assertEquals(count($orders), count($responseData['data']));
@@ -52,8 +52,8 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
         $this->insertOrder();
         $orders = $this->orderRepository->getPaginatedByUuid(limit: 10);
         $firstOrder = $orders[0];
-
         $adminBrowser = $this->getAdminBrowser();
+
         $adminBrowser->request(
             method: Request::METHOD_GET,
             uri: $this->url . '/get-paginated',
@@ -62,8 +62,8 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
                 'limit' => 10,
             ],
         );
-        $responseData = json_decode($adminBrowser->getResponse()->getContent(), true);
 
+        $responseData = json_decode($adminBrowser->getResponse()->getContent(), true);
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
         $this->assertEquals(count($orders) - 1, count($responseData['data']));
@@ -81,12 +81,13 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
         $clientRepository = self::getContainer()->get(ClientRepositoryInterface::class);
         $clientEntity = $clientRepository->findClientByEmail($client->getEmail());
         $order = $this->insertOrder(client: $clientEntity);
+
         $clientBrowser->request(
             method: Request::METHOD_GET,
             uri: $this->url . '/show/' . $order->getId(),
         );
-        $responseData = json_decode($clientBrowser->getResponse()->getContent(), true);
 
+        $responseData = json_decode($clientBrowser->getResponse()->getContent(), true);
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
         $this->assertEquals(
@@ -104,14 +105,14 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
     {
         $this->insertOrder();
         $order = $this->orderRepository->getPaginatedByUuid(limit: 10)[0];
-
         $adminBrowser = $this->getAdminBrowser();
+
         $adminBrowser->request(
             method: Request::METHOD_GET,
             uri: $this->url . '/show/' . $order->getId(),
         );
-        $responseData = json_decode($adminBrowser->getResponse()->getContent(), true);
 
+        $responseData = json_decode($adminBrowser->getResponse()->getContent(), true);
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
         $this->assertEquals(
@@ -130,6 +131,7 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
         $ordersCountBeforeAction = count($this->orderRepository->getPaginatedByUuid(limit: 10));
         $product = $this->insertProduct();
         $clientBrowser = $this->getClientBrowser();
+
         $clientBrowser->request(
             method: Request::METHOD_POST,
             uri: $this->url . '/create',
@@ -143,8 +145,8 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
                 ],
             ]),
         );
-        $responseData = json_decode($clientBrowser->getResponse()->getContent(), true);
 
+        $responseData = json_decode($clientBrowser->getResponse()->getContent(), true);
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
         $this->assertCount(
@@ -158,8 +160,8 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
     {
         $order = $this->insertOrder();
         $statusBeforeAction = $order->getCurrentStatus();
-
         $adminBrowser = $this->getAdminBrowser();
+
         $adminBrowser->request(
             method: Request::METHOD_POST,
             uri: $this->url . '/change-status/' . $order->getId(),
@@ -167,10 +169,9 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
                 'status' => OrderStatus::IN_DELIVERY->value,
             ]),
         );
+
         $responseData = json_decode($adminBrowser->getResponse()->getContent(), true);
-
         $orderAfterAction = $this->orderRepository->findByUuid($order->getId());
-
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
         $this->assertNotEquals($statusBeforeAction, $orderAfterAction->getCurrentStatus());

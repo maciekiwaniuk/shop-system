@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\Commerce\Interface\Controller;
 
+use App\Common\Application\Bus\AsyncCommandBus\AsyncCommandBusInterface;
 use App\Common\Application\Bus\QueryBus\QueryBusInterface;
 use App\Common\Application\Bus\SyncCommandBus\SyncCommandBusInterface;
 use App\Common\Application\DTO\PaginationUuidDTO;
@@ -30,6 +31,7 @@ class OrdersController extends AbstractController
 {
     public function __construct(
         private readonly SyncCommandBusInterface $syncCommandBus,
+        private readonly AsyncCommandBusInterface $asyncCommandBus,
         private readonly QueryBusInterface $queryBus,
         private readonly EntityManagerInterface $commerceEntityManager,
     ) {
@@ -172,18 +174,11 @@ class OrdersController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $commandResult = $this->syncCommandBus->handle(new ChangeOrderStatusCommand($dto, $uuid));
+        $this->asyncCommandBus->handle(new ChangeOrderStatusCommand($dto, $uuid));
 
-        $result = match (true) {
-            $commandResult->success => [
-                'success' => true,
-                'message' => 'Successfully updated status of order.',
-            ],
-            default => [
-                'success' => false,
-                'message' => 'Something went wrong while updating status of order.',
-            ]
-        };
-        return $this->json($result, $commandResult->statusCode);
+        return $this->json([
+            'success' => true,
+            'message' => 'Successfully queued update status of order.'
+        ], Response::HTTP_ACCEPTED);
     }
 }

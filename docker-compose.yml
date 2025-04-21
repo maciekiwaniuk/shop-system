@@ -24,7 +24,7 @@ services:
             
     shop-system-message-broker:
         container_name: shop-system-message-broker
-        image: rabbitmq:4.0.4
+        image: rabbitmq:4.1-management
         ports:
             - "5672:5672"
             - "15672:15672"

@@ -12,7 +12,7 @@ framework:
             'App\Module\Auth\Application\Command\CreateUser\CreateUserCommand': sync
             'App\Module\Auth\Application\Query\FindUserByEmail\FindUserByEmailQuery': sync
 
-            'App\Module\Commerce\Application\Command\ChangeOrderStatus\ChangeOrderStatusCommand': sync
+            'App\Module\Commerce\Application\Command\ChangeOrderStatus\ChangeOrderStatusCommand': async
             'App\Module\Commerce\Application\Command\CreateOrder\CreateOrderCommand': sync
             'App\Module\Commerce\Application\Command\CreateProduct\CreateProductCommand': sync
             'App\Module\Commerce\Application\Command\DeleteProduct\DeleteProductCommand': sync

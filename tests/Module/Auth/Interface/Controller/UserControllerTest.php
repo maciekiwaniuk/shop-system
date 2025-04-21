@@ -23,9 +23,9 @@ class UserControllerTest extends AbstractApplicationTestCase
     public function can_register_new_user(): void
     {
         $usersCountBeforeAction = count($this->userRepository->findAll());
+        $guestBrowser = $this->getGuestBrowser();
 
-        $client = $this->getGuestBrowser();
-        $client->request(
+        $guestBrowser->request(
             method: Request::METHOD_POST,
             uri: $this->url . '/register',
             content: json_encode([
@@ -35,8 +35,8 @@ class UserControllerTest extends AbstractApplicationTestCase
                 'surname' => 'Williams',
             ]),
         );
-        $responseData = json_decode($client->getResponse()->getContent(), true);
 
+        $responseData = json_decode($guestBrowser->getResponse()->getContent(), true);
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
         $this->assertNotNull($responseData['message']);

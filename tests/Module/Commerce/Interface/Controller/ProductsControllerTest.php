@@ -25,6 +25,7 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
         $this->insertProduct();
         $products = $this->productRepository->getPaginatedById(offset: 1, limit: 10);
         $clientBrowser = $this->getClientBrowser();
+
         $clientBrowser->request(
             method: Request::METHOD_GET,
             uri: $this->url . '/get-paginated',
@@ -33,8 +34,8 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
                 'limit' => 10,
             ],
         );
-        $responseData = json_decode($clientBrowser->getResponse()->getContent(), true);
 
+        $responseData = json_decode($clientBrowser->getResponse()->getContent(), true);
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
         $this->assertEquals($products[0]->getName(), $responseData['data'][0]['name']);
@@ -46,6 +47,7 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
     {
         $productsCountBeforeAction = count($this->productRepository->getPaginatedById());
         $adminBrowser = $this->getAdminBrowser();
+
         $adminBrowser->request(
             method: Request::METHOD_POST,
             uri: $this->url . '/create',
@@ -54,8 +56,8 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
                 'price' => 1999.99,
             ]),
         );
-        $responseData = json_decode($adminBrowser->getResponse()->getContent(), true);
 
+        $responseData = json_decode($adminBrowser->getResponse()->getContent(), true);
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
         $this->assertCount(
