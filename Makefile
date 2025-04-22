@@ -41,3 +41,6 @@ clear_database:
 
 simple_migration_of_all_databases:
 	docker compose exec shop-system php bin/console doctrine:migrations:migrate
+
+consume_queue:
+	docker compose exec shop-system php bin/console messenger:consume async -vv

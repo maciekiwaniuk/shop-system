@@ -13,6 +13,23 @@ services:
         ports:
             - "3306:3306"
 
+    shop-system-read-database:
+        container_name: shop-system-read-database
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.18.0
+        environment:
+            - discovery.type=single-node
+            - bootstrap.memory_lock=true
+            - ES_JAVA_OPTS=-Xms512m -Xmx512m
+            - xpack.security.enabled=false
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        volumes:
+            - ./docker/elasticsearch/data:/usr/share/elasticsearch/data
+        ports:
+            - "9200:9200"
+
     shop-system-cache:
         container_name: shop-system-cache
         image: redis:7.4
@@ -42,7 +59,9 @@ services:
             - .:/var/www:cached
         depends_on:
             - shop-system-database
+            - shop-system-read-database
             - shop-system-cache
+            - shop-system-message-broker
 
     shop-system-nginx:
         container_name: shop-system-nginx
@@ -55,6 +74,4 @@ services:
             - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
         depends_on:
             - shop-system
-
-volumes:
-    mysql:
+            - shop-system-read-database
