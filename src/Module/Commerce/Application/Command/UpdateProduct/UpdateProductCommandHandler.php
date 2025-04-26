@@ -31,7 +31,7 @@ readonly class UpdateProductCommandHandler implements SyncCommandInterface
     public function __invoke(UpdateProductCommand $command): CommandResult
     {
         try {
-            $this->cache->delByKeys([$command->product]);
+            $this->cache->delByKeys([$command->product->getSlug()]);
 
             $product = $this->commerceEntityManager->getReference(Product::class, $command->product->getId());
             $product

@@ -30,7 +30,7 @@ readonly class DeleteProductCommandHandler implements SyncCommandHandlerInterfac
     public function __invoke(DeleteProductCommand $command): CommandResult
     {
         try {
-            $this->cache->delByKeys([$command->product]);
+            $this->cache->delByKeys([$command->product->getSlug()]);
 
             if (!$this->productRepository->softDelete($command->product)) {
                 return new CommandResult(success: false, statusCode: Response::HTTP_NOT_FOUND);
