@@ -1,6 +1,6 @@
 services:
-    shop-system-database:
-        container_name: shop-system-database
+    shop-system-mysql:
+        container_name: shop-system-mysql
         image: mysql:9.1
         volumes:
             - ./docker/mysql/data:/var/lib/mysql
@@ -13,8 +13,8 @@ services:
         ports:
             - "3306:3306"
 
-    shop-system-read-database:
-        container_name: shop-system-read-database
+    shop-system-elasticsearch:
+        container_name: shop-system-elasticsearch
         image: docker.elastic.co/elasticsearch/elasticsearch:8.18.0
         environment:
             - discovery.type=single-node
@@ -30,8 +30,8 @@ services:
         ports:
             - "9200:9200"
 
-    shop-system-cache:
-        container_name: shop-system-cache
+    shop-system-redis:
+        container_name: shop-system-redis
         image: redis:7.4
         restart: on-failure
         ports:
@@ -39,8 +39,8 @@ services:
         volumes:
             - ./docker/redis/data:/data
             
-    shop-system-message-broker:
-        container_name: shop-system-message-broker
+    shop-system-rabbitmq:
+        container_name: shop-system-rabbitmq
         image: rabbitmq:4.1-management
         ports:
             - "5672:5672"
@@ -58,10 +58,10 @@ services:
         volumes:
             - .:/var/www:cached
         depends_on:
-            - shop-system-database
-            - shop-system-read-database
-            - shop-system-cache
-            - shop-system-message-broker
+            - shop-system-mysql
+            - shop-system-elasticsearch
+            - shop-system-redis
+            - shop-system-rabbitmq
 
     shop-system-nginx:
         container_name: shop-system-nginx
@@ -74,4 +74,4 @@ services:
             - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
         depends_on:
             - shop-system
-            - shop-system-read-database
+            - shop-system-elasticsearch
