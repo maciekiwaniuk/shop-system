@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Module\Auth\Application\Command\CreateUser;
 
 use App\Common\Application\Bus\AsyncCommandBus\AsyncCommandBusInterface;
+use App\Common\Application\BusResult\CommandResult;
+use App\Common\Application\SyncCommand\SyncCommandHandlerInterface;
 use App\Module\Auth\Application\Command\SendWelcomeEmail\SendWelcomeEmailCommand;
 use App\Module\Auth\Application\DTO\Communication\SendWelcomeEmailDTO;
-use App\Module\Auth\Application\DTO\Communication\UserRegisteredDTO;
 use App\Module\Auth\Domain\Entity\User;
 use App\Module\Auth\Domain\Event\UserRegisteredEvent;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
-use App\Common\Application\BusResult\CommandResult;
-use App\Common\Application\SyncCommand\SyncCommandHandlerInterface;
+use App\Module\Auth\Domain\ValueObject\UserRegistrationDetails;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -41,7 +41,14 @@ readonly class CreateUserCommandHandler implements SyncCommandHandlerInterface
             $user = $this->createUser($command, $userUuid);
 
             $this->eventDispatcher->dispatch(
-                new UserRegisteredEvent(UserRegisteredDTO::fromEntity($user))
+                new UserRegisteredEvent(
+                    new UserRegistrationDetails(
+                        id: $user->getId(),
+                        email: $user->getEmail(),
+                        name: $user->getName(),
+                        surname: $user->getSurname()
+                    )
+                )
             );
             $this->asyncCommandBus->handle(
                 new SendWelcomeEmailCommand(SendWelcomeEmailDTO::fromEntity($user))

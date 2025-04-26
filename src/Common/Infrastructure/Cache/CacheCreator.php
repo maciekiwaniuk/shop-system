@@ -20,8 +20,9 @@ readonly class CacheCreator implements CacheCreatorInterface
 
     public function create(string $prefix = ''): CacheProxyInterface
     {
+        $adapter = new RedisAdapter(new Redis());
         return new CacheProxy(
-            new RedisAdapter(new Redis())::createConnection($this->redisUrl),
+            $adapter::createConnection($this->redisUrl),
             $this->logger,
             $prefix,
         );

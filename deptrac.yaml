@@ -1,54 +1,155 @@
-parameters:
-    paths:
-        - ./src
-    exclude_files:
-        - '#.*test.*#'
-    layers:
-        - name: Domain
-          collectors:
-              - type: classLike
-                value: ^App\\Module\\(?:Auth|Commerce)\\Domain\\.*
-              - type: classLike
-                value: ^App\\Common\\Domain\\.*
-        - name: Application
-          collectors:
-              - type: classLike
-                value: ^App\\Module\\(?:Auth|Commerce)\\Application\\.*
-              - type: classLike
-                value: ^App\\Common\\Application\\.*
-        - name: Infrastructure
-          collectors:
-              - type: classLike
-                value: ^App\\Module\\(?:Auth|Commerce)\\Infrastructure\\.*
-              - type: classLike
-                value: ^App\\Common\\Infrastructure\\.*
-#        - name: UI
-#          collectors:
-#              - type: classLike
-#                value: ^App\\UI\\.*
-        - name: Vendor
-          collectors:
-              - type: bool
-                must:
-                    - type: classLike
-                      value: .+\\.*
-                must_not:
-                    - type: classLike
-                      value: ^App\\.*
-                    - type: classLike
-                      value: Doctrine\\Common\\Collections\\.*
-    ruleset:
-        Domain:
-            - Vendor
-        Application:
-            - Domain
-            - Vendor
-        Infrastructure:
-            - Domain
-            - Application
-            - Vendor
-#        UI:
-#            - Application
-#            - Infrastructure
-#            - Domain
-#            - Vendor
+deptrac:
+  paths:
+    - ./src
+
+  exclude_files:
+    - '#.*Test.php$#'
+
+  layers:
+    - name: Foundation
+      collectors:
+        - type: bool
+          must:
+            - type: classLike
+              value: .+\\.*
+          must_not:
+            - type: classLike
+              value: ^App\\.*
+            - type: classLike
+              value: Doctrine\\Common\\Collections\\.*
+
+    - name: CommonDomain
+      collectors:
+        - type: classLike
+          value: ^App\\Common\\Domain\\.*
+
+    - name: CommonApplication
+      collectors:
+        - type: classLike
+          value: ^App\\Common\\Application\\.*
+
+    - name: CommonInterface
+      collectors:
+        - type: classLike
+          value: ^App\\Common\\Interface\\.*
+
+    - name: CommonInfrastructure
+      collectors:
+        - type: classLike
+          value: ^App\\Common\\Infrastructure\\.*
+
+    - name: AuthDomain
+      collectors:
+        - type: classLike
+          value: ^App\\Module\\Auth\\Domain\\.*
+
+    - name: AuthApplication
+      collectors:
+        - type: classLike
+          value: ^App\\Module\\Auth\\Application\\.*
+
+    - name: AuthInterface
+      collectors:
+        - type: classLike
+          value: ^App\\Module\\Auth\\Interface\\.*
+
+    - name: AuthInfrastructure
+      collectors:
+        - type: classLike
+          value: ^App\\Module\\Auth\\Infrastructure\\.*
+
+    - name: CommerceDomain
+      collectors:
+        - type: classLike
+          value: ^App\\Module\\Commerce\\Domain\\.*
+
+    - name: CommerceApplication
+      collectors:
+        - type: classLike
+          value: ^App\\Module\\Commerce\\Application\\.*
+
+    - name: CommerceInterface
+      collectors:
+        - type: classLike
+          value: ^App\\Module\\Commerce\\Interface\\.*
+
+    - name: CommerceInfrastructure
+      collectors:
+        - type: classLike
+          value: ^App\\Module\\Commerce\\Infrastructure\\.*
+
+  ruleset:
+    AuthDomain:
+      - CommonDomain
+      - Foundation
+
+    CommerceDomain:
+      - CommonDomain
+      - Foundation
+
+    AuthApplication:
+      - AuthDomain
+      - CommonApplication
+      - CommonDomain
+      - CommerceDomain
+      - Foundation
+
+    CommerceApplication:
+      - CommerceDomain
+      - CommonApplication
+      - CommonDomain
+      - AuthDomain
+      - Foundation
+
+    AuthInterface:
+      - AuthApplication
+      - AuthDomain
+      - CommonInterface
+      - CommonApplication
+      - CommonDomain
+      - Foundation
+
+    CommerceInterface:
+      - CommerceApplication
+      - CommerceDomain
+      - CommonInterface
+      - CommonApplication
+      - CommonDomain
+      - Foundation
+
+    AuthInfrastructure:
+      - AuthApplication
+      - AuthDomain
+      - AuthInterface
+      - CommonInfrastructure
+      - CommonApplication
+      - CommonDomain
+      - CommonInterface
+      - Foundation
+
+    CommerceInfrastructure:
+      - CommerceApplication
+      - CommerceDomain
+      - CommerceInterface
+      - CommonInfrastructure
+      - CommonApplication
+      - CommonDomain
+      - CommonInterface
+      - Foundation
+
+    CommonApplication:
+      - CommonDomain
+      - Foundation
+
+    CommonInterface:
+      - CommonApplication
+      - CommonDomain
+      - Foundation
+
+    CommonInfrastructure:
+      - CommonApplication
+      - CommonDomain
+      - CommonInterface
+      - Foundation
+
+
