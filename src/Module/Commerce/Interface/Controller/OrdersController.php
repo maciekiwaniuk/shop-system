@@ -17,8 +17,6 @@ use App\Module\Commerce\Application\Query\GetPaginatedOrders\GetPaginatedOrdersQ
 use App\Module\Commerce\Application\Voter\OrdersVoter;
 use App\Module\Commerce\Domain\Entity\Order;
 use Doctrine\ORM\EntityManagerInterface;
-use Nelmio\ApiDocBundle\Annotation\Model;
-use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,30 +35,6 @@ class OrdersController extends AbstractController
     ) {
     }
 
-    #[OA\Response(
-        response: Response::HTTP_OK,
-        description: 'Return paginated orders',
-        content: new OA\JsonContent(
-            properties: [
-                new OA\Property(property: 'success', type: 'bool'),
-                new OA\Property(
-                    property: 'data',
-                    type: 'array',
-                    items: new OA\Items(ref: new Model(type: Order::class, groups: ['default'])),
-                ),
-            ],
-        ),
-    )]
-    #[OA\Parameter(
-        name: 'cursor',
-        description: 'Set cursor (UUID) for pagination',
-        schema: new OA\Schema(type: 'string'),
-    )]
-    #[OA\Parameter(
-        name: 'limit',
-        description: 'Set limit for pagination',
-        schema: new OA\Schema(type: 'int'),
-    )]
     #[Route('/get-paginated', methods: [Request::METHOD_GET])]
     #[IsGranted(OrdersVoter::GET_PAGINATED)]
     public function getPaginated(#[ValueResolver('get_paginated_orders')] PaginationUuidDTO $dto): Response
@@ -87,20 +61,6 @@ class OrdersController extends AbstractController
         return $this->json($result, $queryResult->statusCode);
     }
 
-    #[OA\Response(
-        response: Response::HTTP_CREATED,
-        description: 'Show order',
-        content: new OA\JsonContent(
-            properties: [
-                new OA\Property(property: 'success', type: 'bool'),
-                new OA\Property(
-                    property: 'data',
-                    ref: new Model(type: Order::class, groups: ['default']),
-                    type: 'object',
-                ),
-            ],
-        ),
-    )]
     #[Route('/show/{uuid}', methods: [Request::METHOD_GET])]
     public function show(string $uuid): Response
     {
@@ -124,17 +84,6 @@ class OrdersController extends AbstractController
         return $this->json($result, $queryResult->statusCode);
     }
 
-    #[OA\Response(
-        response: Response::HTTP_CREATED,
-        description: 'Create order',
-        content: new OA\JsonContent(
-            properties: [
-                new OA\Property(property: 'success', type: 'bool'),
-                new OA\Property(property: 'message', type: 'string'),
-            ],
-        ),
-    )]
-    #[OA\RequestBody(content: new Model(type: CreateOrderDTO::class, groups: ['default']))]
     #[Route('/create', methods: [Request::METHOD_POST])]
     #[IsGranted(OrdersVoter::CREATE)]
     public function create(#[ValueResolver('create_order_dto')] CreateOrderDTO $dto): Response

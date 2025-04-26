@@ -8,7 +8,6 @@ use App\Module\Commerce\Domain\Entity\Client;
 use App\Module\Commerce\Domain\Enum\OrderStatus;
 use App\Module\Commerce\Domain\Repository\ClientRepositoryInterface;
 use App\Module\Commerce\Domain\Repository\OrderRepositoryInterface;
-use App\Module\Commerce\Domain\Repository\ProductRepositoryInterface;
 use App\Tests\Module\Commerce\AbstractApplicationCommerceTestCase;
 use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\Request;

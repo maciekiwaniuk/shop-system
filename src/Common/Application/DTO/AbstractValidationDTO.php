@@ -9,6 +9,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 abstract class AbstractValidationDTO
 {
+    // TODO: i think #ignore is not necessary for application, it was only for nelmio docs but im not sure
     #[Ignore]
     private ConstraintViolationListInterface $errors;
 

@@ -18,8 +18,6 @@ use App\Module\Commerce\Application\Query\GetPaginatedProducts\GetPaginatedProdu
 use App\Module\Commerce\Application\Voter\ProductsVoter;
 use App\Module\Commerce\Domain\Entity\Product;
 use Doctrine\ORM\EntityManagerInterface;
-use Nelmio\ApiDocBundle\Annotation\Model;
-use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,30 +35,6 @@ class ProductsController extends AbstractController
     ) {
     }
 
-    #[OA\Response(
-        response: Response::HTTP_OK,
-        description: 'Return paginated products',
-        content: new OA\JsonContent(
-            properties: [
-                new OA\Property(property: 'success', type: 'bool'),
-                new OA\Property(
-                    property: 'data',
-                    type: 'array',
-                    items: new OA\Items(ref: new Model(type: Product::class, groups: ['default'])),
-                ),
-            ],
-        ),
-    )]
-    #[OA\Parameter(
-        name: 'offset',
-        description: 'Set offset (ID) for pagination',
-        schema: new OA\Schema(type: 'int'),
-    )]
-    #[OA\Parameter(
-        name: 'limit',
-        description: 'Set limit for pagination',
-        schema: new OA\Schema(type: 'int'),
-    )]
     #[Route('/get-paginated', methods: [Request::METHOD_GET])]
     #[IsGranted(ProductsVoter::GET_PAGINATED)]
     public function getPaginated(#[ValueResolver('get_paginated_products')] PaginationIdDTO $dto): Response
@@ -87,17 +61,6 @@ class ProductsController extends AbstractController
         return $this->json($result, $queryResult->statusCode);
     }
 
-    #[OA\Response(
-        response: Response::HTTP_CREATED,
-        description: 'Create product',
-        content: new OA\JsonContent(
-            properties: [
-                new OA\Property(property: 'success', type: 'bool'),
-                new OA\Property(property: 'message', type: 'string'),
-            ],
-        ),
-    )]
-    #[OA\RequestBody(content: new Model(type: CreateProductDTO::class, groups: ['default']))]
     #[Route('/create', methods: [Request::METHOD_POST])]
     #[IsGranted(ProductsVoter::CREATE)]
     public function create(#[ValueResolver('create_product_dto')] CreateProductDTO $dto): Response
@@ -124,20 +87,6 @@ class ProductsController extends AbstractController
         return $this->json($result, $commandResult->statusCode);
     }
 
-    #[OA\Response(
-        response: Response::HTTP_CREATED,
-        description: 'Show product',
-        content: new OA\JsonContent(
-            properties: [
-                new OA\Property(property: 'success', type: 'bool'),
-                new OA\Property(
-                    property: 'data',
-                    ref: new Model(type: Product::class, groups: ['default']),
-                    type: 'object',
-                ),
-            ],
-        ),
-    )]
     #[Route('/show/{slug}', methods: [Request::METHOD_GET])]
     #[IsGranted(ProductsVoter::SHOW)]
     public function show(string $slug): Response
@@ -157,17 +106,6 @@ class ProductsController extends AbstractController
         return $this->json($result, $queryResult->statusCode);
     }
 
-    #[OA\Response(
-        response: Response::HTTP_CREATED,
-        description: 'Update product',
-        content: new OA\JsonContent(
-            properties: [
-                new OA\Property(property: 'success', type: 'bool'),
-                new OA\Property(property: 'message', type: 'string'),
-            ],
-        ),
-    )]
-    #[OA\RequestBody(content: new Model(type: UpdateProductDTO::class, groups: ['default']))]
     #[Route('/update/{id}', methods: [Request::METHOD_PUT])]
     #[IsGranted(ProductsVoter::UPDATE)]
     public function update(
@@ -204,16 +142,6 @@ class ProductsController extends AbstractController
         return $this->json($result, isset($commandResult) ? $commandResult->statusCode : $queryResult->statusCode);
     }
 
-    #[OA\Response(
-        response: Response::HTTP_ACCEPTED,
-        description: 'Soft delete product',
-        content: new OA\JsonContent(
-            properties: [
-                new OA\Property(property: 'success', type: 'bool'),
-                new OA\Property(property: 'message', type: 'string'),
-            ],
-        ),
-    )]
     #[Route('/delete/{id}', methods: [Request::METHOD_DELETE])]
     #[IsGranted(ProductsVoter::DELETE)]
     public function delete(int $id): Response

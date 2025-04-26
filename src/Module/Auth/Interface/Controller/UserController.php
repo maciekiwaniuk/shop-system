@@ -12,8 +12,6 @@ use App\Module\Auth\Application\Query\FindUserByEmail\FindUserByEmailQuery;
 use App\Module\Auth\Domain\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
-use Nelmio\ApiDocBundle\Annotation\Model;
-use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,22 +29,6 @@ class UserController extends AbstractController
     ) {
     }
 
-    #[OA\Response(
-        response: Response::HTTP_OK,
-        description: 'Register user',
-        content: new OA\JsonContent(
-            properties: [
-                new OA\Property(property: 'success', type: 'bool'),
-                new OA\Property(property: 'message', type: 'string'),
-                new OA\Property(
-                    property: 'data',
-                    properties: [new OA\Property(property: 'token', type: 'string')],
-                    type: 'object',
-                ),
-            ],
-        ),
-    )]
-    #[OA\RequestBody(content: new Model(type: CreateUserDTO::class))]
     #[Route('/register', methods: [Request::METHOD_POST])]
     public function register(#[ValueResolver('create_user_dto')] CreateUserDTO $dto): Response
     {
