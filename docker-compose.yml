@@ -48,6 +48,13 @@ services:
         volumes:
             - ./docker/rabbitmq/data:/var/lib/rabbitmq
 
+    shop-system-mailhog:
+        container_name: shop-system-mailhog
+        image: mailhog/mailhog
+        ports:
+            - "8025:8025"
+            - "1025:1025"
+
     shop-system:
         container_name: shop-system
         build:
@@ -62,6 +69,7 @@ services:
             - shop-system-elasticsearch
             - shop-system-redis
             - shop-system-rabbitmq
+            -
 
     shop-system-nginx:
         container_name: shop-system-nginx
