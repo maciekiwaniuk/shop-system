@@ -80,7 +80,7 @@ class AbstractApplicationCommerceTestCase extends AbstractApplicationTestCase
             [
                 'roles' => json_encode(['ROLE_USER', 'ROLE_ADMIN']),
                 'email' => $email,
-            ]
+            ],
         );
 
         $this->client->request(

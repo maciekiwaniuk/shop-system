@@ -69,7 +69,7 @@ services:
             - shop-system-elasticsearch
             - shop-system-redis
             - shop-system-rabbitmq
-            -
+            - shop-system-mailhog
 
     shop-system-nginx:
         container_name: shop-system-nginx

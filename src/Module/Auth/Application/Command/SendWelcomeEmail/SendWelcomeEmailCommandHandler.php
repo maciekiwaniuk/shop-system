@@ -25,7 +25,7 @@ readonly class SendWelcomeEmailCommandHandler implements AsyncCommandHandlerInte
             'fullName' => $command->dto->name . ' ' . $command->dto->surname,
         ]);
 
-        $email = new Email()
+        $email = (new Email())
             ->from('no-reply@example.com')
             ->to($command->dto->email)
             ->subject('Welcome to our shop!')

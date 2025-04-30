@@ -127,7 +127,7 @@ class OrdersController extends AbstractController
 
         return $this->json([
             'success' => true,
-            'message' => 'Successfully queued update status of order.'
+            'message' => 'Successfully queued update status of order.',
         ], Response::HTTP_ACCEPTED);
     }
 }

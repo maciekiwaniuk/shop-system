@@ -47,7 +47,7 @@ class AsyncCommandBusTest extends AbstractUnitTestCase
 
         $this->asyncCommandBus->handle(
             new class implements AsyncCommandInterface {
-            }
+            },
         );
     }
 }

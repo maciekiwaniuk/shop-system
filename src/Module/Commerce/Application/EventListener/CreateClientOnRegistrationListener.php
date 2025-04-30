@@ -27,8 +27,8 @@ readonly class CreateClientOnRegistrationListener
                     $event->dto->email,
                     $event->dto->name,
                     $event->dto->surname,
-                )
-            )
+                ),
+            ),
         );
     }
 }

@@ -18,7 +18,7 @@ class ClientRepository extends ServiceEntityRepository implements ClientReposito
     {
         parent::__construct($registry, Client::class);
     }
-    
+
     public function save(Client $client, bool $flush = false): void
     {
         $this->getEntityManager()->persist($client);

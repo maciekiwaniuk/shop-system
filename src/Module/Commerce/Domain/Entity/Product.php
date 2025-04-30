@@ -83,7 +83,7 @@ class Product
     {
         $slugger = new AsciiSlugger();
         return strtolower(
-            $slugger->slug($name) . '-' . substr((string) Uuid::v1(), 0, 8)
+            $slugger->slug($name) . '-' . substr((string) Uuid::v1(), 0, 8),
         );
     }
 

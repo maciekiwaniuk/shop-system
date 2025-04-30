@@ -12,6 +12,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class AuthenticationSuccessSubscriber implements EventSubscriberInterface
 {
+    /** @phpstan-ignore-next-line */
     private Request $request;
 
     public function onKernelRequest(RequestEvent $event): void

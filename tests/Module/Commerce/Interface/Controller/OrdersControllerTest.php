@@ -74,7 +74,8 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
         $client = new Client(
             id: (string) Uuid::v4(),
             email: 'test1234@wp.pl',
-            name: 'test',surname: 'test'
+            name: 'test',
+            surname: 'test',
         );
         $clientBrowser = $this->getClientBrowser(client: $client);
         $clientRepository = self::getContainer()->get(ClientRepositoryInterface::class);

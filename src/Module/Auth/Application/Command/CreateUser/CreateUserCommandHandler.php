@@ -46,12 +46,12 @@ readonly class CreateUserCommandHandler implements SyncCommandHandlerInterface
                         id: $user->getId(),
                         email: $user->getEmail(),
                         name: $user->getName(),
-                        surname: $user->getSurname()
-                    )
-                )
+                        surname: $user->getSurname(),
+                    ),
+                ),
             );
             $this->asyncCommandBus->handle(
-                new SendWelcomeEmailCommand(SendWelcomeEmailDTO::fromEntity($user))
+                new SendWelcomeEmailCommand(SendWelcomeEmailDTO::fromEntity($user)),
             );
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());

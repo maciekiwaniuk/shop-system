@@ -33,7 +33,7 @@ readonly class CreateOrderCommandHandler implements SyncCommandHandlerInterface
         $user = $this->tokenStorage->getToken()->getUser();
         try {
             $order = new Order(
-                $this->commerceEntityManager->getReference(Client::class, $user->getUserIdentifier())
+                $this->commerceEntityManager->getReference(Client::class, $user->getUserIdentifier()),
             );
             foreach ($command->dto->products as $product) {
                 $order->addProduct(

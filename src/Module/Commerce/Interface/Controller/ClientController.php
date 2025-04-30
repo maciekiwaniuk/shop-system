@@ -26,7 +26,7 @@ class ClientController extends AbstractController
         if (!$email) {
             return $this->json([
                 'success' => false,
-                'message' => 'Email parameter is required'
+                'message' => 'Email parameter is required',
             ], Response::HTTP_BAD_REQUEST);
         }
 
@@ -36,8 +36,8 @@ class ClientController extends AbstractController
             'success' => true,
             'data' => [
                 'exists' => $queryResult->success && $queryResult->data['id'] !== null,
-                'id' => $queryResult->data['id'] ?? null
-            ]
+                'id' => $queryResult->data['id'] ?? null,
+            ],
         ]);
     }
 }
