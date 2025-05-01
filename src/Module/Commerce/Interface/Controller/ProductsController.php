@@ -11,10 +11,12 @@ use App\Module\Commerce\Application\Command\CreateProduct\CreateProductCommand;
 use App\Module\Commerce\Application\Command\DeleteProduct\DeleteProductCommand;
 use App\Module\Commerce\Application\Command\UpdateProduct\UpdateProductCommand;
 use App\Module\Commerce\Application\DTO\Validation\CreateProductDTO;
+use App\Module\Commerce\Application\DTO\Validation\SearchProductsDTO;
 use App\Module\Commerce\Application\DTO\Validation\UpdateProductDTO;
 use App\Module\Commerce\Application\Query\FindProductById\FindProductByIdQuery;
 use App\Module\Commerce\Application\Query\FindProductBySlug\FindProductBySlugQuery;
 use App\Module\Commerce\Application\Query\GetPaginatedProducts\GetPaginatedProductsQuery;
+use App\Module\Commerce\Application\Query\SearchProductByPhrase\SearchProductsByPhraseQuery;
 use App\Module\Commerce\Application\Voter\ProductsVoter;
 use App\Module\Commerce\Domain\Entity\Product;
 use Doctrine\ORM\EntityManagerInterface;
@@ -37,7 +39,7 @@ class ProductsController extends AbstractController
 
     #[Route('/get-paginated', methods: [Request::METHOD_GET])]
     #[IsGranted(ProductsVoter::GET_PAGINATED)]
-    public function getPaginated(#[ValueResolver('get_paginated_products')] PaginationIdDTO $dto): Response
+    public function getPaginated(#[ValueResolver('get_paginated_products_dto')] PaginationIdDTO $dto): Response
     {
         if ($dto->hasErrors()) {
             return $this->json([
@@ -167,5 +169,25 @@ class ProductsController extends AbstractController
             ]
         };
         return $this->json($result, isset($commandResult) ? $commandResult->statusCode : $queryResult->statusCode);
+    }
+
+    // TODO: Tests
+    #[Route('/search', methods: [Request::METHOD_GET])]
+    #[IsGranted(ProductsVoter::SEARCH)]
+    public function search(#[ValueResolver('search_products_dto')] SearchProductsDTO $dto): Response
+    {
+        $queryResult = $this->queryBus->handle(new SearchProductsByPhraseQuery($dto->phrase));
+
+        $result = match (true) {
+            $queryResult->success => [
+                'success' => true,
+                'data' => $queryResult->data,
+            ],
+            default => [
+                'success' => false,
+                'message' => 'Something went wrong while searching for products by phrase.',
+            ]
+        };
+        return $this->json($result, $queryResult->statusCode);
     }
 }

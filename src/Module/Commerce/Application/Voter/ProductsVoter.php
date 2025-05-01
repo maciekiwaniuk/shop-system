@@ -17,6 +17,7 @@ class ProductsVoter extends Voter
     public const string SHOW = 'SHOW_PRODUCT';
     public const string UPDATE = 'UPDATE_PRODUCT';
     public const string DELETE = 'DELETE_PRODUCT';
+    public const string SEARCH = 'SEARCH_PRODUCTS';
 
     public function __construct(
         private readonly UserContextInterface $userContext,
@@ -40,6 +41,7 @@ class ProductsVoter extends Voter
             self::SHOW => $this->canShow(),
             self::UPDATE => $this->canUpdate($this->userContext),
             self::DELETE => $this->canDelete($this->userContext),
+            self::SEARCH => $this->canSearch(),
             default => throw new Exception('Invalid attribute.')
         };
     }
@@ -67,5 +69,10 @@ class ProductsVoter extends Voter
     private function canDelete(UserContextInterface $userContext): bool
     {
         return $userContext->isAdmin();
+    }
+
+    private function canSearch(): bool
+    {
+        return true;
     }
 }
