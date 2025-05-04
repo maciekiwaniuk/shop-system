@@ -6,12 +6,15 @@ namespace App\Module\Commerce\Application\Command\DeleteProduct;
 
 use App\Common\Domain\Cache\CacheCreatorInterface;
 use App\Common\Domain\Cache\CacheProxyInterface;
+use App\Module\Commerce\Application\DTO\Communication\ProductDTO;
+use App\Module\Commerce\Domain\Event\ProductDeletedEvent;
 use App\Module\Commerce\Domain\Repository\ProductRepositoryInterface;
 use App\Common\Application\BusResult\CommandResult;
 use App\Common\Application\SyncCommand\SyncCommandHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Throwable;
 
 #[AsMessageHandler]
@@ -22,6 +25,7 @@ readonly class DeleteProductCommandHandler implements SyncCommandHandlerInterfac
     public function __construct(
         private ProductRepositoryInterface $productRepository,
         private LoggerInterface $logger,
+        private EventDispatcherInterface $eventDispatcher,
         CacheCreatorInterface $cacheCreator,
     ) {
         $this->cache = $cacheCreator->create('query.products.findProductBySlugQuery.');
@@ -35,6 +39,8 @@ readonly class DeleteProductCommandHandler implements SyncCommandHandlerInterfac
             if (!$this->productRepository->softDelete($command->product)) {
                 return new CommandResult(success: false, statusCode: Response::HTTP_NOT_FOUND);
             }
+
+            $this->eventDispatcher->dispatch(new ProductDeletedEvent($command->product->getId()));
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return new CommandResult(success: false, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);

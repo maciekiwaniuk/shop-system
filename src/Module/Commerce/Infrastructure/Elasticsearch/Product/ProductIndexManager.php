@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Commerce\Infrastructure\Elasticsearch;
+namespace App\Module\Commerce\Infrastructure\Elasticsearch\Product;
 
+use App\Module\Commerce\Application\DTO\Communication\ProductDTO;
+use App\Module\Commerce\Infrastructure\Elasticsearch\ElasticsearchIndexException;
 use Elastic\Elasticsearch\Client;
 
 final readonly class ProductIndexManager
@@ -52,5 +54,28 @@ final readonly class ProductIndexManager
         ];
 
         $this->elasticsearchClient->indices()->create($params);
+    }
+
+    public function indexProduct(ProductDTO $dto): void
+    {
+        $this->elasticsearchClient->index([
+            'index' => self::INDEX_NAME,
+            'id' => $dto->id,
+            'body' => [
+                'name' => $dto->name,
+                'price' => $dto->price,
+                'slug' => $dto->slug,
+                'createdAt' => $dto->createdAt->format('c'),
+                'updatedAt' => $dto->updatedAt->format('c'),
+            ]
+        ]);
+    }
+
+    public function removeProduct(int $id): void
+    {
+        $this->elasticsearchClient->delete([
+            'index' => self::INDEX_NAME,
+            'id' => $id,
+        ]);
     }
 }

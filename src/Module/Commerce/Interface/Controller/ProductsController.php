@@ -176,6 +176,13 @@ class ProductsController extends AbstractController
     #[IsGranted(ProductsVoter::SEARCH)]
     public function search(#[ValueResolver('search_products_dto')] SearchProductsDTO $dto): Response
     {
+        if ($dto->hasErrors()) {
+            return $this->json([
+                'success' => false,
+                'errors' => $dto->getErrors(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
         $queryResult = $this->queryBus->handle(new SearchProductsByPhraseQuery($dto->phrase));
 
         $result = match (true) {

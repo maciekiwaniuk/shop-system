@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Commerce\Application\Query\SearchProductByPhrase;
+namespace App\Module\Commerce\Application\Query\SearchProductsByPhrase;
 
 use App\Common\Application\BusResult\QueryResult;
 use App\Common\Application\Query\QueryHandlerInterface;
