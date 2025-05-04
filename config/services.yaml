@@ -1,5 +1,8 @@
 parameters:
     redis_url: '%env(REDIS_URL)%'
+    elasticsearch_host: '%env(ELASTICSEARCH_HOST)%'
+    elasticsearch_port: '%env(int:ELASTICSEARCH_PORT)%'
+    elasticsearch_scheme: '%env(ELASTICSEARCH_SCHEME)%'
 
 services:
     _defaults:
@@ -52,6 +55,13 @@ services:
     App\Module\Commerce\Interface\Controller\OrdersController:
         arguments:
             $commerceEntityManager: '@doctrine.orm.commerce_entity_manager'
+
+    Elastic\Elasticsearch\Client:
+        factory: [ 'App\Module\Commerce\Infrastructure\Elasticsearch\ElasticsearchClientFactory', 'createClient' ]
+        arguments:
+            - '%elasticsearch_host%'
+            - '%elasticsearch_port%'
+            - '%elasticsearch_scheme%'
 
 imports:
     - { resource: 'services/commands.yaml' }

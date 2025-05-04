@@ -44,3 +44,7 @@ simple_migration_of_all_databases:
 
 consume_queue:
 	docker compose exec shop-system php bin/console messenger:consume async -vv
+
+delete_var:
+	sudo chmod -R 777 var
+	rm -r var
