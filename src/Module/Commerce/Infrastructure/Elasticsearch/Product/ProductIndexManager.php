@@ -78,4 +78,29 @@ final readonly class ProductIndexManager
             'id' => $id,
         ]);
     }
+
+    public function searchByPhrase(string $phrase): array
+    {
+        $params = [
+            'index' => self::INDEX_NAME,
+            'body' => [
+                'query' => [
+                    'match_phrase_prefix' => [
+                        'name' => [
+                            'query' => $phrase,
+                            'max_expansions' => 50,
+                            'slop' => 1,
+                        ],
+                    ],
+                ],
+                '_source' => ['name', 'price', 'slug', 'createdAt', 'updatedAt'],
+                'size' => 6,
+            ],
+        ];
+
+        $results = $this->elasticsearchClient->search($params);
+        return array_map(function ($hit) {
+            return $hit['_source'];
+        }, $results['hits']['hits']);
+    }
 }

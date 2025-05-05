@@ -16,7 +16,7 @@ use App\Module\Commerce\Application\DTO\Validation\UpdateProductDTO;
 use App\Module\Commerce\Application\Query\FindProductById\FindProductByIdQuery;
 use App\Module\Commerce\Application\Query\FindProductBySlug\FindProductBySlugQuery;
 use App\Module\Commerce\Application\Query\GetPaginatedProducts\GetPaginatedProductsQuery;
-use App\Module\Commerce\Application\Query\SearchProductByPhrase\SearchProductsByPhraseQuery;
+use App\Module\Commerce\Application\Query\SearchProductsByPhrase\SearchProductsByPhraseQuery;
 use App\Module\Commerce\Application\Voter\ProductsVoter;
 use App\Module\Commerce\Domain\Entity\Product;
 use Doctrine\ORM\EntityManagerInterface;

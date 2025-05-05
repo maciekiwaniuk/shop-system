@@ -6,17 +6,17 @@ namespace App\Module\Commerce\Application\Query\SearchProductsByPhrase;
 
 use App\Common\Application\BusResult\QueryResult;
 use App\Common\Application\Query\QueryHandlerInterface;
-use App\Common\Domain\Serializer\JsonSerializerInterface;
+use App\Module\Commerce\Infrastructure\Elasticsearch\Product\ProductIndexManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
 
 #[AsMessageHandler]
-class SearchProductsByPhraseQueryHandler implements QueryHandlerInterface
+readonly class SearchProductsByPhraseQueryHandler implements QueryHandlerInterface
 {
     public function __construct(
-        private JsonSerializerInterface $serializer,
+        private ProductIndexManager $productIndexManager,
         private LoggerInterface $logger,
     ) {
     }
@@ -24,7 +24,7 @@ class SearchProductsByPhraseQueryHandler implements QueryHandlerInterface
     public function __invoke(SearchProductsByPhraseQuery $query): QueryResult
     {
         try {
-//            $products = ;
+            $products = $this->productIndexManager->searchByPhrase($query->phrase);
         } catch (Throwable $throwable) {
             $this->logger->error($throwable->getMessage());
             return new QueryResult(
@@ -35,7 +35,7 @@ class SearchProductsByPhraseQueryHandler implements QueryHandlerInterface
         return new QueryResult(
             success: true,
             statusCode: Response::HTTP_OK,
-//            data: json_decode($this->serializer->serialize($products), true),
+            data: $products,
         );
     }
 }

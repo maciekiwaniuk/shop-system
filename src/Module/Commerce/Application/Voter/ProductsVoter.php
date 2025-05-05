@@ -26,7 +26,7 @@ class ProductsVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return in_array($attribute, [self::GET_PAGINATED, self::CREATE, self::SHOW, self::UPDATE, self::DELETE])
+        return in_array($attribute, [self::GET_PAGINATED, self::CREATE, self::SHOW, self::UPDATE, self::DELETE, self::SEARCH])
             && ($subject instanceof Product || $subject === null);
     }
 
