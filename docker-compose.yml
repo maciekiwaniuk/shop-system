@@ -48,19 +48,17 @@ services:
         volumes:
             - ./docker/rabbitmq/data:/var/lib/rabbitmq
 
-    shop-system-mailhog:
-        container_name: shop-system-mailhog
-        image: mailhog/mailhog
-        ports:
-            - "8025:8025"
-            - "1025:1025"
+#    shop-system-mailhog:
+#        container_name: shop-system-mailhog
+#        image: mailhog/mailhog
+#        ports:
+#            - "8025:8025"
+#            - "1025:1025"
 
-    shop-system:
-        container_name: shop-system
+    shop-system-backend:
+        container_name: shop-system-backend
         build:
             context: ./docker/php
-        ports:
-            - "5173:5173"
         restart: always
         volumes:
             - .:/var/www:cached
@@ -69,7 +67,18 @@ services:
             - shop-system-elasticsearch
             - shop-system-redis
             - shop-system-rabbitmq
-            - shop-system-mailhog
+#            - shop-system-mailhog
+
+    shop-system-frontend:
+        container_name: shop-system-frontend
+        build:
+            context: .
+            dockerfile: ./docker/node/Dockerfile
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./frontend:/app
+        restart: always
 
     shop-system-nginx:
         container_name: shop-system-nginx
@@ -81,4 +90,5 @@ services:
             - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
             - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
         depends_on:
-            - shop-system
+            - shop-system-backend
+            - shop-system-frontend
