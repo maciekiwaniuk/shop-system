@@ -48,12 +48,12 @@ services:
         volumes:
             - ./docker/rabbitmq/data:/var/lib/rabbitmq
 
-#    shop-system-mailhog:
-#        container_name: shop-system-mailhog
-#        image: mailhog/mailhog
-#        ports:
-#            - "8025:8025"
-#            - "1025:1025"
+    shop-system-mailhog:
+        container_name: shop-system-mailhog
+        image: mailhog/mailhog
+        ports:
+            - "8025:8025"
+            - "1025:1025"
 
     shop-system-backend:
         container_name: shop-system-backend
@@ -67,18 +67,18 @@ services:
             - shop-system-elasticsearch
             - shop-system-redis
             - shop-system-rabbitmq
-#            - shop-system-mailhog
+            - shop-system-mailhog
 
     shop-system-frontend:
         container_name: shop-system-frontend
-        build:
-            context: .
-            dockerfile: ./docker/node/Dockerfile
-        ports:
-            - "3000:3000"
+        image: node:23-alpine
+        command: sh -c "npm install && npm run dev"
         volumes:
-            - ./frontend:/app
-        restart: always
+            - ./frontend:/var/www/html
+        working_dir: /var/www/html
+        restart: on-failure
+        stdin_open: true
+        tty: true
 
     shop-system-nginx:
         container_name: shop-system-nginx
@@ -92,3 +92,6 @@ services:
         depends_on:
             - shop-system-backend
             - shop-system-frontend
+
+volumes:
+    frontend_node_modules:
