@@ -73,6 +73,8 @@ services:
         container_name: shop-system-frontend
         image: node:23-alpine
         command: sh -c "npm install && npm run dev"
+        ports:
+            - "3000:3000"
         volumes:
             - ./frontend:/var/www/html
         working_dir: /var/www/html
