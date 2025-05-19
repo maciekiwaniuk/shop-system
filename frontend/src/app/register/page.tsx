@@ -1,73 +1,109 @@
+import Link from 'next/link';
+
 export default function Register() {
     return (
         <>
-            <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-                <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                    <img
-                        alt="Your Company"
-                        src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-                        className="mx-auto h-10 w-auto"
-                    />
-                    <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-white">Sign in to your account</h2>
-                </div>
-
-                <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                    <form action="#" method="POST" className="space-y-6">
-                        <div>
-                            <label htmlFor="email" className="block text-sm/6 font-medium text-white">
-                                Email address
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    required
-                                    autoComplete="email"
-                                    className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                                />
-                            </div>
-                        </div>
-
-                        <div>
-                            <div className="flex items-center justify-between">
-                                <label htmlFor="password" className="block text-sm/6 font-medium text-white">
-                                    Password
-                                </label>
-                                <div className="text-sm">
-                                    <a href="#" className="font-semibold text-indigo-400 hover:text-indigo-300">
-                                        Forgot password?
-                                    </a>
+            <div className="bg-gray-50">
+                <div className="min-h-[80vh] flex flex-col items-center justify-center pt-8 px-4">
+                    <div className="max-w-md w-full">
+                        <div className="p-8 rounded-2xl bg-white shadow">
+                            <h2 className="text-slate-900 text-center text-3xl font-semibold">Register</h2>
+                            <form className="mt-12 space-y-6">
+                                <div>
+                                    <label className="text-slate-800 text-sm font-medium mb-2 block">Email</label>
+                                    <div className="relative flex items-center">
+                                        <input name="email" type="text" required
+                                               className="w-full text-slate-800 text-sm border border-slate-300 px-4 py-3 rounded-md outline-emerald-600"
+                                               placeholder="Enter email"/>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb"
+                                             className="w-4 h-4 absolute right-4" viewBox="0 0 24 24">
+                                            <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
+                                            <path
+                                                d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
+                                                data-original="#000000"></path>
+                                        </svg>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="mt-2">
-                                <input
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    required
-                                    autoComplete="current-password"
-                                    className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
-                                />
-                            </div>
-                        </div>
 
-                        <div>
-                            <button
-                                type="submit"
-                                className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-                            >
-                                Register
-                            </button>
-                        </div>
-                    </form>
+                                <div>
+                                    <label className="text-slate-800 text-sm font-medium mb-2 block">Name</label>
+                                    <div className="relative flex items-center">
+                                        <input name="name" type="text" required
+                                               className="w-full text-slate-800 text-sm border border-slate-300 px-4 py-3 rounded-md outline-emerald-600"
+                                               placeholder="Enter name"/>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb"
+                                             className="w-4 h-4 absolute right-4" viewBox="0 0 24 24">
+                                            <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
+                                            <path
+                                                d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
+                                                data-original="#000000"></path>
+                                        </svg>
+                                    </div>
+                                </div>
 
-                    <p className="mt-10 text-center text-sm/6 text-gray-400">
-                        Not a member?{' '}
-                        <a href="#" className="font-semibold text-indigo-400 hover:text-indigo-300">
-                            Start a 14 day free trial
-                        </a>
-                    </p>
+                                <div>
+                                    <label className="text-slate-800 text-sm font-medium mb-2 block">Surname</label>
+                                    <div className="relative flex items-center">
+                                        <input name="surname" type="text" required
+                                               className="w-full text-slate-800 text-sm border border-slate-300 px-4 py-3 rounded-md outline-emerald-600"
+                                               placeholder="Enter surname"/>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb"
+                                             className="w-4 h-4 absolute right-4" viewBox="0 0 24 24">
+                                            <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
+                                            <path
+                                                d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
+                                                data-original="#000000"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="text-slate-800 text-sm font-medium mb-2 block">Password</label>
+                                    <div className="relative flex items-center">
+                                        <input name="password" type="password" required
+                                               className="w-full text-slate-800 text-sm border border-slate-300 px-4 py-3 rounded-md outline-emerald-600"
+                                               placeholder="Enter password"/>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb"
+                                             className="w-4 h-4 absolute right-4 cursor-pointer" viewBox="0 0 128 128">
+                                            <path
+                                                d="M64 104C22.127 104 1.367 67.496.504 65.943a4 4 0 0 1 0-3.887C1.367 60.504 22.127 24 64 24s62.633 36.504 63.496 38.057a4 4 0 0 1 0 3.887C126.633 67.496 105.873 104 64 104zM8.707 63.994C13.465 71.205 32.146 96 64 96c31.955 0 50.553-24.775 55.293-31.994C114.535 56.795 95.854 32 64 32 32.045 32 13.447 56.775 8.707 63.994zM64 88c-13.234 0-24-10.766-24-24s10.766-24 24-24 24 10.766 24 24-10.766 24-24 24zm0-40c-8.822 0-16 7.178-16 16s7.178 16 16 16 16-7.178 16-16-7.178-16-16-16z"
+                                                data-original="#000000"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="text-slate-800 text-sm font-medium mb-2 block">Repeat password</label>
+                                    <div className="relative flex items-center">
+                                        <input name="password-repeat" type="password" required
+                                               className="w-full text-slate-800 text-sm border border-slate-300 px-4 py-3 rounded-md outline-emerald-600"
+                                               placeholder="Enter password again"/>
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb"
+                                             className="w-4 h-4 absolute right-4 cursor-pointer" viewBox="0 0 128 128">
+                                            <path
+                                                d="M64 104C22.127 104 1.367 67.496.504 65.943a4 4 0 0 1 0-3.887C1.367 60.504 22.127 24 64 24s62.633 36.504 63.496 38.057a4 4 0 0 1 0 3.887C126.633 67.496 105.873 104 64 104zM8.707 63.994C13.465 71.205 32.146 96 64 96c31.955 0 50.553-24.775 55.293-31.994C114.535 56.795 95.854 32 64 32 32.045 32 13.447 56.775 8.707 63.994zM64 88c-13.234 0-24-10.766-24-24s10.766-24 24-24 24 10.766 24 24-10.766 24-24 24zm0-40c-8.822 0-16 7.178-16 16s7.178 16 16 16 16-7.178 16-16-7.178-16-16-16z"
+                                                data-original="#000000"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <div className="!mt-12">
+                                    <button type="button"
+                                            className="w-full py-2 px-4 text-[15px] font-medium tracking-wide rounded-md text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none cursor-pointer">
+                                        Register
+                                    </button>
+                                </div>
+                                <p className="text-slate-800 text-sm !mt-6 text-center">Have an account?
+                                    <Link
+                                        href="/login"
+                                        className="text-emerald-600 hover:underline ml-1 whitespace-nowrap font-semibold"
+                                    >
+                                        Login here
+                                    </Link>
+                                </p>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </>
