@@ -94,6 +94,3 @@ services:
         depends_on:
             - shop-system-backend
             - shop-system-frontend
-
-volumes:
-    frontend_node_modules:

@@ -17,6 +17,7 @@
         "elasticsearch/elasticsearch": "^8.18",
         "lexik/jwt-authentication-bundle": "^2.21",
         "nelmio/api-doc-bundle": "^4.38",
+        "nelmio/cors-bundle": "^2.5",
         "nyholm/psr7": "^1.8",
         "php-amqplib/php-amqplib": "^2.0",
         "symfony/amqp-messenger": "^7.2",
