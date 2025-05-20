@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Dialog, DialogPanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link';
+import SearchBar from '@/components/Header/SearchBar';
 
 // var toggleOpen = document.getElementById('toggleOpen')!;
 // var toggleClose = document.getElementById('toggleClose')!;
@@ -30,22 +31,12 @@ export default function Header() {
                     className="flex flex-wrap items-center justify-between relative lg:gap-y-4 gap-y-4 gap-x-4 w-full">
 
                     <div className="flex items-center">
-                        <Link href="/">
+                        <Link href="/frontend/public">
                             Shop system
                         </Link>
                     </div>
 
-                    <div
-                        className="bg-gray-100 flex items-center border max-md:order-1 border-transparent focus-within:border-black focus-within:bg-transparent px-4 rounded-sm h-10 min-w-[40%] lg:w-2/4 max-md:w-full transition-all">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.904 192.904"
-                             className="fill-gray-400 mr-4 w-4 h-4">
-                            <path
-                                d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z">
-                            </path>
-                        </svg>
-                        <input type='email' placeholder='Search...'
-                               className="w-full outline-none bg-transparent text-slate-900 text-sm"/>
-                    </div>
+                    <SearchBar />
 
                     <div className="flex items-center space-x-4 max-md:ml-auto">
                         <span className="relative pr-3">
@@ -74,9 +65,9 @@ export default function Header() {
                                 <button className="ml-4 cursor-pointer">
                                     <svg className="w-7 h-7" fill="#000" viewBox="0 0 20 20"
                                          xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
+                                        <path fillRule="evenodd"
                                               d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                                              clip-rule="evenodd"></path>
+                                              clipRule="evenodd"></path>
                                     </svg>
                                 </button>
                             </div>
@@ -94,17 +85,11 @@ export default function Header() {
 
                         <button id="toggleOpen" className="cursor-pointer">
                             <svg className="w-8 h-8" fill="#000" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
+                                <path fillRule="evenodd"
                                       d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                                      clip-rule="evenodd"></path>
+                                      clipRule="evenodd"></path>
                             </svg>
                         </button>
-
-
-
-
-
-
                     </div>
                 </div>
 
