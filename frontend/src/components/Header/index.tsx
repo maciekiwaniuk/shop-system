@@ -31,7 +31,7 @@ export default function Header() {
                     className="flex flex-wrap items-center justify-between relative lg:gap-y-4 gap-y-4 gap-x-4 w-full">
 
                     <div className="flex items-center">
-                        <Link href="/frontend/public">
+                        <Link href="/">
                             Shop system
                         </Link>
                     </div>

@@ -111,9 +111,10 @@ export default function SearchBar() {
     };
 
     const handleResultClick = (product: Product) => {
-        setSearchTerm(product.name);
+        setSearchTerm('');
         setShowDropdown(false);
         setApiError(null);
+        router.push(`/products/${product.slug}`);
     };
 
     return (
@@ -163,7 +164,7 @@ export default function SearchBar() {
                                     role="option"
                                     aria-selected={false}
                                 >
-                                    {product.name} - <span className="text-xs text-gray-500">{product.price.toFixed(2)} $</span>
+                                    {product.name} - <span className="text-xs text-gray-500">${product.price.toFixed(2)}</span>
                                 </li>
                             ))}
                         </ul>
