@@ -28,7 +28,6 @@ const SkeletonProduct: React.FC = () => (
 );
 
 export default function ProductPage() {
-    console.log('test');
     const [product, setProduct] = useState<Product | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);

@@ -1,81 +1,104 @@
-const products = [
-    {
-        id: 1,
-        name: 'Basic Tee',
-        href: '#',
-        imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
-        imageAlt: "Front of men's Basic Tee in black.",
-        price: '$35',
-        color: 'Black',
-    },
-    {
-        id: 2,
-        name: 'Basic Tee',
-        href: '#',
-        imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
-        imageAlt: "Front of men's Basic Tee in black.",
-        price: '$35',
-        color: 'Black',
-    },
-    {
-        id: 3,
-        name: 'Basic Tee',
-        href: '#',
-        imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
-        imageAlt: "Front of men's Basic Tee in black.",
-        price: '$35',
-        color: 'Black',
-    },
-    {
-        id: 4,
-        name: 'Basic Tee',
-        href: '#',
-        imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
-        imageAlt: "Front of men's Basic Tee in black.",
-        price: '$35',
-        color: 'Black',
-    },
-    {
-        id: 5,
-        name: 'Basic Tee',
-        href: '#',
-        imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg',
-        imageAlt: "Front of men's Basic Tee in black.",
-        price: '$35',
-        color: 'Black',
-    },
-]
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+
+interface Product {
+    id: number;
+    name: string;
+    slug: string;
+    price: number;
+    updatedAt: string;
+    createdAt: string;
+}
+
+interface ApiResponse {
+    success: boolean;
+    data: Product[];
+}
+
+const SkeletonProduct: React.FC = () => (
+    <div className="animate-pulse rounded-md bg-gray-100 p-4">
+        <div className="h-48 w-full rounded-md bg-gray-200" />
+        <div className="mt-4 space-y-2">
+            <div className="h-4 w-3/4 rounded bg-gray-200" />
+            <div className="h-3 w-1/2 rounded bg-gray-200" />
+        </div>
+    </div>
+);
 
 export default function Home() {
-    return (
-        <div className="bg-white">
-            <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-                <h2 className="text-2xl font-bold tracking-tight text-gray-900">Customers also purchased</h2>
+    const [products, setProducts] = useState<Product[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-                <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-                    {products.map((product) => (
-                        <div key={product.id} className="group relative">
-                            <img
-                                alt={product.imageAlt}
-                                src={product.imageSrc}
-                                className="aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80"
-                            />
-                            <div className="mt-4 flex justify-between">
-                                <div>
-                                    <h3 className="text-sm text-gray-700">
-                                        <a href={product.href}>
-                                            <span aria-hidden="true" className="absolute inset-0" />
-                                            {product.name}
-                                        </a>
-                                    </h3>
-                                    <p className="mt-1 text-sm text-gray-500">{product.color}</p>
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await fetch('http://localhost/api/v1/products/get-paginated?offset=1&limit=20');
+                if (!response.ok) throw new Error('Failed to fetch products');
+
+                const data: ApiResponse = await response.json();
+                if (!data.success) throw new Error('API returned an error');
+
+                setProducts(data.data);
+            } catch (err) {
+                console.log(err);
+                setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, []);
+
+    const getRandomImage = (id: number) => `https://picsum.photos/seed/${id}-${Date.now()}/400/400.webp`;
+
+    return (
+        <div className="min-h-screen bg-gray-50">
+            <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+                <h2 className="text-2xl font-bold text-gray-900">Customers Also Purchased</h2>
+
+                {error && (
+                    <div className="mt-6 rounded-md bg-red-50 p-4 text-center text-sm text-red-600">
+                        {error}
+                    </div>
+                )}
+
+                {isLoading && (
+                    <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                        {Array(4).fill(0).map((_, index) => (
+                            <SkeletonProduct key={index} />
+                        ))}
+                    </div>
+                )}
+
+                {!isLoading && !error && (
+                    <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                        {products.map((product) => (
+                            <Link
+                                key={product.id}
+                                href={`/products/${product.slug}`}
+                                className="group rounded-md bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
+                            >
+                                <img
+                                    src={getRandomImage(product.id)}
+                                    alt={product.name}
+                                    className="h-48 w-full rounded-md object-cover transition-opacity group-hover:opacity-90"
+                                />
+                                <div className="mt-4 flex justify-between">
+                                    <div>
+                                        <h3 className="text-sm font-semibold text-gray-900">{product.name}</h3>
+                                        <p className="text-xs text-gray-500">ID: {product.id}</p>
+                                    </div>
+                                    <p className="text-sm font-medium text-gray-900">${product.price.toFixed(2)}</p>
                                 </div>
-                                <p className="text-sm font-medium text-gray-900">{product.price}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
+                            </Link>
+                        ))}
+                    </div>
+                )}
+            </main>
         </div>
-    )
+    );
 }
