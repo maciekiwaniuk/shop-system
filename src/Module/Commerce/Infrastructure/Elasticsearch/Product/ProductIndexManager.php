@@ -85,11 +85,25 @@ final readonly class ProductIndexManager
             'index' => self::INDEX_NAME,
             'body' => [
                 'query' => [
-                    'match_phrase_prefix' => [
-                        'name' => [
-                            'query' => $phrase,
-                            'max_expansions' => 50,
-                            'slop' => 1,
+                    'bool' => [
+                        'should' => [
+                            [
+                                'match_phrase_prefix' => [
+                                    'name' => [
+                                        'query' => $phrase,
+                                        'max_expansions' => 50,
+                                        'slop' => 1,
+                                    ],
+                                ],
+                            ],
+                            [
+                                'match' => [
+                                    'name' => [
+                                        'query' => $phrase,
+                                        'fuzziness' => 'AUTO',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                 ],
