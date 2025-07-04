@@ -38,9 +38,8 @@ readonly class CreateUserCommandHandler implements SyncCommandHandlerInterface
     public function __invoke(CreateUserCommand $command): CommandResult
     {
         try {
-            $userUuid = $this->lookForClientIdByEmailIfPreviouslyUsedCommerceWithoutAccount($command->dto->email);
-            $user = $this->createUser($command, $userUuid);
-
+            $clientUuid = $this->lookForClientIdByEmailIfPreviouslyUsedCommerceWithoutAccount($command->dto->email);
+            $user = $this->createUser($command, $clientUuid);
             $this->eventDispatcher->dispatch(
                 new UserRegisteredEvent(
                     new UserRegistrationDetails(
