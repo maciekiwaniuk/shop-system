@@ -8,6 +8,7 @@ use App\Module\Commerce\Domain\Repository\ProductRepositoryInterface;
 use App\Tests\Module\Commerce\AbstractApplicationCommerceTestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductsControllerTest extends AbstractApplicationCommerceTestCase
 {
@@ -123,5 +124,64 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
         $this->assertNull($deletedProduct);
+    }
+
+    #[Test]
+    public function can_search_products_as_guest(): void
+    {
+        $product = $this->insertProduct();
+        $guestBrowser = $this->getGuestBrowser();
+
+        $guestBrowser->request(
+            method: Request::METHOD_GET,
+            uri: $this->url . '/search',
+            parameters: [
+                'phrase' => $product->getName(),
+            ],
+        );
+
+        $responseData = json_decode($guestBrowser->getResponse()->getContent(), true);
+        $this->assertResponseIsSuccessful();
+        $this->assertTrue($responseData['success']);
+        $this->assertArrayHasKey('data', $responseData);
+        $this->assertIsArray($responseData['data']);
+    }
+
+    #[Test]
+    public function search_returns_error_for_invalid_phrase(): void
+    {
+        $clientBrowser = $this->getClientBrowser();
+
+        $clientBrowser->request(
+            method: Request::METHOD_GET,
+            uri: $this->url . '/search',
+            parameters: [
+                'phrase' => 'a',
+            ],
+        );
+
+        $responseData = json_decode($clientBrowser->getResponse()->getContent(), true);
+        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+        $this->assertFalse($responseData['success']);
+        $this->assertArrayHasKey('errors', $responseData);
+    }
+
+    #[Test]
+    public function search_returns_error_for_empty_phrase(): void
+    {
+        $clientBrowser = $this->getClientBrowser();
+
+        $clientBrowser->request(
+            method: Request::METHOD_GET,
+            uri: $this->url . '/search',
+            parameters: [
+                'phrase' => '',
+            ],
+        );
+
+        $responseData = json_decode($clientBrowser->getResponse()->getContent(), true);
+        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+        $this->assertFalse($responseData['success']);
+        $this->assertArrayHasKey('errors', $responseData);
     }
 }
