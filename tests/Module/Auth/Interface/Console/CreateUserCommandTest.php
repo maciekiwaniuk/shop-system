@@ -10,6 +10,7 @@ use App\Module\Auth\Interface\Console\CreateUserCommand;
 use App\Common\Application\Bus\SyncCommandBus\SyncCommandBusInterface;
 use App\Common\Application\Bus\QueryBus\QueryBusInterface;
 use App\Tests\AbstractIntegrationTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -46,7 +47,7 @@ class CreateUserCommandTest extends AbstractIntegrationTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_should_create_user_successfully(): void
     {
         $command = $this->application->find('app:create-user');
@@ -65,7 +66,7 @@ class CreateUserCommandTest extends AbstractIntegrationTestCase
         $this->assertNotEmpty($this->userRepository->findUserByEmail('example@mail.pl'));
     }
 
-    /** @test */
+    #[Test]
     public function it_should_create_user_and_set_as_admin_when_flag_is_provided(): void
     {
         $command = $this->application->find('app:create-user');

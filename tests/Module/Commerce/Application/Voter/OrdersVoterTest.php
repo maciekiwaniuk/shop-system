@@ -9,6 +9,7 @@ use App\Module\Commerce\Application\Voter\OrdersVoter;
 use App\Module\Commerce\Domain\Entity\Client;
 use App\Module\Commerce\Domain\Entity\Order;
 use App\Tests\AbstractUnitTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class OrdersVoterTest extends AbstractUnitTestCase
@@ -50,7 +51,7 @@ class OrdersVoterTest extends AbstractUnitTestCase
         $this->adminVoter = new OrdersVoter($admin);
     }
 
-    /** @test */
+    #[Test]
     public function it_should_allow_client_to_get_paginated_orders(): void
     {
         $this->assertTrue(
@@ -66,7 +67,7 @@ class OrdersVoterTest extends AbstractUnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_should_not_allow_client_to_show_somebody_else_order(): void
     {
         $clientTwo = $this->createMock(Client::class);
@@ -91,7 +92,7 @@ class OrdersVoterTest extends AbstractUnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_should_allow_client_to_show_owned_order(): void
     {
         $clientOne = $this->createMock(Client::class);
@@ -116,7 +117,7 @@ class OrdersVoterTest extends AbstractUnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_should_allow_admin_to_show_somebody_else_order(): void
     {
         $clientOne = $this->createMock(Client::class);
@@ -141,7 +142,7 @@ class OrdersVoterTest extends AbstractUnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_should_allow_to_create_order(): void
     {
         $this->assertTrue(
@@ -157,7 +158,7 @@ class OrdersVoterTest extends AbstractUnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_should_not_allow_client_to_update_order_status(): void
     {
         $this->assertFalse(
@@ -173,7 +174,7 @@ class OrdersVoterTest extends AbstractUnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_should_allow_admin_to_update_order_status(): void
     {
         $this->assertTrue(

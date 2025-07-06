@@ -6,6 +6,8 @@ namespace App\Tests\Module\Commerce\Application\DTO;
 
 use App\Module\Commerce\Application\DTO\Validation\CreateProductDTO;
 use App\Tests\AbstractIntegrationTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CreateProductDTOTest extends AbstractIntegrationTestCase
@@ -20,7 +22,7 @@ class CreateProductDTOTest extends AbstractIntegrationTestCase
         $this->validator = self::getContainer()->get(ValidatorInterface::class);
     }
 
-    /** @test */
+    #[Test]
     public function it_should_pass_validation_when_data_is_valid(): void
     {
         $dto = new CreateProductDTO(
@@ -33,15 +35,13 @@ class CreateProductDTOTest extends AbstractIntegrationTestCase
         $this->assertEmpty($errors);
     }
 
-    /**
-     * @dataProvider invalidNameProvider
-     * @test
-     */
+    #[Test]
+    #[DataProvider('invalidNameProvider')]
     public function it_should_not_pass_validation_when_name_is_invalid(string $name): void
     {
         $dto = new CreateProductDTO(
             name: $name,
-            price: $this->exampleValidPrice,
+            price: 45.33,
         );
 
         $errors = $this->validator->validate($dto);
@@ -49,21 +49,19 @@ class CreateProductDTOTest extends AbstractIntegrationTestCase
         $this->assertCount(1, $errors);
     }
 
-    public function invalidNameProvider(): iterable
+    public static function invalidNameProvider(): iterable
     {
         yield [''];
         yield ['1'];
         yield [str_repeat('d', 101)];
     }
 
-    /**
-     * @dataProvider invalidPriceProvider
-     * @test
-     */
+    #[Test]
+    #[DataProvider('invalidPriceProvider')]
     public function it_should_not_pass_validation_when_price_is_invalid(float $price): void
     {
         $dto = new CreateProductDTO(
-            name: $this->exampleValidName,
+            name: 'Example name',
             price: $price,
         );
 
@@ -72,7 +70,7 @@ class CreateProductDTOTest extends AbstractIntegrationTestCase
         $this->assertCount(1, $errors);
     }
 
-    public function invalidPriceProvider(): iterable
+    public static function invalidPriceProvider(): iterable
     {
         yield [0.0];
         yield [-1.1];

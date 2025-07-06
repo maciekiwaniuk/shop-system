@@ -6,10 +6,11 @@ namespace App\Tests\Module\Commerce\Domain\Entity;
 
 use App\Module\Commerce\Domain\Entity\Product;
 use App\Tests\AbstractUnitTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class ProductTest extends AbstractUnitTestCase
 {
-    /** @test */
+    #[Test]
     public function it_should_create_a_product_with_valid_initial_values(): void
     {
         $product = new Product(

@@ -6,6 +6,7 @@ namespace App\Tests\Module\Auth\Interface\Controller;
 
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Tests\AbstractApplicationTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserControllerTest extends AbstractApplicationTestCase
@@ -19,7 +20,7 @@ class UserControllerTest extends AbstractApplicationTestCase
         $this->userRepository = self::getContainer()->get(UserRepositoryInterface::class);
     }
 
-    /** @test */
+    #[Test]
     public function can_register_new_user(): void
     {
         $usersCountBeforeAction = count($this->userRepository->findAll());

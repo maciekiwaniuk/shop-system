@@ -9,6 +9,7 @@ use App\Common\Application\Bus\QueryBus\QueryBusInterface;
 use App\Common\Application\BusResult\QueryResult;
 use App\Common\Application\Query\QueryInterface;
 use App\Tests\AbstractUnitTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Envelope;
@@ -32,7 +33,7 @@ class QueryBusTest extends AbstractUnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function will_handle(): void
     {
         $stamp = new HandledStamp(
@@ -62,7 +63,7 @@ class QueryBusTest extends AbstractUnitTestCase
         $this->assertEquals(Response::HTTP_OK, $queryResult->statusCode);
     }
 
-    /** @test */
+    #[Test]
     public function will_fail_when_bus_dispatches_more_than_one_stamp(): void
     {
         $stamp = new HandledStamp(
@@ -92,7 +93,7 @@ class QueryBusTest extends AbstractUnitTestCase
         $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, $queryResult->statusCode);
     }
 
-    /** @test */
+    #[Test]
     public function will_fail_when_query_result_is_not_proper_type(): void
     {
         $stamp = new HandledStamp(

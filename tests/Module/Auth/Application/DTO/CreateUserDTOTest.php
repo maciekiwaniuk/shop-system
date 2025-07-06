@@ -8,6 +8,8 @@ use App\Module\Auth\Application\DTO\Validation\CreateUserDTO;
 use App\Module\Auth\Domain\Entity\User;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Tests\AbstractIntegrationTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CreateUserDTOTest extends AbstractIntegrationTestCase
@@ -24,7 +26,7 @@ class CreateUserDTOTest extends AbstractIntegrationTestCase
         $this->validator = self::getContainer()->get(ValidatorInterface::class);
     }
 
-    /** @test */
+    #[Test]
     public function it_should_pass_validation_when_data_is_correct(): void
     {
         $dto = new CreateUserDTO(
@@ -39,24 +41,22 @@ class CreateUserDTOTest extends AbstractIntegrationTestCase
         $this->assertEmpty($errors);
     }
 
-    public function invalidEmailProvider(): iterable
+    public static function invalidEmailProvider(): iterable
     {
         yield [''];
         yield ['mailWithoutAt'];
         yield [str_repeat('o', 101) . '@example.com'];
     }
 
-    /**
-     * @dataProvider invalidEmailProvider
-     * @test
-     */
+    #[Test]
+    #[DataProvider('invalidEmailProvider')]
     public function it_should_not_pass_validation_when_email_is_invalid(string $email): void
     {
         $dto = new CreateUserDTO(
             email: $email,
-            password: $this->exampleValidPassword,
-            name: $this->exampleValidName,
-            surname: $this->exampleValidSurname,
+            password: 'example123',
+            name: 'John',
+            surname: 'Muller',
         );
 
         $errors = $this->validator->validate($dto);
@@ -64,24 +64,22 @@ class CreateUserDTOTest extends AbstractIntegrationTestCase
         $this->assertCount(1, $errors);
     }
 
-    public function invalidPasswordProvider(): iterable
+    public static function invalidPasswordProvider(): iterable
     {
         yield [''];
         yield ['1'];
         yield [str_repeat('o', 101)];
     }
 
-    /**
-     * @dataProvider invalidPasswordProvider
-     * @test
-     */
+    #[Test]
+    #[DataProvider('invalidPasswordProvider')]
     public function it_should_not_pass_validation_when_password_is_invalid(string $password): void
     {
         $dto = new CreateUserDTO(
-            email: $this->exampleValidEmail,
+            email: 'example@email.com',
             password: $password,
-            name: $this->exampleValidName,
-            surname: $this->exampleValidSurname,
+            name: 'John',
+            surname: 'Muller',
         );
 
         $errors = $this->validator->validate($dto);
@@ -89,24 +87,22 @@ class CreateUserDTOTest extends AbstractIntegrationTestCase
         $this->assertCount(1, $errors);
     }
 
-    public function invalidNameProvider(): iterable
+    public static function invalidNameProvider(): iterable
     {
         yield [''];
         yield ['1'];
         yield [str_repeat('o', 101)];
     }
 
-    /**
-     * @dataProvider invalidNameProvider
-     * @test
-     */
+    #[Test]
+    #[DataProvider('invalidNameProvider')]
     public function it_should_not_pass_validation_when_name_is_invalid(string $name): void
     {
         $dto = new CreateUserDTO(
-            email: $this->exampleValidEmail,
-            password: $this->exampleValidPassword,
+            email: 'example@email.com',
+            password: 'example123',
             name: $name,
-            surname: $this->exampleValidSurname,
+            surname: 'Muller',
         );
 
         $errors = $this->validator->validate($dto);
@@ -114,23 +110,21 @@ class CreateUserDTOTest extends AbstractIntegrationTestCase
         $this->assertCount(1, $errors);
     }
 
-    public function invalidSurnameProvider(): iterable
+    public static function invalidSurnameProvider(): iterable
     {
         yield [''];
         yield ['1'];
         yield [str_repeat('o', 101)];
     }
 
-    /**
-     * @dataProvider invalidSurnameProvider
-     * @test
-     */
+    #[Test]
+    #[DataProvider('invalidSurnameProvider')]
     public function it_should_not_pass_validation_when_surname_is_invalid(string $surname): void
     {
         $dto = new CreateUserDTO(
-            email: $this->exampleValidEmail,
-            password: $this->exampleValidPassword,
-            name: $this->exampleValidName,
+            email: 'example@email.com',
+            password: 'example123',
+            name: 'John',
             surname: $surname,
         );
 
@@ -139,7 +133,7 @@ class CreateUserDTOTest extends AbstractIntegrationTestCase
         $this->assertCount(1, $errors);
     }
 
-    /** @test */
+    #[Test]
     public function it_should_not_pass_validation_when_email_is_duplicated(): void
     {
         $user = new User(

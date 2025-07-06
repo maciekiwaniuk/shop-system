@@ -7,6 +7,7 @@ namespace App\Tests\Common\Infrastructure\Serializer;
 use App\Common\Infrastructure\Serializer\JsonSerializer;
 use App\Tests\AbstractUnitTestCase;
 use Exception;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 class JsonSerializerTest extends AbstractUnitTestCase
@@ -19,7 +20,7 @@ class JsonSerializerTest extends AbstractUnitTestCase
         $this->serializer = self::getContainer()->get(JsonSerializer::class);
     }
 
-    /** @test */
+    #[Test]
     public function it_should_serialize_object_with_default_group(): void
     {
         $object = new class ('exampleName') {
@@ -40,7 +41,7 @@ class JsonSerializerTest extends AbstractUnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_should_serialize_object_with_existing_group(): void
     {
         $object = new class ('exampleName') {
@@ -61,7 +62,7 @@ class JsonSerializerTest extends AbstractUnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_should_return_empty_array_when_serializing_object_with_non_existing_group(): void
     {
         $object = new class ('exampleName') {
@@ -82,7 +83,7 @@ class JsonSerializerTest extends AbstractUnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_should_deserialize_object_with_default_group(): void
     {
         $object = new class ('exampleName') {
@@ -106,7 +107,7 @@ class JsonSerializerTest extends AbstractUnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_should_deserialize_object_with_existing_group(): void
     {
         $object = new class ('exampleName') {
@@ -131,7 +132,7 @@ class JsonSerializerTest extends AbstractUnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_should_throw_exception_when_deserializing_object_with_non_existing_group(): void
     {
         $object = new class ('exampleName') {

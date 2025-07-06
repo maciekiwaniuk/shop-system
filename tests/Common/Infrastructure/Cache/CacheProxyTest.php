@@ -7,6 +7,7 @@ namespace App\Tests\Common\Infrastructure\Cache;
 use App\Common\Infrastructure\Cache\CacheProxy;
 use App\Tests\AbstractUnitTestCase;
 use Exception;
+use PHPUnit\Framework\Attributes\Test;
 use Psr\Log\LoggerInterface;
 use Redis;
 
@@ -22,7 +23,7 @@ class CacheProxyTest extends AbstractUnitTestCase
         $this->logger = $this->createMock(LoggerInterface::class);
     }
 
-    /** @test */
+    #[Test]
     public function it_should_return_true_when_key_exists(): void
     {
         $this->cache
@@ -47,7 +48,7 @@ class CacheProxyTest extends AbstractUnitTestCase
         $this->assertTrue($exists);
     }
 
-    /** @test */
+    #[Test]
     public function it_should_return_false_and_log_error_when_exists_throws_exception(): void
     {
         $this->cache

@@ -6,6 +6,8 @@ namespace App\Tests\Common\Application\DTO;
 
 use App\Common\Application\DTO\PaginationUuidDTO;
 use App\Tests\AbstractIntegrationTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class PaginationUuidDTOTest extends AbstractIntegrationTestCase
@@ -20,7 +22,7 @@ class PaginationUuidDTOTest extends AbstractIntegrationTestCase
         $this->validator = self::getContainer()->get(ValidatorInterface::class);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_pass_valid_data(): void
     {
         $dto = new PaginationUuidDTO(
@@ -33,20 +35,18 @@ class PaginationUuidDTOTest extends AbstractIntegrationTestCase
         $this->assertEmpty($errors);
     }
 
-    public function invalidLimitProvider(): iterable
+    public static function invalidLimitProvider(): iterable
     {
         yield [0];
         yield [-300];
     }
 
-    /**
-     * @dataProvider invalidLimitProvider
-     * @test
-     */
+    #[Test]
+    #[DataProvider('invalidLimitProvider')]
     public function it_can_detect_invalid_limit(int $limit): void
     {
         $dto = new PaginationUuidDTO(
-            cursor: $this->exampleValidCursor,
+            cursor: 'exampleUuidCursor',
             limit: $limit,
         );
 

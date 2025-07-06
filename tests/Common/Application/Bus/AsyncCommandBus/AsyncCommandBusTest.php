@@ -9,6 +9,7 @@ use App\Common\Application\Bus\AsyncCommandBus\AsyncCommandBus;
 use App\Common\Application\Bus\AsyncCommandBus\AsyncCommandBusInterface;
 use App\Common\Application\BusResult\CommandResult;
 use App\Tests\AbstractUnitTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -26,7 +27,7 @@ class AsyncCommandBusTest extends AbstractUnitTestCase
         $this->asyncCommandBus = new AsyncCommandBus($this->bus);
     }
 
-    /** @test */
+    #[Test]
     public function will_handle(): void
     {
         $stamp = new HandledStamp(

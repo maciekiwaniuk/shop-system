@@ -7,10 +7,11 @@ namespace App\Tests\Module\Commerce\Domain\Entity;
 use App\Module\Commerce\Domain\Entity\Client;
 use App\Module\Commerce\Domain\Entity\Order;
 use App\Tests\AbstractUnitTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class OrderTest extends AbstractUnitTestCase
 {
-    /** @test */
+    #[Test]
     public function it_should_create_an_order_with_valid_initial_values(): void
     {
         $order = new Order($this->createMock(Client::class));

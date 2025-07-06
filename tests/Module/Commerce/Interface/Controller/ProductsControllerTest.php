@@ -6,6 +6,7 @@ namespace App\Tests\Module\Commerce\Interface\Controller;
 
 use App\Module\Commerce\Domain\Repository\ProductRepositoryInterface;
 use App\Tests\Module\Commerce\AbstractApplicationCommerceTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Request;
 
 class ProductsControllerTest extends AbstractApplicationCommerceTestCase
@@ -19,7 +20,7 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
         $this->productRepository = self::getContainer()->get(ProductRepositoryInterface::class);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_paginated_products_as_client(): void
     {
         $this->insertProduct();
@@ -42,7 +43,7 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
         $this->assertEquals(count($products), count($responseData['data']));
     }
 
-    /** @test */
+    #[Test]
     public function can_create_product_as_admin(): void
     {
         $productsCountBeforeAction = count($this->productRepository->getPaginatedById());
@@ -66,7 +67,7 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_show_product_as_guest(): void
     {
         $product = $this->insertProduct();
@@ -83,7 +84,7 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
         $this->assertEquals($product->getName(), $responseData['data']['name']);
     }
 
-    /** @test */
+    #[Test]
     public function can_update_product_as_admin(): void
     {
         $product = $this->insertProduct();
@@ -106,7 +107,7 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
         $this->assertEquals(102.00, $updatedProduct->getPrice());
     }
 
-    /** @test */
+    #[Test]
     public function can_delete_product_as_admin(): void
     {
         $product = $this->insertProduct();

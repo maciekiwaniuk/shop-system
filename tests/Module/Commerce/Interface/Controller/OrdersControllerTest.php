@@ -10,6 +10,7 @@ use App\Module\Commerce\Domain\Repository\ClientRepositoryInterface;
 use App\Module\Commerce\Domain\Repository\OrderRepositoryInterface;
 use App\Tests\Module\Commerce\AbstractApplicationCommerceTestCase;
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Uuid;
 
@@ -24,7 +25,7 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
         $this->orderRepository = self::getContainer()->get(OrderRepositoryInterface::class);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_paginated_data_without_passed_cursor_as_admin(): void
     {
         $this->insertOrder();
@@ -45,7 +46,7 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
         $this->assertEquals(count($orders), count($responseData['data']));
     }
 
-    /** @test */
+    #[Test]
     public function can_get_paginated_data_with_passed_cursor_as_admin(): void
     {
         $this->insertOrder();
@@ -68,7 +69,7 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
         $this->assertEquals(count($orders) - 1, count($responseData['data']));
     }
 
-    /** @test */
+    #[Test]
     public function can_show_order_as_owner(): void
     {
         $client = new Client(
@@ -100,7 +101,7 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_show_order_someones_else_as_admin(): void
     {
         $this->insertOrder();
@@ -125,7 +126,7 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_create_order_as_client(): void
     {
         $ordersCountBeforeAction = count($this->orderRepository->getPaginatedByUuid(limit: 10));
@@ -155,7 +156,7 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_change_order_status_as_admin(): void
     {
         $order = $this->insertOrder();

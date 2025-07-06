@@ -7,8 +7,6 @@
          colors="true"
          bootstrap="tests/bootstrap.php"
          convertDeprecationsToExceptions="false"
-         convertWarningsToExceptions="false"
-         convertNoticesToExceptions="false"
 >
     <php>
         <ini name="display_errors" value="1" />
@@ -16,7 +14,7 @@
         <server name="APP_ENV" value="test" force="true" />
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
-        <server name="SYMFONY_PHPUNIT_VERSION" value="9.6" />
+        <server name="SYMFONY_PHPUNIT_VERSION" value="12.2" />
         <server name="KERNEL_CLASS" value="App\Kernel" />
     </php>
 
@@ -26,16 +24,9 @@
         </testsuite>
     </testsuites>
 
-    <coverage processUncoveredFiles="true">
+    <source>
         <include>
             <directory suffix=".php">src</directory>
         </include>
-    </coverage>
-
-    <listeners>
-        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
-    </listeners>
-
-    <extensions>
-    </extensions>
+    </source>
 </phpunit>

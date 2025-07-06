@@ -7,6 +7,7 @@ namespace App\Tests\Module\Commerce\Application\Voter;
 use App\Common\Application\Security\UserContextInterface;
 use App\Module\Commerce\Application\Voter\ProductsVoter;
 use App\Tests\AbstractUnitTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class ProductsVoterTest extends AbstractUnitTestCase
@@ -33,7 +34,7 @@ class ProductsVoterTest extends AbstractUnitTestCase
         $this->adminVoter = new ProductsVoter($admin);
     }
 
-    /** @test */
+    #[Test]
     public function it_should_allow_client_to_get_paginated_products(): void
     {
         $this->assertTrue(
@@ -49,7 +50,7 @@ class ProductsVoterTest extends AbstractUnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_should_not_allow_client_to_create_product(): void
     {
         $this->assertFalse(
@@ -65,7 +66,7 @@ class ProductsVoterTest extends AbstractUnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_should_allow_admin_to_create_product(): void
     {
         $this->assertTrue(
@@ -81,7 +82,7 @@ class ProductsVoterTest extends AbstractUnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_should_allow_client_to_show_product(): void
     {
         $this->assertTrue(
@@ -97,7 +98,7 @@ class ProductsVoterTest extends AbstractUnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_should_not_allow_client_to_update_product(): void
     {
         $this->assertFalse(
@@ -113,7 +114,7 @@ class ProductsVoterTest extends AbstractUnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_should_allow_admin_to_update_product(): void
     {
         $this->assertTrue(
@@ -129,7 +130,7 @@ class ProductsVoterTest extends AbstractUnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_should_not_allow_client_to_delete_product(): void
     {
         $this->assertFalse(
@@ -145,7 +146,7 @@ class ProductsVoterTest extends AbstractUnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_should_allow_admin_to_delete_product(): void
     {
         $this->assertTrue(

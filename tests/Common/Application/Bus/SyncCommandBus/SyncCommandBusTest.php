@@ -9,6 +9,7 @@ use App\Common\Application\Bus\SyncCommandBus\SyncCommandBusInterface;
 use App\Common\Application\BusResult\CommandResult;
 use App\Common\Application\SyncCommand\SyncCommandInterface;
 use App\Tests\AbstractUnitTestCase;
+use PHPUnit\Framework\Attributes\Test;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Envelope;
@@ -32,7 +33,7 @@ class SyncCommandBusTest extends AbstractUnitTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function will_handle(): void
     {
         $stamp = new HandledStamp(
@@ -60,7 +61,7 @@ class SyncCommandBusTest extends AbstractUnitTestCase
         $this->assertEquals(Response::HTTP_OK, $commandResult->statusCode);
     }
 
-    /** @test */
+    #[Test]
     public function will_fail_when_bus_dispatches_more_than_one_stamp(): void
     {
         $stamp = new HandledStamp(
@@ -88,7 +89,7 @@ class SyncCommandBusTest extends AbstractUnitTestCase
         $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, $commandResult->statusCode);
     }
 
-    /** @test */
+    #[Test]
     public function will_fail_when_command_bus_is_not_proper_type(): void
     {
         $stamp = new HandledStamp(

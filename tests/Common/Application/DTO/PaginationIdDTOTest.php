@@ -6,6 +6,8 @@ namespace App\Tests\Common\Application\DTO;
 
 use App\Common\Application\DTO\PaginationIdDTO;
 use App\Tests\AbstractIntegrationTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class PaginationIdDTOTest extends AbstractIntegrationTestCase
@@ -20,7 +22,7 @@ class PaginationIdDTOTest extends AbstractIntegrationTestCase
         $this->validator = self::getContainer()->get(ValidatorInterface::class);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_pass_valid_data(): void
     {
         $dto = new PaginationIdDTO(
@@ -33,21 +35,19 @@ class PaginationIdDTOTest extends AbstractIntegrationTestCase
         $this->assertEmpty($errors);
     }
 
-    public function invalidOffsetProvider(): iterable
+    public static function invalidOffsetProvider(): iterable
     {
         yield [0];
         yield [-10];
     }
 
-    /**
-     * @dataProvider invalidOffsetProvider
-     * @test
-     */
+    #[Test]
+    #[DataProvider('invalidOffsetProvider')]
     public function it_can_detect_invalid_offset(int $offset): void
     {
         $dto = new PaginationIdDTO(
             offset: $offset,
-            limit: $this->exampleValidLimit,
+            limit: 10,
         );
 
         $errors = $this->validator->validate($dto);
@@ -55,20 +55,18 @@ class PaginationIdDTOTest extends AbstractIntegrationTestCase
         $this->assertCount(1, $errors);
     }
 
-    public function invalidLimitProvider(): iterable
+    public static function invalidLimitProvider(): iterable
     {
         yield [0];
         yield [-300];
     }
 
-    /**
-     * @dataProvider invalidLimitProvider
-     * @test
-     */
+    #[Test]
+    #[DataProvider('invalidLimitProvider')]
     public function it_can_detect_invalid_limit(int $limit): void
     {
         $dto = new PaginationIdDTO(
-            offset: $this->exampleValidOffset,
+            offset: 1,
             limit: $limit,
         );
 
