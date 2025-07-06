@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useState } from 'react'
 import { Dialog, DialogPanel } from '@headlessui/react'
@@ -8,9 +8,14 @@ import SearchBar from '@/components/Header/SearchBar'
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false)
+    const [isProfileOpen, setIsProfileOpen] = useState(false)
 
     const toggleMenu = () => {
         setIsOpen(!isOpen)
+    }
+
+    const toggleProfile = () => {
+        setIsProfileOpen(!isProfileOpen)
     }
 
     const navigation = [
@@ -29,7 +34,7 @@ export default function Header() {
 
                     <SearchBar />
 
-                    <div className="flex items-center space-x-4 ml-auto">
+                    <div className="flex items-center space-x-4 max-md:ml-auto">
                         <span className="relative pr-3">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -65,21 +70,53 @@ export default function Header() {
                             </button>
                         </div>
 
-                        <button
-                            type="button"
-                            className="border-0 outline-0 flex items-center justify-center rounded-full p-2 hover:bg-gray-100 transition-all"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="w-5 h-5 cursor-pointer fill-black"
-                                viewBox="0 0 512 512"
+                        <div className="relative px-1">
+                            <button
+                                onClick={toggleProfile}
+                                className="cursor-pointer hover:fill-black"
+                                aria-label="Toggle profile menu"
                             >
-                                <path
-                                    d="M337.711 241.3a16 16 0 0 0-11.461 3.988c-18.739 16.561-43.688 25.682-70.25 25.682s-51.511-9.121-70.25-25.683a16.007 16.007 0 0 0-11.461-3.988c-78.926 4.274-140.752 63.672-140.752 135.224v107.152C33.537 499.293 46.9 512 63.332 512h385.336c16.429 0 29.8-12.707 29.8-28.325V376.523c-.005-71.552-61.831-130.95-140.757-135.223zM446.463 480H65.537V376.523c0-52.739 45.359-96.888 104.351-102.8C193.75 292.63 224.055 302.97 256 302.97s62.25-10.34 86.112-29.245c58.992 5.91 104.351 50.059 104.351 102.8zM256 234.375a117.188 117.188 0 1 0-117.188-117.187A117.32 117.32 0 0 0 256 234.375zM256 32a85.188 85.188 0 1 1-85.188 85.188A85.284 85.284 0 0 1 256 32z"
-                                    data-original="#000000"
-                                />
-                            </svg>
-                        </button>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24px"
+                                    height="24px"
+                                    className="cursor-pointer hover:fill-black"
+                                    viewBox="0 0 512 512"
+                                >
+                                    <path
+                                        d="M437.02 74.981C388.667 26.629 324.38 0 256 0S123.333 26.629 74.98 74.981C26.629 123.333 0 187.62 0 256s26.629 132.667 74.98 181.019C123.333 485.371 187.62 512 256 512s132.667-26.629 181.02-74.981C485.371 388.667 512 324.38 512 256s-26.629-132.667-74.98-181.019zM256 482c-66.869 0-127.037-29.202-168.452-75.511C113.223 338.422 178.948 290 256 290c-49.706 0-90-40.294-90-90s40.294-90 90-90 90 40.294 90 90-40.294 90-90 90c77.052 0 142.777 48.422 168.452 116.489C383.037 452.798 322.869 482 256 482z"
+                                        data-original="#000000"
+                                    />
+                                </svg>
+                            </button>
+                            {isProfileOpen && (
+                                <div className="bg-white block z-20 shadow-lg py-6 px-6 rounded-sm sm:min-w-[320px] max-sm:min-w-[250px] absolute right-0 top-10">
+                                    <ul className="space-y-1.5">
+                                        <li>
+                                            <Link
+                                                href="/orders"
+                                                className="text-sm text-gray-500 hover:text-slate-900"
+                                                onClick={() => setIsProfileOpen(false)}
+                                            >
+                                                Orders
+                                            </Link>
+                                        </li>
+                                    </ul>
+                                    <hr className="border-b-0 my-4 border-gray-300" />
+                                    <ul className="space-y-1.5">
+                                        <li>
+                                            <Link
+                                                href="/"
+                                                className="text-sm text-gray-500 hover:text-slate-900"
+                                                onClick={() => setIsProfileOpen(false)}
+                                            >
+                                                Logout
+                                            </Link>
+                                        </li>
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
 
