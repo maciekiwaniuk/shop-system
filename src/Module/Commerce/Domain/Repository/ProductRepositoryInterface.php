@@ -8,7 +8,7 @@ use App\Module\Commerce\Domain\Entity\Product;
 
 interface ProductRepositoryInterface
 {
-    public function save(Product $product, bool $flush = false): void;
+    public function save(Product $product, bool $flush = false): ?int;
 
     /**
      * @return array<Product>
@@ -20,4 +20,6 @@ interface ProductRepositoryInterface
     public function findById(int $id): ?Product;
 
     public function softDelete(Product $product): bool;
+
+    public function getReference(int $id): Product;
 }

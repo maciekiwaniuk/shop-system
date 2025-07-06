@@ -71,12 +71,13 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
     {
         $product = $this->insertProduct();
         $guestBrowser = $this->getGuestBrowser();
+
         $guestBrowser->request(
             method: Request::METHOD_GET,
             uri: $this->url . '/show/' . $product->getSlug(),
         );
-        $responseData = json_decode($guestBrowser->getResponse()->getContent(), true);
 
+        $responseData = json_decode($guestBrowser->getResponse()->getContent(), true);
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
         $this->assertEquals($product->getName(), $responseData['data']['name']);
@@ -87,6 +88,7 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
     {
         $product = $this->insertProduct();
         $adminBrowser = $this->getAdminBrowser();
+
         $adminBrowser->request(
             method: Request::METHOD_PUT,
             uri: $this->url . '/update/' . $product->getId(),
@@ -95,10 +97,9 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
                 'price' => 102.00,
             ]),
         );
+
         $responseData = json_decode($adminBrowser->getResponse()->getContent(), true);
-
         $updatedProduct = $this->productRepository->findById($product->getId());
-
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
         $this->assertEquals('newExampleName', $updatedProduct->getName());
@@ -110,14 +111,14 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
     {
         $product = $this->insertProduct();
         $adminBrowser = $this->getAdminBrowser();
+
         $adminBrowser->request(
             method: Request::METHOD_DELETE,
             uri: $this->url . '/delete/' . $product->getId(),
         );
+
         $responseData = json_decode($adminBrowser->getResponse()->getContent(), true);
-
         $deletedProduct = $this->productRepository->findBySlug($product->getSlug());
-
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
         $this->assertNull($deletedProduct);

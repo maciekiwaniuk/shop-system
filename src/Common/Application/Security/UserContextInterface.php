@@ -7,5 +7,8 @@ namespace App\Common\Application\Security;
 interface UserContextInterface
 {
     public function isAdmin(): bool;
+
     public function getUserIdentifier(): string;
+
+    public function getUser(): ?object;
 }

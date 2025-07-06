@@ -20,13 +20,15 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
         parent::__construct($registry, Product::class);
     }
 
-    public function save(Product $product, bool $flush = false): void
+    public function save(Product $product, bool $flush = false): ?int
     {
         $this->getEntityManager()->persist($product);
 
         if ($flush) {
             $this->getEntityManager()->flush();
+            return $product->getId();
         }
+        return null;
     }
 
     /**
@@ -78,5 +80,10 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
             ->setParameter('id', $product->getId())
             ->getQuery()
             ->execute();
+    }
+
+    public function getReference(int $id): Product
+    {
+        return $this->getEntityManager()->getReference(Product::class, $id);
     }
 }

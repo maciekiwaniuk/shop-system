@@ -80,6 +80,9 @@ class ProductsController extends AbstractController
             $commandResult->success => [
                 'success' => true,
                 'message' => 'Successfully created product.',
+                'data' => [
+                    'productId' => $commandResult->entityId,
+                ],
             ],
             default => [
                 'success' => false,

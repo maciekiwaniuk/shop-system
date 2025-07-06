@@ -9,6 +9,7 @@ readonly class CommandResult implements BusResultInterface
     public function __construct(
         public bool $success,
         public int $statusCode,
+        public string|int|null $entityId = null,
     ) {
     }
 }

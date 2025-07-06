@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Module\Commerce;
 
+use App\Common\Application\Bus\SyncCommandBus\SyncCommandBusInterface;
+use App\Module\Commerce\Application\Command\CreateProduct\CreateProductCommand;
+use App\Module\Commerce\Application\DTO\Validation\CreateProductDTO;
 use App\Module\Commerce\Domain\Entity\Client;
 use App\Module\Commerce\Domain\Entity\Order;
 use App\Module\Commerce\Domain\Entity\Product;
@@ -112,10 +115,13 @@ class AbstractApplicationCommerceTestCase extends AbstractApplicationTestCase
             );
         }
 
-        $productRepository = self::getContainer()->get(ProductRepositoryInterface::class);
-        $productRepository->save($product, true);
+        $createProductDto = new CreateProductDTO($product->getName(), $product->getPrice());
+        $createProductCommand = new CreateProductCommand($createProductDto);
+        $syncCommandBus = self::getContainer()->get(SyncCommandBusInterface::class);
+        $commandResult = $syncCommandBus->handle($createProductCommand);
 
-        return $product;
+        $productRepository = self::getContainer()->get(ProductRepositoryInterface::class);
+        return $productRepository->getReference($commandResult->entityId);
     }
 
     public function insertClient(?Client $client = null): Client

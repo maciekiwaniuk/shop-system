@@ -10,11 +10,11 @@ use App\Module\Commerce\Domain\Repository\OrderRepositoryInterface;
 use App\Module\Commerce\Domain\Entity\Product;
 use App\Common\Application\BusResult\CommandResult;
 use App\Common\Application\SyncCommand\SyncCommandHandlerInterface;
+use App\Common\Application\Security\UserContextInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Throwable;
 
 #[AsMessageHandler]
@@ -24,13 +24,13 @@ readonly class CreateOrderCommandHandler implements SyncCommandHandlerInterface
         private OrderRepositoryInterface $orderRepository,
         private EntityManagerInterface $commerceEntityManager,
         private LoggerInterface $logger,
-        private TokenStorageInterface $tokenStorage,
+        private UserContextInterface $userContext,
     ) {
     }
 
     public function __invoke(CreateOrderCommand $command): CommandResult
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->userContext->getUser();
         try {
             $order = new Order(
                 $this->commerceEntityManager->getReference(Client::class, $user->getUserIdentifier()),

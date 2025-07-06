@@ -30,4 +30,9 @@ readonly class UserContext implements UserContextInterface
     {
         return $this->user?->getUserIdentifier() ?? '';
     }
+
+    public function getUser(): ?object
+    {
+        return $this->user;
+    }
 }
