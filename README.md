@@ -33,10 +33,9 @@ This project demonstrates **enterprise-level software architecture** with a focu
 - **Hexagonal Architecture**: Business logic isolated from external concerns
 
 ### 🧪 **Test-Driven Development (TDD)**
-- **81 Tests** with **145 Assertions**
 - **E2E Tests**: Full integration testing
 - **Unit Tests**: Isolated component testing
-- **PHPUnit 12.2.6**: Latest testing framework
+- **PHPUnit 12.2**: Latest testing framework
 
 ## 🚀 **Key Features**
 
