@@ -1,29 +1,868 @@
 nelmio_api_doc:
     documentation:
         info:
-            title: Shop system
-            description: Backend of basic shop system
+            title: Shop System API
+            description: |
+                # Shop System API Documentation
+                
+                A modern e-commerce platform API built with Symfony 7.3, featuring:
+                - **JWT Authentication**: Secure token-based authentication
+                - **Product Management**: CRUD operations for products with search capabilities
+                - **Order Management**: Order creation and status management
+                - **Role-based Access Control**: Admin and client permissions
+                - **CQRS Architecture**: Command and Query Responsibility Segregation
+                
+                ## Authentication
+                All protected endpoints require a valid JWT token in the Authorization header:
+                ```
+                Authorization: Bearer <your-jwt-token>
+                ```
+                
+                ## Response Format
+                All API responses follow a consistent format:
+                ```json
+                {
+                    "success": true|false,
+                    "message": "Optional message",
+                    "data": {},
+                    "errors": {}
+                }
+                ```
             version: 1.0.0
+        components:
+            securitySchemes:
+                Bearer:
+                    type: http
+                    scheme: bearer
+                    bearerFormat: JWT
+            schemas:
+                Error:
+                    type: object
+                    properties:
+                        success:
+                            type: boolean
+                            example: false
+                        message:
+                            type: string
+                            example: "Something went wrong"
+                        errors:
+                            type: object
+                            additionalProperties: true
+                Success:
+                    type: object
+                    properties:
+                        success:
+                            type: boolean
+                            example: true
+                        message:
+                            type: string
+                            example: "Operation completed successfully"
+                        data:
+                            type: object
+                            additionalProperties: true
+                Product:
+                    type: object
+                    properties:
+                        id:
+                            type: integer
+                            example: 1
+                        name:
+                            type: string
+                            example: "iPhone 15 Pro"
+                        price:
+                            type: number
+                            format: float
+                            example: 999.99
+                        slug:
+                            type: string
+                            example: "iphone-15-pro"
+                        createdAt:
+                            type: string
+                            format: date-time
+                            example: "2024-01-15T10:30:00+00:00"
+                        updatedAt:
+                            type: string
+                            format: date-time
+                            example: "2024-01-15T10:30:00+00:00"
+                Order:
+                    type: object
+                    properties:
+                        id:
+                            type: integer
+                            example: 1
+                        uuid:
+                            type: string
+                            format: uuid
+                            example: "550e8400-e29b-41d4-a716-446655440000"
+                        status:
+                            type: string
+                            enum: [pending, paid, shipped, delivered, cancelled]
+                            example: "pending"
+                        totalPrice:
+                            type: number
+                            format: float
+                            example: 1999.98
+                        createdAt:
+                            type: string
+                            format: date-time
+                            example: "2024-01-15T10:30:00+00:00"
+                        updatedAt:
+                            type: string
+                            format: date-time
+                            example: "2024-01-15T10:30:00+00:00"
+                PaginatedProducts:
+                    type: object
+                    properties:
+                        products:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/Product'
+                        total:
+                            type: integer
+                            example: 100
+                        offset:
+                            type: integer
+                            example: 0
+                        limit:
+                            type: integer
+                            example: 10
+                PaginatedOrders:
+                    type: object
+                    properties:
+                        orders:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/Order'
+                        total:
+                            type: integer
+                            example: 50
+                        cursor:
+                            type: string
+                            example: "550e8400-e29b-41d4-a716-446655440000"
+                        limit:
+                            type: integer
+                            example: 10
         paths:
             /api/v1/login:
                 post:
+                    tags:
+                        - Authentication
+                    summary: User Login
+                    description: Authenticate user and receive JWT token
                     requestBody:
-                        description: 'Login'
+                        required: true
                         content:
                             application/json:
                                 schema:
                                     type: object
-                                    properties:
-                                        email:
-                                            type: string
-                                        password:
-                                            type: string
                                     required:
                                         - email
                                         - password
+                                    properties:
+                                        email:
+                                            type: string
+                                            format: email
+                                            example: "user@example.com"
+                                            description: User email address
+                                        password:
+                                            type: string
+                                            format: password
+                                            example: "password123"
+                                            description: User password
                     responses:
+                        200:
+                            description: Login successful
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            token:
+                                                type: string
+                                                example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..."
                         401:
                             description: Invalid credentials
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        400:
+                            description: Validation error
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+            
+            /api/v1/register:
+                post:
+                    tags:
+                        - Authentication
+                    summary: User Registration
+                    description: Register a new user account
+                    requestBody:
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    type: object
+                                    required:
+                                        - email
+                                        - password
+                                        - name
+                                        - surname
+                                    properties:
+                                        email:
+                                            type: string
+                                            format: email
+                                            example: "newuser@example.com"
+                                            description: User email address (must be unique)
+                                        password:
+                                            type: string
+                                            minLength: 2
+                                            maxLength: 100
+                                            example: "password123"
+                                            description: User password
+                                        name:
+                                            type: string
+                                            minLength: 2
+                                            maxLength: 100
+                                            example: "John"
+                                            description: User first name
+                                        surname:
+                                            type: string
+                                            minLength: 2
+                                            maxLength: 100
+                                            example: "Doe"
+                                            description: User last name
+                    responses:
+                        201:
+                            description: Registration successful
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            success:
+                                                type: boolean
+                                                example: true
+                                            message:
+                                                type: string
+                                                example: "Successfully registered."
+                                            data:
+                                                type: object
+                                                properties:
+                                                    token:
+                                                        type: string
+                                                        example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..."
+                        400:
+                            description: Validation error
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+            
+            /api/v1/products/get-paginated:
+                get:
+                    tags:
+                        - Products
+                    summary: Get Paginated Products
+                    description: Retrieve a paginated list of products (Admin only)
+                    security:
+                        - Bearer: []
+                    parameters:
+                        - name: offset
+                          in: query
+                          required: true
+                          schema:
+                              type: integer
+                              minimum: 0
+                              example: 0
+                          description: Number of items to skip
+                        - name: limit
+                          in: query
+                          required: true
+                          schema:
+                              type: integer
+                              minimum: 1
+                              example: 10
+                          description: Number of items to return
+                    responses:
+                        200:
+                            description: Products retrieved successfully
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            success:
+                                                type: boolean
+                                                example: true
+                                            data:
+                                                $ref: '#/components/schemas/PaginatedProducts'
+                        400:
+                            description: Validation error
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        401:
+                            description: Unauthorized
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        403:
+                            description: Forbidden - Admin access required
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+            
+            /api/v1/products/create:
+                post:
+                    tags:
+                        - Products
+                    summary: Create Product
+                    description: Create a new product (Admin only)
+                    security:
+                        - Bearer: []
+                    requestBody:
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    type: object
+                                    required:
+                                        - name
+                                        - price
+                                    properties:
+                                        name:
+                                            type: string
+                                            minLength: 2
+                                            maxLength: 100
+                                            example: "iPhone 15 Pro"
+                                            description: Product name
+                                        price:
+                                            type: number
+                                            format: float
+                                            minimum: 0
+                                            example: 999.99
+                                            description: Product price
+                    responses:
+                        201:
+                            description: Product created successfully
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            success:
+                                                type: boolean
+                                                example: true
+                                            message:
+                                                type: string
+                                                example: "Successfully created product."
+                                            data:
+                                                type: object
+                                                properties:
+                                                    productId:
+                                                        type: integer
+                                                        example: 1
+                        400:
+                            description: Validation error
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        401:
+                            description: Unauthorized
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        403:
+                            description: Forbidden - Admin access required
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+            
+            /api/v1/products/show/{slug}:
+                get:
+                    tags:
+                        - Products
+                    summary: Get Product by Slug
+                    description: Retrieve a product by its slug
+                    security:
+                        - Bearer: []
+                    parameters:
+                        - name: slug
+                          in: path
+                          required: true
+                          schema:
+                              type: string
+                              example: "iphone-15-pro"
+                          description: Product slug
+                    responses:
+                        200:
+                            description: Product retrieved successfully
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            success:
+                                                type: boolean
+                                                example: true
+                                            data:
+                                                $ref: '#/components/schemas/Product'
+                        404:
+                            description: Product not found
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        401:
+                            description: Unauthorized
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        403:
+                            description: Forbidden
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+            
+            /api/v1/products/update/{id}:
+                put:
+                    tags:
+                        - Products
+                    summary: Update Product
+                    description: Update an existing product (Admin only)
+                    security:
+                        - Bearer: []
+                    parameters:
+                        - name: id
+                          in: path
+                          required: true
+                          schema:
+                              type: integer
+                              example: 1
+                          description: Product ID
+                    requestBody:
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    type: object
+                                    required:
+                                        - name
+                                        - price
+                                    properties:
+                                        name:
+                                            type: string
+                                            minLength: 2
+                                            maxLength: 100
+                                            example: "iPhone 15 Pro Max"
+                                            description: Product name
+                                        price:
+                                            type: number
+                                            format: float
+                                            minimum: 0
+                                            example: 1199.99
+                                            description: Product price
+                    responses:
+                        200:
+                            description: Product updated successfully
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            success:
+                                                type: boolean
+                                                example: true
+                                            message:
+                                                type: string
+                                                example: "Successfully updated product."
+                        400:
+                            description: Validation error
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        404:
+                            description: Product not found
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        401:
+                            description: Unauthorized
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        403:
+                            description: Forbidden - Admin access required
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+            
+            /api/v1/products/delete/{id}:
+                delete:
+                    tags:
+                        - Products
+                    summary: Delete Product
+                    description: Delete a product (Admin only)
+                    security:
+                        - Bearer: []
+                    parameters:
+                        - name: id
+                          in: path
+                          required: true
+                          schema:
+                              type: integer
+                              example: 1
+                          description: Product ID
+                    responses:
+                        200:
+                            description: Product deleted successfully
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            success:
+                                                type: boolean
+                                                example: true
+                                            message:
+                                                type: string
+                                                example: "Successfully deleted product."
+                        404:
+                            description: Product not found
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        401:
+                            description: Unauthorized
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        403:
+                            description: Forbidden - Admin access required
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+            
+            /api/v1/products/search:
+                get:
+                    tags:
+                        - Products
+                    summary: Search Products
+                    description: Search products by phrase
+                    security:
+                        - Bearer: []
+                    parameters:
+                        - name: phrase
+                          in: query
+                          required: true
+                          schema:
+                              type: string
+                              minLength: 2
+                              maxLength: 100
+                              example: "iphone"
+                          description: Search phrase
+                    responses:
+                        200:
+                            description: Search results
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            success:
+                                                type: boolean
+                                                example: true
+                                            data:
+                                                type: array
+                                                items:
+                                                    $ref: '#/components/schemas/Product'
+                        400:
+                            description: Validation error
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        401:
+                            description: Unauthorized
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        403:
+                            description: Forbidden
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+            
+            /api/v1/orders/get-paginated:
+                get:
+                    tags:
+                        - Orders
+                    summary: Get Paginated Orders
+                    description: Retrieve a paginated list of orders
+                    security:
+                        - Bearer: []
+                    parameters:
+                        - name: cursor
+                          in: query
+                          required: false
+                          schema:
+                              type: string
+                              format: uuid
+                              example: "550e8400-e29b-41d4-a716-446655440000"
+                          description: Cursor for pagination (UUID)
+                        - name: limit
+                          in: query
+                          required: true
+                          schema:
+                              type: integer
+                              minimum: 1
+                              example: 10
+                          description: Number of items to return
+                    responses:
+                        200:
+                            description: Orders retrieved successfully
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            success:
+                                                type: boolean
+                                                example: true
+                                            data:
+                                                $ref: '#/components/schemas/PaginatedOrders'
+                        400:
+                            description: Validation error
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        401:
+                            description: Unauthorized
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        403:
+                            description: Forbidden
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+            
+            /api/v1/orders/show/{uuid}:
+                get:
+                    tags:
+                        - Orders
+                    summary: Get Order by UUID
+                    description: Retrieve an order by its UUID
+                    security:
+                        - Bearer: []
+                    parameters:
+                        - name: uuid
+                          in: path
+                          required: true
+                          schema:
+                              type: string
+                              format: uuid
+                              example: "550e8400-e29b-41d4-a716-446655440000"
+                          description: Order UUID
+                    responses:
+                        200:
+                            description: Order retrieved successfully
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            success:
+                                                type: boolean
+                                                example: true
+                                            data:
+                                                $ref: '#/components/schemas/Order'
+                        404:
+                            description: Order not found
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        401:
+                            description: Unauthorized
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        403:
+                            description: Forbidden - Access denied
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+            
+            /api/v1/orders/create:
+                post:
+                    tags:
+                        - Orders
+                    summary: Create Order
+                    description: Create a new order
+                    security:
+                        - Bearer: []
+                    requestBody:
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    type: object
+                                    required:
+                                        - products
+                                    properties:
+                                        products:
+                                            type: array
+                                            items:
+                                                type: object
+                                                required:
+                                                    - id
+                                                    - quantity
+                                                    - pricePerPiece
+                                                properties:
+                                                    id:
+                                                        type: integer
+                                                        example: 1
+                                                        description: Product ID
+                                                    quantity:
+                                                        type: integer
+                                                        minimum: 1
+                                                        example: 2
+                                                        description: Quantity of the product
+                                                    pricePerPiece:
+                                                        type: number
+                                                        format: float
+                                                        minimum: 0
+                                                        example: 999.99
+                                                        description: Price per piece
+                                            example:
+                                                - id: 1
+                                                  quantity: 2
+                                                  pricePerPiece: 999.99
+                                                - id: 2
+                                                  quantity: 1
+                                                  pricePerPiece: 799.99
+                    responses:
+                        201:
+                            description: Order created successfully
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            success:
+                                                type: boolean
+                                                example: true
+                                            message:
+                                                type: string
+                                                example: "Successfully created order."
+                        400:
+                            description: Validation error
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        401:
+                            description: Unauthorized
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        403:
+                            description: Forbidden
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+            
+            /api/v1/orders/change-status/{uuid}:
+                post:
+                    tags:
+                        - Orders
+                    summary: Change Order Status
+                    description: Update the status of an order (Admin only)
+                    security:
+                        - Bearer: []
+                    parameters:
+                        - name: uuid
+                          in: path
+                          required: true
+                          schema:
+                              type: string
+                              format: uuid
+                              example: "550e8400-e29b-41d4-a716-446655440000"
+                          description: Order UUID
+                    requestBody:
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    type: object
+                                    required:
+                                        - status
+                                    properties:
+                                        status:
+                                            type: string
+                                            enum: [pending, paid, shipped, delivered, cancelled]
+                                            example: "paid"
+                                            description: New order status
+                    responses:
+                        202:
+                            description: Status change queued successfully
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            success:
+                                                type: boolean
+                                                example: true
+                                            message:
+                                                type: string
+                                                example: "Successfully queued update status of order."
+                        400:
+                            description: Validation error
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        401:
+                            description: Unauthorized
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        403:
+                            description: Forbidden - Admin access required
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
     areas:
         path_patterns:
             - ^/api(?!/doc$)

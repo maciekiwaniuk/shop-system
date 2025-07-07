@@ -133,29 +133,42 @@ docker compose exec shop-system-backend vendor/bin/deptrac analyse
 
 ## 📚 **API Documentation**
 
+### **Interactive Documentation**
+- **Swagger UI**: http://localhost/api/doc
+- **OpenAPI JSON**: http://localhost/api/doc.json
+- **Complete Documentation**: See `API_DOCUMENTATION.md`
+
 ### **Authentication**
 ```http
-POST /api/v1/register
-POST /api/v1/login
+POST /api/v1/register    # Register new user
+POST /api/v1/login       # Authenticate user
 ```
 
 ### **Products**
 ```http
-GET    /api/v1/products/get-paginated
-POST   /api/v1/products/create
-GET    /api/v1/products/show/{slug}
-PUT    /api/v1/products/update/{id}
-DELETE /api/v1/products/delete/{id}
-GET    /api/v1/products/search
+GET    /api/v1/products/get-paginated  # List products (Admin)
+POST   /api/v1/products/create         # Create product (Admin)
+GET    /api/v1/products/show/{slug}    # Get product by slug
+PUT    /api/v1/products/update/{id}    # Update product (Admin)
+DELETE /api/v1/products/delete/{id}    # Delete product (Admin)
+GET    /api/v1/products/search         # Search products
 ```
 
 ### **Orders**
 ```http
-GET  /api/v1/orders/get-paginated
-POST /api/v1/orders/create
-GET  /api/v1/orders/show/{uuid}
-POST /api/v1/orders/change-status/{uuid}
+GET  /api/v1/orders/get-paginated      # List orders
+POST /api/v1/orders/create             # Create order
+GET  /api/v1/orders/show/{uuid}        # Get order by UUID
+POST /api/v1/orders/change-status/{uuid} # Update status (Admin)
 ```
+
+### **Features**
+- **JWT Authentication**: Bearer token required for protected endpoints
+- **Role-based Access**: Admin and client permissions
+- **Validation**: Comprehensive input validation
+- **Error Handling**: Consistent error response format
+- **Pagination**: Efficient data loading
+- **Search**: Elasticsearch-powered product search
 
 ## 🏗️ **Architecture Patterns**
 
