@@ -1,6 +1,49 @@
+'use client';
+
 import Link from 'next/link';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Login() {
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+    });
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+    const { login } = useAuth();
+    const router = useRouter();
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true);
+        setError('');
+
+        try {
+            const response = await login(formData);
+            if (response.success) {
+                router.push('/');
+            } else {
+                // Display the specific error message from the backend
+                setError(response.message || 'Login failed');
+            }
+        } catch (err) {
+            setError('An error occurred during login');
+            console.error('Login error:', err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <>
             <div className="bg-gray-50">
@@ -8,13 +51,26 @@ export default function Login() {
                     <div className="max-w-md w-full">
                         <div className="p-8 rounded-2xl bg-white shadow">
                             <h2 className="text-slate-900 text-center text-3xl font-semibold">Log in</h2>
-                            <form className="mt-12 space-y-6">
+                            
+                            {error && (
+                                <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                                    {error}
+                                </div>
+                            )}
+
+                            <form onSubmit={handleSubmit} className="mt-12 space-y-6">
                                 <div>
                                     <label className="text-slate-800 text-sm font-medium mb-2 block">Email</label>
                                     <div className="relative flex items-center">
-                                        <input name="email" type="text" required
-                                               className="w-full text-slate-800 text-sm border border-slate-300 px-4 py-3 rounded-md outline-emerald-600"
-                                               placeholder="Enter email"/>
+                                        <input 
+                                            name="email" 
+                                            type="email" 
+                                            required
+                                            value={formData.email}
+                                            onChange={handleInputChange}
+                                            className="w-full text-slate-800 text-sm border border-slate-300 px-4 py-3 rounded-md outline-emerald-600"
+                                            placeholder="Enter email"
+                                        />
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb"
                                              className="w-4 h-4 absolute right-4" viewBox="0 0 24 24">
                                             <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -28,9 +84,15 @@ export default function Login() {
                                 <div>
                                     <label className="text-slate-800 text-sm font-medium mb-2 block">Password</label>
                                     <div className="relative flex items-center">
-                                        <input name="password" type="password" required
-                                               className="w-full text-slate-800 text-sm border border-slate-300 px-4 py-3 rounded-md outline-emerald-600"
-                                               placeholder="Enter password"/>
+                                        <input 
+                                            name="password" 
+                                            type="password" 
+                                            required
+                                            value={formData.password}
+                                            onChange={handleInputChange}
+                                            className="w-full text-slate-800 text-sm border border-slate-300 px-4 py-3 rounded-md outline-emerald-600"
+                                            placeholder="Enter password"
+                                        />
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb"
                                              className="w-4 h-4 absolute right-4 cursor-pointer" viewBox="0 0 128 128">
                                             <path
@@ -40,20 +102,13 @@ export default function Login() {
                                     </div>
                                 </div>
 
-                                <div className="flex flex-wrap items-center justify-between gap-4">
-                                    <div className="flex items-center">
-                                        <input id="do-not-logout" name="do-not-logout" type="checkbox"
-                                               className="h-4 w-4 shrink-0 accent-emerald-400 text-emerald-600 focus:ring-emerald-500 border-emerald-300 rounded"/>
-                                        <label htmlFor="do-not-logout" className="ml-3 block text-sm text-slate-800">
-                                            Do not logout
-                                        </label>
-                                    </div>
-                                </div>
-
                                 <div className="!mt-12">
-                                    <button type="button"
-                                            className="w-full py-2 px-4 text-[15px] font-medium tracking-wide rounded-md text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none cursor-pointer">
-                                        Log in
+                                    <button 
+                                        type="submit"
+                                        disabled={isLoading}
+                                        className="w-full py-2 px-4 text-[15px] font-medium tracking-wide rounded-md text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {isLoading ? 'Logging in...' : 'Log in'}
                                     </button>
                                 </div>
                                 <p className="text-slate-800 text-sm !mt-6 text-center">Don't have an account?

@@ -1,6 +1,72 @@
+'use client';
+
 import Link from 'next/link';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Register() {
+    const [formData, setFormData] = useState({
+        email: '',
+        name: '',
+        surname: '',
+        password: '',
+        passwordRepeat: '',
+    });
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+    const { register } = useAuth();
+    const router = useRouter();
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true);
+        setError('');
+
+        // Validate passwords match
+        if (formData.password !== formData.passwordRepeat) {
+            setError('Passwords do not match');
+            setIsLoading(false);
+            return;
+        }
+
+        // Validate password length
+        if (formData.password.length < 6) {
+            setError('Password must be at least 6 characters long');
+            setIsLoading(false);
+            return;
+        }
+
+        try {
+            const response = await register({
+                email: formData.email,
+                name: formData.name,
+                surname: formData.surname,
+                password: formData.password,
+            });
+            
+            if (response.success) {
+                router.push('/');
+            } else {
+                // Display the specific error message from the backend
+                setError(response.message || 'Registration failed');
+            }
+        } catch (err) {
+            setError('An error occurred during registration');
+            console.error('Register error:', err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <>
             <div className="bg-gray-50">
@@ -8,13 +74,26 @@ export default function Register() {
                     <div className="max-w-md w-full">
                         <div className="p-8 rounded-2xl bg-white shadow">
                             <h2 className="text-slate-900 text-center text-3xl font-semibold">Register</h2>
-                            <form className="mt-12 space-y-6">
+                            
+                            {error && (
+                                <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                                    {error}
+                                </div>
+                            )}
+
+                            <form onSubmit={handleSubmit} className="mt-12 space-y-6">
                                 <div>
                                     <label className="text-slate-800 text-sm font-medium mb-2 block">Email</label>
                                     <div className="relative flex items-center">
-                                        <input name="email" type="text" required
-                                               className="w-full text-slate-800 text-sm border border-slate-300 px-4 py-3 rounded-md outline-emerald-600"
-                                               placeholder="Enter email"/>
+                                        <input 
+                                            name="email" 
+                                            type="email" 
+                                            required
+                                            value={formData.email}
+                                            onChange={handleInputChange}
+                                            className="w-full text-slate-800 text-sm border border-slate-300 px-4 py-3 rounded-md outline-emerald-600"
+                                            placeholder="Enter email"
+                                        />
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb"
                                              className="w-4 h-4 absolute right-4" viewBox="0 0 24 24">
                                             <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -28,9 +107,15 @@ export default function Register() {
                                 <div>
                                     <label className="text-slate-800 text-sm font-medium mb-2 block">Name</label>
                                     <div className="relative flex items-center">
-                                        <input name="name" type="text" required
-                                               className="w-full text-slate-800 text-sm border border-slate-300 px-4 py-3 rounded-md outline-emerald-600"
-                                               placeholder="Enter name"/>
+                                        <input 
+                                            name="name" 
+                                            type="text" 
+                                            required
+                                            value={formData.name}
+                                            onChange={handleInputChange}
+                                            className="w-full text-slate-800 text-sm border border-slate-300 px-4 py-3 rounded-md outline-emerald-600"
+                                            placeholder="Enter name"
+                                        />
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb"
                                              className="w-4 h-4 absolute right-4" viewBox="0 0 24 24">
                                             <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -44,9 +129,15 @@ export default function Register() {
                                 <div>
                                     <label className="text-slate-800 text-sm font-medium mb-2 block">Surname</label>
                                     <div className="relative flex items-center">
-                                        <input name="surname" type="text" required
-                                               className="w-full text-slate-800 text-sm border border-slate-300 px-4 py-3 rounded-md outline-emerald-600"
-                                               placeholder="Enter surname"/>
+                                        <input 
+                                            name="surname" 
+                                            type="text" 
+                                            required
+                                            value={formData.surname}
+                                            onChange={handleInputChange}
+                                            className="w-full text-slate-800 text-sm border border-slate-300 px-4 py-3 rounded-md outline-emerald-600"
+                                            placeholder="Enter surname"
+                                        />
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb"
                                              className="w-4 h-4 absolute right-4" viewBox="0 0 24 24">
                                             <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
@@ -60,9 +151,15 @@ export default function Register() {
                                 <div>
                                     <label className="text-slate-800 text-sm font-medium mb-2 block">Password</label>
                                     <div className="relative flex items-center">
-                                        <input name="password" type="password" required
-                                               className="w-full text-slate-800 text-sm border border-slate-300 px-4 py-3 rounded-md outline-emerald-600"
-                                               placeholder="Enter password"/>
+                                        <input 
+                                            name="password" 
+                                            type="password" 
+                                            required
+                                            value={formData.password}
+                                            onChange={handleInputChange}
+                                            className="w-full text-slate-800 text-sm border border-slate-300 px-4 py-3 rounded-md outline-emerald-600"
+                                            placeholder="Enter password"
+                                        />
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb"
                                              className="w-4 h-4 absolute right-4 cursor-pointer" viewBox="0 0 128 128">
                                             <path
@@ -75,9 +172,15 @@ export default function Register() {
                                 <div>
                                     <label className="text-slate-800 text-sm font-medium mb-2 block">Repeat password</label>
                                     <div className="relative flex items-center">
-                                        <input name="password-repeat" type="password" required
-                                               className="w-full text-slate-800 text-sm border border-slate-300 px-4 py-3 rounded-md outline-emerald-600"
-                                               placeholder="Enter password again"/>
+                                        <input 
+                                            name="passwordRepeat" 
+                                            type="password" 
+                                            required
+                                            value={formData.passwordRepeat}
+                                            onChange={handleInputChange}
+                                            className="w-full text-slate-800 text-sm border border-slate-300 px-4 py-3 rounded-md outline-emerald-600"
+                                            placeholder="Enter password again"
+                                        />
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="#bbb" stroke="#bbb"
                                              className="w-4 h-4 absolute right-4 cursor-pointer" viewBox="0 0 128 128">
                                             <path
@@ -88,9 +191,12 @@ export default function Register() {
                                 </div>
 
                                 <div className="!mt-12">
-                                    <button type="button"
-                                            className="w-full py-2 px-4 text-[15px] font-medium tracking-wide rounded-md text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none cursor-pointer">
-                                        Register
+                                    <button 
+                                        type="submit"
+                                        disabled={isLoading}
+                                        className="w-full py-2 px-4 text-[15px] font-medium tracking-wide rounded-md text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {isLoading ? 'Registering...' : 'Register'}
                                     </button>
                                 </div>
                                 <p className="text-slate-800 text-sm !mt-6 text-center">Have an account?

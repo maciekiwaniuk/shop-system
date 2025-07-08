@@ -5,10 +5,12 @@ import { Dialog, DialogPanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import SearchBar from '@/components/Header/SearchBar'
+import { useAuth } from '@/contexts/AuthContext'
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false)
     const [isProfileOpen, setIsProfileOpen] = useState(false)
+    const { isAuthenticated, user, isAdmin, logout } = useAuth()
 
     const toggleMenu = () => {
         setIsOpen(!isOpen)
@@ -18,11 +20,21 @@ export default function Header() {
         setIsProfileOpen(!isProfileOpen)
     }
 
-    const navigation = [
-        { name: 'Home', href: '/' },
-        { name: 'Log in', href: '/login' },
-        { name: 'Register', href: '/register' },
-    ]
+    const handleLogout = () => {
+        logout()
+        setIsProfileOpen(false)
+    }
+
+    const navigation = isAuthenticated 
+        ? [
+            { name: 'Home', href: '/' },
+            ...(isAdmin ? [{ name: 'Admin', href: '/admin' }] : []),
+          ]
+        : [
+            { name: 'Home', href: '/' },
+            { name: 'Log in', href: '/login' },
+            { name: 'Register', href: '/register' },
+          ]
 
     return (
         <header className="flex shadow-md sm:px-10 px-6 py-3 bg-white min-h-[70px]">
@@ -54,12 +66,25 @@ export default function Header() {
                         </span>
 
                         <div className="flex ml-auto">
-                            <Link
-                                href="/login"
-                                className="hidden lg:block px-4 py-2 text-[15px] rounded-md font-medium text-white bg-blue-600 hover:bg-blue-700 cursor-pointer"
-                            >
-                                Log in
-                            </Link>
+                            {!isAuthenticated ? (
+                                <Link
+                                    href="/login"
+                                    className="hidden lg:block px-4 py-2 text-[15px] rounded-md font-medium text-white bg-blue-600 hover:bg-blue-700 cursor-pointer"
+                                >
+                                    Log in
+                                </Link>
+                            ) : (
+                                <div className="hidden lg:flex items-center space-x-2">
+                                    <span className="text-sm text-gray-600">
+                                        Welcome, {user?.email}
+                                    </span>
+                                    {isAdmin && (
+                                        <span className="px-2 py-1 text-xs bg-red-100 text-red-800 rounded-full">
+                                            Admin
+                                        </span>
+                                    )}
+                                </div>
+                            )}
 
                             <button
                                 onClick={toggleMenu}
@@ -70,53 +95,71 @@ export default function Header() {
                             </button>
                         </div>
 
-                        <div className="relative px-1">
-                            <button
-                                onClick={toggleProfile}
-                                className="cursor-pointer hover:fill-black"
-                                aria-label="Toggle profile menu"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24px"
-                                    height="24px"
+                        {isAuthenticated && (
+                            <div className="relative px-1">
+                                <button
+                                    onClick={toggleProfile}
                                     className="cursor-pointer hover:fill-black"
-                                    viewBox="0 0 512 512"
+                                    aria-label="Toggle profile menu"
                                 >
-                                    <path
-                                        d="M437.02 74.981C388.667 26.629 324.38 0 256 0S123.333 26.629 74.98 74.981C26.629 123.333 0 187.62 0 256s26.629 132.667 74.98 181.019C123.333 485.371 187.62 512 256 512s132.667-26.629 181.02-74.981C485.371 388.667 512 324.38 512 256s-26.629-132.667-74.98-181.019zM256 482c-66.869 0-127.037-29.202-168.452-75.511C113.223 338.422 178.948 290 256 290c-49.706 0-90-40.294-90-90s40.294-90 90-90 90 40.294 90 90-40.294 90-90 90c77.052 0 142.777 48.422 168.452 116.489C383.037 452.798 322.869 482 256 482z"
-                                        data-original="#000000"
-                                    />
-                                </svg>
-                            </button>
-                            {isProfileOpen && (
-                                <div className="bg-white block z-20 shadow-lg py-6 px-6 rounded-sm sm:min-w-[320px] max-sm:min-w-[250px] absolute right-0 top-10">
-                                    <ul className="space-y-1.5">
-                                        <li>
-                                            <Link
-                                                href="/orders"
-                                                className="text-sm text-gray-500 hover:text-slate-900"
-                                                onClick={() => setIsProfileOpen(false)}
-                                            >
-                                                Orders
-                                            </Link>
-                                        </li>
-                                    </ul>
-                                    <hr className="border-b-0 my-4 border-gray-300" />
-                                    <ul className="space-y-1.5">
-                                        <li>
-                                            <Link
-                                                href="/"
-                                                className="text-sm text-gray-500 hover:text-slate-900"
-                                                onClick={() => setIsProfileOpen(false)}
-                                            >
-                                                Logout
-                                            </Link>
-                                        </li>
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24px"
+                                        height="24px"
+                                        className="cursor-pointer hover:fill-black"
+                                        viewBox="0 0 512 512"
+                                    >
+                                        <path
+                                            d="M437.02 74.981C388.667 26.629 324.38 0 256 0S123.333 26.629 74.98 74.981C26.629 123.333 0 187.62 0 256s26.629 132.667 74.98 181.019C123.333 485.371 187.62 512 256 512s132.667-26.629 181.02-74.981C485.371 388.667 512 324.38 512 256s-26.629-132.667-74.98-181.019zM256 482c-66.869 0-127.037-29.202-168.452-75.511C113.223 338.422 178.948 290 256 290c-49.706 0-90-40.294-90-90s40.294-90 90-90 90 40.294 90 90-40.294 90-90 90c77.052 0 142.777 48.422 168.452 116.489C383.037 452.798 322.869 482 256 482z"
+                                            data-original="#000000"
+                                        />
+                                    </svg>
+                                </button>
+                                {isProfileOpen && (
+                                    <div className="bg-white block z-20 shadow-lg py-6 px-6 rounded-sm sm:min-w-[320px] max-sm:min-w-[250px] absolute right-0 top-10">
+                                        <div className="mb-4">
+                                            <p className="text-sm font-medium text-gray-900">{user?.email}</p>
+                                            {isAdmin && (
+                                                <p className="text-xs text-red-600">Administrator</p>
+                                            )}
+                                        </div>
+                                        <ul className="space-y-1.5">
+                                            <li>
+                                                <Link
+                                                    href="/orders"
+                                                    className="text-sm text-gray-500 hover:text-slate-900"
+                                                    onClick={() => setIsProfileOpen(false)}
+                                                >
+                                                    Orders
+                                                </Link>
+                                            </li>
+                                            {isAdmin && (
+                                                <li>
+                                                    <Link
+                                                        href="/admin"
+                                                        className="text-sm text-gray-500 hover:text-slate-900"
+                                                        onClick={() => setIsProfileOpen(false)}
+                                                    >
+                                                        Admin Panel
+                                                    </Link>
+                                                </li>
+                                            )}
+                                        </ul>
+                                        <hr className="border-b-0 my-4 border-gray-300" />
+                                        <ul className="space-y-1.5">
+                                            <li>
+                                                <button
+                                                    onClick={handleLogout}
+                                                    className="text-sm text-gray-500 hover:text-slate-900 w-full text-left"
+                                                >
+                                                    Logout
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -149,6 +192,17 @@ export default function Header() {
                                             {item.name}
                                         </Link>
                                     ))}
+                                    {isAuthenticated && (
+                                        <button
+                                            onClick={() => {
+                                                handleLogout();
+                                                toggleMenu();
+                                            }}
+                                            className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 w-full"
+                                        >
+                                            Logout
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </div>
