@@ -148,11 +148,11 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
     }
 
     #[Test]
-    public function search_returns_error_for_invalid_phrase(): void
+    public function can_not_search_with_invalid_phrase_as_guest(): void
     {
-        $clientBrowser = $this->getClientBrowser();
+        $guestBrowser = $this->getGuestBrowser();
 
-        $clientBrowser->request(
+        $guestBrowser->request(
             method: Request::METHOD_GET,
             uri: $this->url . '/search',
             parameters: [
@@ -160,18 +160,18 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
             ],
         );
 
-        $responseData = json_decode($clientBrowser->getResponse()->getContent(), true);
+        $responseData = json_decode($guestBrowser->getResponse()->getContent(), true);
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         $this->assertFalse($responseData['success']);
         $this->assertArrayHasKey('errors', $responseData);
     }
 
     #[Test]
-    public function search_returns_error_for_empty_phrase(): void
+    public function can_not_search_for_empty_phrase_as_guest(): void
     {
-        $clientBrowser = $this->getClientBrowser();
+        $guestBrowser = $this->getGuestBrowser();
 
-        $clientBrowser->request(
+        $guestBrowser->request(
             method: Request::METHOD_GET,
             uri: $this->url . '/search',
             parameters: [
@@ -179,7 +179,7 @@ class ProductsControllerTest extends AbstractApplicationCommerceTestCase
             ],
         );
 
-        $responseData = json_decode($clientBrowser->getResponse()->getContent(), true);
+        $responseData = json_decode($guestBrowser->getResponse()->getContent(), true);
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         $this->assertFalse($responseData['success']);
         $this->assertArrayHasKey('errors', $responseData);

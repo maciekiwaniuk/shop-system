@@ -87,7 +87,6 @@ readonly class CreateUserCommandHandler implements SyncCommandHandlerInterface
             $this->passwordHasher->hashPassword($user, $user->getPassword()),
         );
         $this->userRepository->save($user, true);
-
         return $user;
     }
 }

@@ -174,7 +174,6 @@ class ProductsController extends AbstractController
         return $this->json($result, isset($commandResult) ? $commandResult->statusCode : $queryResult->statusCode);
     }
 
-    // TODO: Tests
     #[Route('/search', methods: [Request::METHOD_GET])]
     #[IsGranted(ProductsVoter::SEARCH)]
     public function search(#[ValueResolver('search_products_dto')] SearchProductsDTO $dto): Response

@@ -17,21 +17,19 @@ class ClearCacheCommandTest extends AbstractIntegrationTestCase
     public function will_execute(): void
     {
         $container = self::getContainer();
-
         /** @var CacheCreator $cacheCreator */
         $cacheCreator = $container->get(CacheCreator::class);
         $cache = $cacheCreator->create('examplePrefix.');
         $cache->set('key', 'value');
-
         $application = new Application();
         $application->add(
             new ClearCacheCommand(
                 cacheCreator: $cacheCreator,
             ),
         );
-
         $command = $application->find('app:clear-cache');
         $commandTester = new CommandTester($command);
+
         $commandTester->execute([]);
 
         $commandTester->assertCommandIsSuccessful();

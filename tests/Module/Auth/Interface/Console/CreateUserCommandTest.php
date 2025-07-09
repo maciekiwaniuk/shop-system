@@ -81,7 +81,6 @@ class CreateUserCommandTest extends AbstractIntegrationTestCase
         ]);
 
         $user = $this->userRepository->findUserByEmail('example@mail.pl');
-
         $commandTester->assertCommandIsSuccessful();
         $output = $commandTester->getDisplay();
         $this->assertStringContainsString('Successfully created user.', $output);
