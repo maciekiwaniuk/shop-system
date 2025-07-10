@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints\Sequentially;
 class ChangeOrderStatusDTO extends AbstractValidationDTO
 {
     #[Sequentially([
-        new NotBlank(['message' => 'Order status cannot be blank.']),
+        new NotBlank(message: 'Order status cannot be blank.'),
     ])]
     #[Groups(['default'])]
     public readonly ?OrderStatus $status;
