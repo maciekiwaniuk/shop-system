@@ -48,13 +48,6 @@ class AbstractApplicationTestCase extends WebTestCase
         $schemaTool->updateSchema(
             $this->commerceEntityManager->getMetadataFactory()->getAllMetadata(),
         );
-
-//        $this->addFixture(
-//            className: AppFixtures::class,
-//            classesToInjectToFixture: [
-//                UserPasswordHasherInterface::class,
-//            ],
-//        );
     }
 
     public function tearDown(): void

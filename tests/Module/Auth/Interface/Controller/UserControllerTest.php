@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Tests\Module\Auth\Interface\Controller;
 
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
-use App\Tests\AbstractApplicationTestCase;
+use App\Tests\Module\Auth\AbstractApplicationAuthTestCase;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Request;
 
-class UserControllerTest extends AbstractApplicationTestCase
+class UserControllerTest extends AbstractApplicationAuthTestCase
 {
     private string $url = '/api/v1';
     private UserRepositoryInterface $userRepository;
