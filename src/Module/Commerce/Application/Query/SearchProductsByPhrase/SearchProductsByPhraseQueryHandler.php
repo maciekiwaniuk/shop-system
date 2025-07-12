@@ -25,12 +25,14 @@ readonly class SearchProductsByPhraseQueryHandler implements QueryHandlerInterfa
     {
         try {
             $products = $this->productIndexManager->searchByPhrase($query->phrase);
-        } catch (Throwable $throwable) {
-            $this->logger->error($throwable->getMessage());
-            return new QueryResult(
-                success: false,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR,
-            );
+        } catch (Throwable $exception) {
+            $this->logger->error('Failed to search products by phrase', [
+                'search_phrase' => $query->phrase,
+                'error' => $exception->getMessage(),
+                'exception_class' => get_class($exception),
+                'trace' => $exception->getTraceAsString(),
+            ]);
+            return new QueryResult(success: false, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return new QueryResult(
             success: true,

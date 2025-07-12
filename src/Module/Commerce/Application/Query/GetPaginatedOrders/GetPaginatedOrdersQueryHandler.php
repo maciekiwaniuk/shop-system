@@ -27,12 +27,15 @@ readonly class GetPaginatedOrdersQueryHandler implements QueryHandlerInterface
     {
         try {
             $orders = $this->orderRepository->getPaginatedByUuid($query->cursor, $query->limit);
-        } catch (Throwable $throwable) {
-            $this->logger->error($throwable->getMessage());
-            return new QueryResult(
-                success: false,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR,
-            );
+        } catch (Throwable $exception) {
+            $this->logger->error('Failed to get paginated orders', [
+                'cursor' => $query->cursor,
+                'limit' => $query->limit,
+                'error' => $exception->getMessage(),
+                'exception_class' => get_class($exception),
+                'trace' => $exception->getTraceAsString(),
+            ]);
+            return new QueryResult(success: false, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return new QueryResult(
             success: true,

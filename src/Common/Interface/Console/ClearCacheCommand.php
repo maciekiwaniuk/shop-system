@@ -40,11 +40,11 @@ final class ClearCacheCommand extends Command
             );
             $output->writeln('Successfully cleared cache.');
             return Command::SUCCESS;
-        } catch (Throwable $throwable) {
+        } catch (Throwable $exception) {
             $output->writeln(
                 sprintf(
                     'There was a technical problem while clearing cache. Error: %s',
-                    $throwable->getMessage(),
+                    $exception->getMessage(),
                 ),
             );
         }

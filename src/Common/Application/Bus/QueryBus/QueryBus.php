@@ -35,7 +35,13 @@ readonly class QueryBus implements QueryBusInterface
             || !isset($queryResult)
             || !$queryResult instanceof QueryResult
         ) {
-            $this->logger->error('Something went wrong while handling action in query bus');
+            $this->logger->error('Query bus handler validation failed', [
+                'query_class' => get_class($query),
+                'handled_stamps_count' => count($handledStamps),
+                'has_query_result' => isset($queryResult),
+                'query_result_class' => isset($queryResult) ? get_class($queryResult) : null,
+                'expected_result_class' => QueryResult::class,
+            ]);
             return new QueryResult(
                 success: false,
                 statusCode: Response::HTTP_INTERNAL_SERVER_ERROR,

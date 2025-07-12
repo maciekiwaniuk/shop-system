@@ -31,8 +31,13 @@ readonly class SetUserAsAdminCommandHandler implements SyncCommandInterface
                 array_merge($command->user->getRoles(), [UserRole::ADMIN->value]),
             );
             $this->entityManager->flush();
-        } catch (Throwable $throwable) {
-            $this->logger->error($throwable->getMessage());
+        } catch (Throwable $exception) {
+            $this->logger->error('Failed to set user as admin', [
+                'user_email' => $command->user->getEmail(),
+                'error' => $exception->getMessage(),
+                'exception_class' => get_class($exception),
+                'trace' => $exception->getTraceAsString(),
+            ]);
             return new CommandResult(success: false, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return new CommandResult(success: true, statusCode: Response::HTTP_OK);

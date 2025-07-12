@@ -40,8 +40,13 @@ readonly class DeleteProductCommandHandler implements SyncCommandHandlerInterfac
             }
 
             $this->eventDispatcher->dispatch(new ProductDeletedEvent($command->product->getId()));
-        } catch (Throwable $throwable) {
-            $this->logger->error($throwable->getMessage());
+        } catch (Throwable $exception) {
+            $this->logger->error('Failed to delete product', [
+                'product_id' => $command->product->getId(),
+                'error' => $exception->getMessage(),
+                'exception_class' => get_class($exception),
+                'trace' => $exception->getTraceAsString(),
+            ]);
             return new CommandResult(success: false, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return new CommandResult(success: true, statusCode: Response::HTTP_ACCEPTED);

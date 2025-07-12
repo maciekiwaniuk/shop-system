@@ -26,18 +26,20 @@ readonly class FindOrderByUuidQueryHandler implements QueryHandlerInterface
     public function __invoke(FindOrderByUuidQuery $query): QueryResult
     {
         try {
-            if (null === $order = $this->orderRepository->findByUuid($query->email)) {
+            if (null === $order = $this->orderRepository->findByUuid($query->uuid)) {
                 return new QueryResult(
                     success: false,
                     statusCode: Response::HTTP_NOT_FOUND,
                 );
             }
-        } catch (Throwable $throwable) {
-            $this->logger->error($throwable->getMessage());
-            return new QueryResult(
-                success: false,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR,
-            );
+        } catch (Throwable $exception) {
+            $this->logger->error('Failed to find order by UUID', [
+                'order_uuid' => $query->uuid,
+                'error' => $exception->getMessage(),
+                'exception_class' => get_class($exception),
+                'trace' => $exception->getTraceAsString(),
+            ]);
+            return new QueryResult(success: false, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return new QueryResult(
             success: true,

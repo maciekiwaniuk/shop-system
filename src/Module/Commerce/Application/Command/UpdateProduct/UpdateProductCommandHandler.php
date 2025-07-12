@@ -43,8 +43,15 @@ readonly class UpdateProductCommandHandler implements SyncCommandInterface
                 ->setPrice($command->dto->price);
             $this->commerceEntityManager->flush();
             $this->eventDispatcher->dispatch(new ProductUpdatedEvent(ProductDTO::fromEntity($product)));
-        } catch (Throwable $throwable) {
-            $this->logger->error($throwable->getMessage());
+        } catch (Throwable $exception) {
+            $this->logger->error('Failed to update product', [
+                'product_id' => $command->product->getId(),
+                'new_name' => $command->dto->name,
+                'new_price' => $command->dto->price,
+                'error' => $exception->getMessage(),
+                'exception_class' => get_class($exception),
+                'trace' => $exception->getTraceAsString(),
+            ]);
             return new CommandResult(success: false, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return new CommandResult(success: true, statusCode: Response::HTTP_OK);

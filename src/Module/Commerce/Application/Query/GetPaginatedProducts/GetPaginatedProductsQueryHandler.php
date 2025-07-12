@@ -27,12 +27,15 @@ readonly class GetPaginatedProductsQueryHandler implements QueryHandlerInterface
     {
         try {
             $products = $this->productRepository->getPaginatedById($query->offset, $query->limit);
-        } catch (Throwable $throwable) {
-            $this->logger->error($throwable->getMessage());
-            return new QueryResult(
-                success: false,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR,
-            );
+        } catch (Throwable $exception) {
+            $this->logger->error('Failed to get paginated products', [
+                'offset' => $query->offset,
+                'limit' => $query->limit,
+                'error' => $exception->getMessage(),
+                'exception_class' => get_class($exception),
+                'trace' => $exception->getTraceAsString(),
+            ]);
+            return new QueryResult(success: false, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return new QueryResult(
             success: true,

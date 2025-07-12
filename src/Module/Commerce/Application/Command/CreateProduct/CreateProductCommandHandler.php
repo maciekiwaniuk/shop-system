@@ -35,8 +35,12 @@ readonly class CreateProductCommandHandler implements SyncCommandHandlerInterfac
             );
             $productId = $this->productRepository->save($product, true);
             $this->eventDispatcher->dispatch(new ProductCreatedEvent(ProductDTO::fromEntity($product)));
-        } catch (Throwable $throwable) {
-            $this->logger->error($throwable->getMessage());
+        } catch (Throwable $exception) {
+            $this->logger->error('Failed to create product', [
+                'error' => $exception->getMessage(),
+                'exception_class' => get_class($exception),
+                'trace' => $exception->getTraceAsString(),
+            ]);
             return new CommandResult(success: false, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return new CommandResult(success: true, statusCode: Response::HTTP_CREATED, entityId: $productId);

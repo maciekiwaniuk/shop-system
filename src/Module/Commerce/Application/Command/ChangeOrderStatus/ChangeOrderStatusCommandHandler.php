@@ -31,8 +31,13 @@ readonly class ChangeOrderStatusCommandHandler implements AsyncCommandHandlerInt
                 status: $command->dto->status,
             );
             $this->orderStatusUpdateRepository->save($changeOrderStatus, true);
-        } catch (Throwable $throwable) {
-            $this->logger->error($throwable->getMessage());
+        } catch (Throwable $exception) {
+            $this->logger->error('Failed to change order status', [
+                'new_status' => $command->dto->status->value,
+                'error' => $exception->getMessage(),
+                'exception_class' => get_class($exception),
+                'trace' => $exception->getTraceAsString(),
+            ]);
         }
     }
 }

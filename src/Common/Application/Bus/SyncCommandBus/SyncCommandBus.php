@@ -35,8 +35,12 @@ readonly class SyncCommandBus implements SyncCommandBusInterface
             || !isset($commandResult)
             || !$commandResult instanceof CommandResult
         ) {
-            $this->logger->error('Something went wrong while handling action in sync command bus', [
-                'command' => get_class($command),
+            $this->logger->error('Sync command bus handler validation failed', [
+                'command_class' => get_class($command),
+                'handled_stamps_count' => count($handledStamps),
+                'has_command_result' => isset($commandResult),
+                'command_result_class' => isset($commandResult) ? get_class($commandResult) : null,
+                'expected_result_class' => CommandResult::class,
             ]);
             return new CommandResult(
                 success: false,

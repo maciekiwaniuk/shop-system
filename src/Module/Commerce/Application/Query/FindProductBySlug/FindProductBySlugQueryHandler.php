@@ -43,12 +43,14 @@ readonly class FindProductBySlugQueryHandler implements QueryHandlerInterface
                     statusCode: Response::HTTP_NOT_FOUND,
                 );
             }
-        } catch (Throwable $throwable) {
-            $this->logger->error($throwable->getMessage());
-            return new QueryResult(
-                success: false,
-                statusCode: Response::HTTP_INTERNAL_SERVER_ERROR,
-            );
+        } catch (Throwable $exception) {
+            $this->logger->error('Failed to find product by slug', [
+                'product_slug' => $query->slug,
+                'error' => $exception->getMessage(),
+                'exception_class' => get_class($exception),
+                'trace' => $exception->getTraceAsString(),
+            ]);
+            return new QueryResult(success: false, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return new QueryResult(
             success: true,

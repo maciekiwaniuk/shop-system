@@ -22,8 +22,13 @@ readonly class CacheProxy implements CacheProxyInterface
     {
         try {
             return (bool) $this->cache->exists($this->prefix . $key);
-        } catch (Throwable $throwable) {
-            $this->logger->error($throwable->getMessage());
+        } catch (Throwable $exception) {
+            $this->logger->error('Failed to check cache key existence', [
+                'key' => $key,
+                'prefixed_key' => $this->prefix . $key,
+                'error' => $exception->getMessage(),
+                'exception_class' => get_class($exception),
+            ]);
             return false;
         }
     }
@@ -32,8 +37,13 @@ readonly class CacheProxy implements CacheProxyInterface
     {
         try {
             return $this->cache->get($this->prefix . $key);
-        } catch (Throwable $throwable) {
-            $this->logger->error($throwable->getMessage());
+        } catch (Throwable $exception) {
+            $this->logger->error('Failed to retrieve value from cache', [
+                'key' => $key,
+                'prefixed_key' => $this->prefix . $key,
+                'error' => $exception->getMessage(),
+                'exception_class' => get_class($exception),
+            ]);
             return null;
         }
     }
@@ -43,8 +53,14 @@ readonly class CacheProxy implements CacheProxyInterface
         try {
             $this->cache->set($this->prefix . $key, $value);
             return true;
-        } catch (Throwable $throwable) {
-            $this->logger->error($throwable->getMessage());
+        } catch (Throwable $exception) {
+            $this->logger->error('Failed to store value in cache', [
+                'key' => $key,
+                'prefixed_key' => $this->prefix . $key,
+                'value_length' => strlen($value),
+                'error' => $exception->getMessage(),
+                'exception_class' => get_class($exception),
+            ]);
             return false;
         }
     }
@@ -56,8 +72,12 @@ readonly class CacheProxy implements CacheProxyInterface
     {
         try {
             return $this->cache->keys($this->prefix . '*');
-        } catch (Throwable $throwable) {
-            $this->logger->error($throwable->getMessage());
+        } catch (Throwable $exception) {
+            $this->logger->error('Failed to retrieve cache keys by prefix', [
+                'prefix' => $this->prefix,
+                'error' => $exception->getMessage(),
+                'exception_class' => get_class($exception),
+            ]);
             return [];
         }
     }
@@ -73,8 +93,14 @@ readonly class CacheProxy implements CacheProxyInterface
                 $keys,
             ));
             return true;
-        } catch (Throwable $throwable) {
-            $this->logger->error($throwable->getMessage());
+        } catch (Throwable $exception) {
+            $this->logger->error('Failed to delete cache keys', [
+                'keys' => $keys,
+                'prefixed_keys' => array_map(fn($key) => $this->prefix . $key, $keys),
+                'keys_count' => count($keys),
+                'error' => $exception->getMessage(),
+                'exception_class' => get_class($exception),
+            ]);
             return false;
         }
     }

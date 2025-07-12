@@ -43,8 +43,12 @@ readonly class CreateOrderCommandHandler implements SyncCommandHandlerInterface
                 );
             }
             $this->orderRepository->save($order, true);
-        } catch (Throwable $throwable) {
-            $this->logger->error($throwable->getMessage());
+        } catch (Throwable $exception) {
+            $this->logger->error('Failed to create order', [
+                'error' => $exception->getMessage(),
+                'exception_class' => get_class($exception),
+                'trace' => $exception->getTraceAsString(),
+            ]);
             return new CommandResult(success: false, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return new CommandResult(success: true, statusCode: Response::HTTP_CREATED);

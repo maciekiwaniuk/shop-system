@@ -53,8 +53,16 @@ readonly class CreateUserCommandHandler implements SyncCommandHandlerInterface
             $this->asyncCommandBus->handle(
                 new SendWelcomeEmailCommand(SendWelcomeEmailDTO::fromEntity($user)),
             );
-        } catch (Throwable $throwable) {
-            $this->logger->error($throwable->getMessage());
+        } catch (Throwable $exception) {
+            $this->logger->error('Failed to create user account', [
+                'email' => $command->dto->email,
+                'name' => $command->dto->name,
+                'surname' => $command->dto->surname,
+                'client_uuid' => $clientUuid ?? 'not_found',
+                'error' => $exception->getMessage(),
+                'exception_class' => get_class($exception),
+                'trace' => $exception->getTraceAsString(),
+            ]);
             return new CommandResult(success: false, statusCode: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return new CommandResult(success: true, statusCode: Response::HTTP_CREATED);
