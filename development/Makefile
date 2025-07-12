@@ -1,17 +1,5 @@
-copy_env:
-	cp .env.dist .env
-
-initialize:
-	docker compose exec shop-system php bin/console doctrine:migrations:diff
-	docker compose exec shop-system php bin/console doctrine:migrations:migrate
-	docker compose exec shop-system php bin/console lexik:jwt:generate-keypair
-
 drop_migrations:
 	docker compose exec shop-system php bin/console doctrine:schema:drop --full-database --force
-
-migrate:
-	docker compose exec shop-system php bin/console doctrine:migrations:diff
-	docker compose exec shop-system php bin/console doctrine:migrations:migrate
 
 load_fixtures:
 	docker compose exec shop-system php bin/console doctrine:fixtures:load
@@ -24,9 +12,6 @@ fix_codesniffer:
 
 cache_clear:
 	docker compose exec shop-system php bin/console cache:clear
-
-install:
-	docker compose exec shop-system composer install --optimize-autoloader --no-interaction --no-progress
 
 diff:
 	bin/console doctrine:migrations:diff --em=commerce --namespace=DoctrineMigrationsCommerce
@@ -48,3 +33,6 @@ consume_queue:
 delete_var:
 	sudo chmod -R 777 var
 	rm -r var
+
+remove_containers:
+	docker stop $(docker ps -q) && docker rm $(docker ps -a -q)
