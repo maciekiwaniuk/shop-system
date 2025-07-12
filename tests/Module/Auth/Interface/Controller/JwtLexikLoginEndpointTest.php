@@ -169,15 +169,15 @@ class JwtLexikLoginEndpointTest extends AbstractApplicationAuthTestCase
                 'CONTENT_TYPE' => 'application/json',
             ],
             content: json_encode([
-                'email' => '',
-                'password' => '',
+                'email' => 'notMatching@email.com',
+                'password' => 'wrongPassword',
             ]),
         );
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
-//        $responseData = json_decode($guestBrowser->getResponse()->getContent(), true);
-//        $this->assertFalse($responseData['success']);
-//        $this->assertArrayHasKey('message', $responseData);
-//        $this->assertStringContainsString('Invalid credentials', $responseData['message']);
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
+        $responseData = json_decode($guestBrowser->getResponse()->getContent(), true);
+        $this->assertFalse($responseData['success']);
+        $this->assertArrayHasKey('message', $responseData);
+        $this->assertStringContainsString('Invalid credentials', $responseData['message']);
     }
 }
