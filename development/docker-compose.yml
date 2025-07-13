@@ -97,4 +97,4 @@ services:
 
 networks:
     default:
-        name: shop_system
+        name: shop_system_network
