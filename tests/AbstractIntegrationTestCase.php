@@ -8,7 +8,9 @@ use App\Common\Infrastructure\Cache\CacheCreator;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
+use Elastic\Elasticsearch\Client;
 use LogicException;
+use stdClass;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class AbstractIntegrationTestCase extends KernelTestCase
@@ -43,6 +45,29 @@ class AbstractIntegrationTestCase extends KernelTestCase
         $purger = new ORMPurger($this->entityManager);
         $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);
         $purger->purge();
+
+        $this->truncateElasticsearchIndices();
+    }
+
+    private function truncateElasticsearchIndices(): void
+    {
+        $elasticsearchClient = self::getContainer()->get(Client::class);
+        $response = $elasticsearchClient->indices()->get(['index' => 'test_*']);
+        $testIndices = $response->asArray();
+
+        foreach (array_keys($testIndices) as $indexName) {
+            $params = [
+                'index' => $indexName,
+                'body' => [
+                    'query' => [
+                        'match_all' => new stdClass(),
+                    ],
+                ],
+                'conflicts' => 'proceed',
+            ];
+
+            $elasticsearchClient->deleteByQuery($params);
+        }
     }
 
     private function clearCache(): void

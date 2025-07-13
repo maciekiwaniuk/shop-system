@@ -22,4 +22,5 @@ while ! docker exec shop-system-elasticsearch curl -s -f "http://localhost:9200/
     sleep 0.2
 done
 
-docker exec -it shop-system-backend php bin/console commerce:elasticsearch:create-product-index --no-interaction
+docker exec -it shop-system-backend php bin/console commerce:elasticsearch:create-product-index --env=dev --no-interaction
+docker exec -it shop-system-backend php bin/console commerce:elasticsearch:create-product-index --env=test --no-interaction

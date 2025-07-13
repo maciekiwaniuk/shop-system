@@ -26,8 +26,8 @@ final class CreateProductIndexCommand extends Command
             $this->productIndexManager->createIndex();
             $output->writeln('Product index created successfully.');
             return Command::SUCCESS;
-        } catch (ElasticsearchIndexException $e) {
-            $output->writeln('Failed to create product index: ' . $e->getMessage());
+        } catch (ElasticsearchIndexException $exception) {
+            $output->writeln('Failed to create product index: ' . $exception->getMessage());
             return Command::FAILURE;
         }
     }

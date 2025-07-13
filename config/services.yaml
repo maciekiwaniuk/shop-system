@@ -63,6 +63,11 @@ services:
             - '%elasticsearch_port%'
             - '%elasticsearch_scheme%'
 
+    App\Module\Commerce\Infrastructure\Elasticsearch\Product\ProductIndexManager:
+        arguments:
+            $elasticsearchClient: '@Elastic\Elasticsearch\Client'
+            $environment: '%kernel.environment%'
+
 imports:
     - { resource: 'services/commands.yaml' }
     - { resource: 'services/queries.yaml' }
