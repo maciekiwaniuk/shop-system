@@ -25,9 +25,7 @@ readonly class QueryBus implements QueryBusInterface
             ->all(HandledStamp::class);
 
         $handledStamp = $handledStamps[0];
-        if (method_exists($handledStamp, 'getResult')) {
-            $queryResult = $handledStamp->getResult();
-        }
+        $queryResult = $handledStamp->getResult();
 
         if (
             !$handledStamps

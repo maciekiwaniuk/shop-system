@@ -24,6 +24,7 @@ class Product
     #[ORM\GeneratedValue]
     #[ORM\Column(length: 255)]
     #[Groups(['default'])]
+    /** @phpstan-ignore-next-line */
     private ?int $id = null;
 
     #[ORM\Column(length: 200)]
@@ -71,6 +72,12 @@ class Product
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setDeletedAt(?DateTimeImmutable $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
+        return $this;
     }
 
     private function generateSlug(string $name): string

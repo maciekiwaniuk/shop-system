@@ -10,6 +10,9 @@ use Exception;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/**
+ * @template-extends Voter<string, Order|null>
+ */
 class OrdersVoter extends Voter
 {
     public const string GET_PAGINATED = 'GET_PAGINATED_ORDERS';

@@ -64,7 +64,7 @@ final readonly class ProductIndexManager
     {
         $this->elasticsearchClient->index([
             'index' => $this->getIndexName(),
-            'id' => $dto->id,
+            'id' => (string) $dto->id,
             'body' => [
                 'name' => $dto->name,
                 'price' => $dto->price,
@@ -84,13 +84,14 @@ final readonly class ProductIndexManager
     {
         $this->elasticsearchClient->delete([
             'index' => $this->getIndexName(),
-            'id' => $id,
+            'id' => (string) $id,
         ]);
     }
 
     /**
      * @throws ServerResponseException
      * @throws ClientResponseException
+     * @return array<int, array<string, mixed>>
      */
     public function searchByPhrase(string $phrase): array
     {

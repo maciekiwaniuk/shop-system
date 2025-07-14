@@ -25,9 +25,7 @@ readonly class SyncCommandBus implements SyncCommandBusInterface
             ->all(HandledStamp::class);
 
         [$handledStamp] = $handledStamps;
-        if (method_exists($handledStamp, 'getResult')) {
-            $commandResult = $handledStamp->getResult();
-        }
+        $commandResult = $handledStamp->getResult();
 
         if (
             !$handledStamps

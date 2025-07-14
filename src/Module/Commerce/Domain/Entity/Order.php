@@ -78,11 +78,17 @@ class Order
         return $this->client;
     }
 
+    /**
+     * @return Collection<int, OrderProduct>
+     */
     public function getOrdersProducts(): Collection
     {
         return $this->ordersProducts;
     }
 
+    /**
+     * @return Collection<int, OrderStatusUpdate>
+     */
     public function getOrdersStatusUpdates(): Collection
     {
         return $this->ordersStatusUpdates;
