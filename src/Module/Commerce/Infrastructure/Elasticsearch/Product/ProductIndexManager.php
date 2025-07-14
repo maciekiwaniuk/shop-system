@@ -71,7 +71,7 @@ final readonly class ProductIndexManager
                 'slug' => $dto->slug,
                 'createdAt' => $dto->createdAt->format('c'),
                 'updatedAt' => $dto->updatedAt->format('c'),
-            ]
+            ],
         ]);
     }
 

@@ -6,5 +6,4 @@ namespace App\Module\Payment\Application\Command\ProcessPayment;
 
 class ProcessPaymentCommandHandler
 {
-
 }

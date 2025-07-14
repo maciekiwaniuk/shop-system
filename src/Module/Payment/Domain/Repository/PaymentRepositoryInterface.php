@@ -6,5 +6,4 @@ namespace App\Module\Payment\Domain\Repository;
 
 class PaymentRepositoryInterface
 {
-
 }

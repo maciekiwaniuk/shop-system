@@ -16,7 +16,7 @@ final class ElasticsearchClientFactory
     public static function createClient(
         string $host,
         int $port,
-        string $scheme
+        string $scheme,
     ): Client {
         return ClientBuilder::create()
             ->setHosts(["{$scheme}://{$host}:{$port}"])

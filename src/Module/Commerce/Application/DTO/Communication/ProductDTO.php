@@ -15,7 +15,7 @@ final readonly class ProductDTO
         public float $price,
         public string $slug,
         public DateTimeImmutable $createdAt,
-        public DateTimeImmutable $updatedAt
+        public DateTimeImmutable $updatedAt,
     ) {
     }
 

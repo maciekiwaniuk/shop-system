@@ -6,5 +6,4 @@ namespace App\Module\Payment\Domain\Event;
 
 class PaymentSucceededEvent
 {
-
 }
