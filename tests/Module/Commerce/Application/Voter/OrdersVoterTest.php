@@ -9,9 +9,11 @@ use App\Module\Commerce\Application\Voter\OrdersVoter;
 use App\Module\Commerce\Domain\Entity\Client;
 use App\Module\Commerce\Domain\Entity\Order;
 use App\Tests\AbstractUnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
+#[Group('unit')]
 class OrdersVoterTest extends AbstractUnitTestCase
 {
     private TokenInterface $token;

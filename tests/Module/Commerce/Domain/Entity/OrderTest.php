@@ -7,8 +7,10 @@ namespace App\Tests\Module\Commerce\Domain\Entity;
 use App\Module\Commerce\Domain\Entity\Client;
 use App\Module\Commerce\Domain\Entity\Order;
 use App\Tests\AbstractUnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 
+#[Group('unit')]
 class OrderTest extends AbstractUnitTestCase
 {
     #[Test]

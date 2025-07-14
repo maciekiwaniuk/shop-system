@@ -7,9 +7,11 @@ namespace App\Tests\Module\Commerce\Application\DTO;
 use App\Module\Commerce\Application\DTO\Validation\CreateProductDTO;
 use App\Tests\AbstractIntegrationTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+#[Group('integration')]
 class CreateProductDTOTest extends AbstractIntegrationTestCase
 {
     private ValidatorInterface $validator;

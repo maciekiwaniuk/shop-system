@@ -7,10 +7,12 @@ namespace App\Tests\Common\Infrastructure\Cache;
 use App\Common\Infrastructure\Cache\CacheProxy;
 use App\Tests\AbstractUnitTestCase;
 use Exception;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Psr\Log\LoggerInterface;
 use Redis;
 
+#[Group('unit')]
 class CacheProxyTest extends AbstractUnitTestCase
 {
     private Redis $cache;

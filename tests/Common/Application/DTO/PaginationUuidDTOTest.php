@@ -7,10 +7,12 @@ namespace App\Tests\Common\Application\DTO;
 use App\Common\Application\DTO\PaginationUuidDTO;
 use App\Tests\AbstractIntegrationTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+#[Group('integration')]
 class PaginationUuidDTOTest extends AbstractIntegrationTestCase
 {
     private ValidatorInterface $validator;

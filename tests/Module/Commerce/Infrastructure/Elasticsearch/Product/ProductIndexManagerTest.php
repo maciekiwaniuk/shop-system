@@ -10,8 +10,10 @@ use App\Module\Commerce\Infrastructure\Elasticsearch\Product\ProductIndexManager
 use App\Tests\AbstractIntegrationTestCase;
 use DateTimeImmutable;
 use Elastic\Elasticsearch\Client;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 
+#[Group('integration')]
 final class ProductIndexManagerTest extends AbstractIntegrationTestCase
 {
     private Client $elasticsearchClient;
@@ -41,8 +43,8 @@ final class ProductIndexManagerTest extends AbstractIntegrationTestCase
     #[Test]
     public function it_indexes_and_searches_products(): void
     {
-        $fancyProduct = new ProductDTO(1, 'Fancy product', 99.99, 'super-fancy-product', new DateTimeImmutable(), new DateTimeImmutable());
-        $nikeAirMaxProduct = new ProductDTO(2, 'Nike Air Max', 49.50, 'nike-air-max', new DateTimeImmutable(), new DateTimeImmutable());
+        $fancyProduct = $this->getFancyProductDTO();
+        $nikeAirMaxProduct = $this->getNikeAirMaxProductDTO();
         $this->productIndexManager->indexProduct($fancyProduct);
         $this->productIndexManager->indexProduct($nikeAirMaxProduct);
         $this->refreshIndex();
@@ -59,7 +61,7 @@ final class ProductIndexManagerTest extends AbstractIntegrationTestCase
     #[Test]
     public function it_removes_product_from_index(): void
     {
-        $product = new ProductDTO(1, 'Temporary Item', 10.00, 'temporary-item', new DateTimeImmutable(), new DateTimeImmutable());
+        $product = $this->getTemporaryProductDTO();
         $this->productIndexManager->indexProduct($product);
         $this->refreshIndex();
         $resultsBefore = $this->productIndexManager->searchByPhrase('temporary');
@@ -69,5 +71,41 @@ final class ProductIndexManagerTest extends AbstractIntegrationTestCase
 
         $this->assertCount(1, $resultsBefore);
         $this->assertCount(0, $resultsAfter);
+    }
+
+    private function getFancyProductDTO(): ProductDTO
+    {
+        return new ProductDTO(
+            1,
+            'Fancy product',
+            99.99,
+            'super-fancy-product',
+            new DateTimeImmutable(),
+            new DateTimeImmutable(),
+        );
+    }
+
+    private function getNikeAirMaxProductDTO(): ProductDTO
+    {
+        return new ProductDTO(
+            2,
+            'Nike Air Max',
+            49.50,
+            'nike-air-max',
+            new DateTimeImmutable(),
+            new DateTimeImmutable(),
+        );
+    }
+
+    private function getTemporaryProductDTO(): ProductDTO
+    {
+        return new ProductDTO(
+            1,
+            'Temporary Item',
+            10.00,
+            'temporary-item',
+            new DateTimeImmutable(),
+            new DateTimeImmutable(),
+        );
     }
 }

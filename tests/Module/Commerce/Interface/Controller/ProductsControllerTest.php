@@ -6,10 +6,12 @@ namespace App\Tests\Module\Commerce\Interface\Controller;
 
 use App\Module\Commerce\Domain\Repository\ProductRepositoryInterface;
 use App\Tests\Module\Commerce\AbstractApplicationCommerceTestCase;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+#[Group('application')]
 class ProductsControllerTest extends AbstractApplicationCommerceTestCase
 {
     private string $url = '/api/v1/products';

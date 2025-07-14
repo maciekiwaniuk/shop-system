@@ -7,9 +7,11 @@ namespace App\Tests\Common\Infrastructure\Serializer;
 use App\Common\Infrastructure\Serializer\JsonSerializer;
 use App\Tests\AbstractUnitTestCase;
 use Exception;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+#[Group('unit')]
 class JsonSerializerTest extends AbstractUnitTestCase
 {
     private JsonSerializer $serializer;

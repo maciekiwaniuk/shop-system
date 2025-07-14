@@ -6,9 +6,11 @@ namespace App\Tests\Module\Auth\Interface\Controller;
 
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Tests\Module\Auth\AbstractApplicationAuthTestCase;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Request;
 
+#[Group('application')]
 class UserControllerTest extends AbstractApplicationAuthTestCase
 {
     private string $url = '/api/v1';

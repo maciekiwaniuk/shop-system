@@ -10,10 +10,12 @@ use App\Module\Commerce\Domain\Repository\ClientRepositoryInterface;
 use App\Module\Commerce\Domain\Repository\OrderRepositoryInterface;
 use App\Tests\Module\Commerce\AbstractApplicationCommerceTestCase;
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Uuid;
 
+#[Group('application')]
 class OrdersControllerTest extends AbstractApplicationCommerceTestCase
 {
     private string $url = '/api/v1/orders';

@@ -7,9 +7,11 @@ namespace App\Tests\Module\Commerce\Application\Voter;
 use App\Common\Application\Security\UserContextInterface;
 use App\Module\Commerce\Application\Voter\ProductsVoter;
 use App\Tests\AbstractUnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
+#[Group('unit')]
 class ProductsVoterTest extends AbstractUnitTestCase
 {
     private TokenInterface $token;

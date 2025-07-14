@@ -9,6 +9,7 @@ use App\Common\Application\Bus\QueryBus\QueryBusInterface;
 use App\Common\Application\BusResult\QueryResult;
 use App\Common\Application\Query\QueryInterface;
 use App\Tests\AbstractUnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,6 +17,7 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 
+#[Group('unit')]
 class QueryBusTest extends AbstractUnitTestCase
 {
     private MessageBusInterface $bus;

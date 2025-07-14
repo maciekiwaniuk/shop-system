@@ -9,12 +9,14 @@ use App\Common\Application\Bus\AsyncCommandBus\AsyncCommandBus;
 use App\Common\Application\Bus\AsyncCommandBus\AsyncCommandBusInterface;
 use App\Common\Application\BusResult\CommandResult;
 use App\Tests\AbstractUnitTestCase;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 
+#[Group('unit')]
 class AsyncCommandBusTest extends AbstractUnitTestCase
 {
     private MessageBusInterface $bus;

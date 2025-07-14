@@ -9,9 +9,11 @@ use App\Module\Auth\Domain\Entity\User;
 use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use App\Tests\AbstractIntegrationTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+#[Group('integration')]
 class CreateUserDTOTest extends AbstractIntegrationTestCase
 {
     private ValidatorInterface $validator;

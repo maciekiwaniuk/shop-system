@@ -6,10 +6,12 @@ namespace App\Tests\Module\Auth\Interface\Controller;
 
 use App\Module\Auth\Domain\Entity\User;
 use App\Tests\Module\Auth\AbstractApplicationAuthTestCase;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+#[Group('application')]
 class JwtLexikLoginEndpointTest extends AbstractApplicationAuthTestCase
 {
     private string $url = '/api/v1';
@@ -29,7 +31,7 @@ class JwtLexikLoginEndpointTest extends AbstractApplicationAuthTestCase
             content: json_encode([
                 'email' => $user->getEmail(),
                 'password' => 'examplePassword',
-            ])
+            ]),
         );
 
         $responseData = json_decode($guestBrowser->getResponse()->getContent(), true);

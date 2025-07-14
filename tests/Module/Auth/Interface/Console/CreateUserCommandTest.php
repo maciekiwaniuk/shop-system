@@ -10,11 +10,13 @@ use App\Module\Auth\Interface\Console\CreateUserCommand;
 use App\Common\Application\Bus\SyncCommandBus\SyncCommandBusInterface;
 use App\Common\Application\Bus\QueryBus\QueryBusInterface;
 use App\Tests\AbstractIntegrationTestCase;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+#[Group('integration')]
 class CreateUserCommandTest extends AbstractIntegrationTestCase
 {
     private UserRepositoryInterface $userRepository;
