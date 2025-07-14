@@ -12,15 +12,6 @@ A **simple e-commerce platform** built with cutting-edge technologies, showcasin
 ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
 
-### 🎯 Why I Built This
-
-Most e-commerce tutorials focus on getting something working quickly. I wanted to explore what happens when you build with **scale in mind** from day one. This project demonstrates:
-
-- **Domain-Driven Design** in practice
-- **CQRS** for better performance and maintainability  
-- **Event-driven architecture** for loose coupling
-- **Clean Architecture** principles throughout
-
 ## 🏗️ Architecture Highlights
 
 ### Modular Design
@@ -46,7 +37,7 @@ Instead of tight coupling, the system uses domain events to trigger side effects
 cd development && ./build.sh
 ```
 
-3. **Access the application**
+**Access the application**
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost/api/v1
 - **API Documentation**: http://localhost/api/doc
@@ -146,19 +137,6 @@ Module/Commerce/
     ├── Controller/         # REST API endpoints
     └── Console/            # CLI commands
 ```
-
-### 🔄 **How It All Works Together**
-
-1. **Interface Layer** receives HTTP requests
-2. **Application Layer** orchestrates the business logic
-3. **Domain Layer** contains the core business rules
-4. **Infrastructure Layer** handles external concerns (database, search, etc.)
-
-This separation ensures that:
-- **Business logic is isolated** from technical details
-- **Modules can evolve independently**
-- **Testing is easier** with clear boundaries
-- **Dependencies flow inward** (Domain doesn't depend on Infrastructure)
 
 ## 🏛️ Architecture Deep Dive
 

@@ -136,7 +136,6 @@ final readonly class ProductIndexManager
         if ($this->environment === 'test') {
             return 'test_' . self::INDEX_NAME;
         };
-
         return self::INDEX_NAME;
     }
 
