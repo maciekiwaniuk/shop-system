@@ -46,7 +46,12 @@ deptrac:
     - name: AuthApplication
       collectors:
         - type: classLike
-          value: ^App\\Module\\Auth\\Application\\.*
+          value: ^App\\Module\\Auth\\Application\\(?!Port\\).*
+
+    -  name: AuthPort
+       collectors:
+        - type: classLike
+          value: ^App\\Module\\Auth\\Application\\Port\\.*
 
     - name: AuthInterface
       collectors:
@@ -76,7 +81,12 @@ deptrac:
     - name: CommerceInfrastructure
       collectors:
         - type: classLike
-          value: ^App\\Module\\Commerce\\Infrastructure\\.*
+          value: ^App\\Module\\Commerce\\Infrastructure\\(?!Adapter\\).*
+
+    - name: CommerceAdapter
+      collectors:
+        - type: classLike
+          value: ^App\\Module\\Commerce\\Infrastructure\\Adapter\\.*
 
   ruleset:
     AuthDomain:
@@ -88,6 +98,14 @@ deptrac:
       - Foundation
 
     AuthApplication:
+      - AuthDomain
+      - AuthPort
+      - CommonApplication
+      - CommonDomain
+      - CommerceDomain
+      - Foundation
+
+    AuthPort:
       - AuthDomain
       - CommonApplication
       - CommonDomain
@@ -136,6 +154,17 @@ deptrac:
       - CommonDomain
       - CommonInterface
       - Foundation
+
+    CommerceAdapter:
+      - CommerceApplication
+      - CommerceDomain
+      - CommerceInterface
+      - CommonInfrastructure
+      - CommonApplication
+      - CommonDomain
+      - CommonInterface
+      - Foundation
+      - AuthPort
 
     CommonApplication:
       - CommonDomain

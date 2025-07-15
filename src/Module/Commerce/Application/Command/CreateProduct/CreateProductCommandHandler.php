@@ -34,7 +34,7 @@ readonly class CreateProductCommandHandler implements SyncCommandHandlerInterfac
                 price: $command->dto->price,
             );
             $productId = $this->productRepository->save($product, true);
-            $this->eventDispatcher->dispatch(new ProductCreatedEvent(ProductDTO::fromEntity($product)));
+            $this->eventDispatcher->dispatch(new ProductCreatedEvent($product));
         } catch (Throwable $exception) {
             $this->logger->error('Failed to create product', [
                 'error' => $exception->getMessage(),

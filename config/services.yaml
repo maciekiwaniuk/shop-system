@@ -63,7 +63,7 @@ services:
             - '%elasticsearch_port%'
             - '%elasticsearch_scheme%'
 
-    App\Module\Commerce\Infrastructure\Elasticsearch\Product\ProductIndexManager:
+    App\Module\Commerce\Infrastructure\Elasticsearch\ProductIndexManager:
         arguments:
             $elasticsearchClient: '@Elastic\Elasticsearch\Client'
             $environment: '%kernel.environment%'

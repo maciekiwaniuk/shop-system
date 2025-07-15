@@ -2,16 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Module\Commerce\Infrastructure\Elasticsearch\Product;
+namespace App\Module\Commerce\Infrastructure\Elasticsearch;
 
 use App\Module\Commerce\Application\DTO\Communication\ProductDTO;
+use App\Module\Commerce\Domain\Entity\Product;
+use App\Module\Commerce\Domain\Repository\ProductSearchRepositoryInterface;
 use App\Module\Commerce\Infrastructure\Elasticsearch\ElasticsearchIndexException;
 use Elastic\Elasticsearch\Client;
 use Elastic\Elasticsearch\Exception\ClientResponseException;
 use Elastic\Elasticsearch\Exception\MissingParameterException;
 use Elastic\Elasticsearch\Exception\ServerResponseException;
 
-final readonly class ProductIndexManager
+final readonly class ProductIndexManager implements ProductSearchRepositoryInterface
 {
     private const string INDEX_NAME = 'products';
 
@@ -60,17 +62,19 @@ final readonly class ProductIndexManager
         $this->elasticsearchClient->indices()->create($params);
     }
 
-    public function indexProduct(ProductDTO $dto): void
+    public function indexProduct(Product $product): void
     {
+        var_dump($product->getId());
+
         $this->elasticsearchClient->index([
             'index' => $this->getIndexName(),
-            'id' => (string) $dto->id,
+            'id' => (string) $product->getId(),
             'body' => [
-                'name' => $dto->name,
-                'price' => $dto->price,
-                'slug' => $dto->slug,
-                'createdAt' => $dto->createdAt->format('c'),
-                'updatedAt' => $dto->updatedAt->format('c'),
+                'name' => $product->getName(),
+                'price' => $product->getPrice(),
+                'slug' => $product->getSlug(),
+                'createdAt' => $product->getCreatedAt()->format('c'),
+                'updatedAt' => $product->getUpdatedAt()->format('c'),
             ],
         ]);
     }

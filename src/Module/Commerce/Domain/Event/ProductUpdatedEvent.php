@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Module\Commerce\Domain\Event;
 
-use App\Module\Commerce\Application\DTO\Communication\ProductDTO;
+use App\Module\Commerce\Domain\Entity\Product;
 use Symfony\Contracts\EventDispatcher\Event;
 
 final class ProductUpdatedEvent extends Event
 {
     public function __construct(
-        public readonly ProductDTO $dto,
+        public readonly Product $product,
     ) {
     }
 }
