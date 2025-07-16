@@ -64,8 +64,6 @@ final readonly class ProductIndexManager implements ProductSearchRepositoryInter
 
     public function indexProduct(Product $product): void
     {
-        var_dump($product->getId());
-
         $this->elasticsearchClient->index([
             'index' => $this->getIndexName(),
             'id' => (string) $product->getId(),

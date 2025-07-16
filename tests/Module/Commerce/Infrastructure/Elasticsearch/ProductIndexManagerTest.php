@@ -2,13 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Module\Commerce\Infrastructure\Elasticsearch\Product;
+namespace App\Tests\Integration\Module\Commerce\Infrastructure\Elasticsearch;
 
-use App\Module\Commerce\Application\DTO\Communication\ProductDTO;
+use App\Common\Application\Bus\SyncCommandBus\SyncCommandBusInterface;
+use App\Module\Commerce\Application\Command\CreateProduct\CreateProductCommand;
+use App\Module\Commerce\Application\DTO\Validation\CreateProductDTO;
+use App\Module\Commerce\Domain\Entity\Product;
+use App\Module\Commerce\Domain\Repository\ProductRepositoryInterface;
 use App\Module\Commerce\Infrastructure\Elasticsearch\ElasticsearchIndexException;
-use App\Module\Commerce\Infrastructure\Elasticsearch\Product\ProductIndexManager;
+use App\Module\Commerce\Infrastructure\Elasticsearch\ProductIndexManager;
 use App\Tests\AbstractIntegrationTestCase;
-use DateTimeImmutable;
 use Elastic\Elasticsearch\Client;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
@@ -43,8 +46,8 @@ final class ProductIndexManagerTest extends AbstractIntegrationTestCase
     #[Test]
     public function it_indexes_and_searches_products(): void
     {
-        $fancyProduct = $this->getFancyProductDTO();
-        $nikeAirMaxProduct = $this->getNikeAirMaxProductDTO();
+        $fancyProduct = $this->persistProduct(new Product('Fancy product', 99.99));
+        $nikeAirMaxProduct = $this->persistProduct(new Product('Nike Air Max', 3.23));
         $this->productIndexManager->indexProduct($fancyProduct);
         $this->productIndexManager->indexProduct($nikeAirMaxProduct);
         $this->refreshIndex();
@@ -53,59 +56,34 @@ final class ProductIndexManagerTest extends AbstractIntegrationTestCase
         $nikeAirMaxProductResult = $this->productIndexManager->searchByPhrase('air max');
 
         $this->assertCount(1, $fancyProductResult);
-        $this->assertSame('super-fancy-product', $fancyProductResult[0]['slug']);
+        $this->assertSame($fancyProduct->getSlug(), $fancyProductResult[0]['slug']);
         $this->assertCount(1, $nikeAirMaxProductResult);
-        $this->assertSame('nike-air-max', $nikeAirMaxProductResult[0]['slug']);
+        $this->assertSame($nikeAirMaxProduct->getSlug(), $nikeAirMaxProductResult[0]['slug']);
     }
 
     #[Test]
     public function it_removes_product_from_index(): void
     {
-        $product = $this->getTemporaryProductDTO();
+        $product = $this->persistProduct(new Product('Temporary Item', 10.00));
         $this->productIndexManager->indexProduct($product);
         $this->refreshIndex();
-        $resultsBefore = $this->productIndexManager->searchByPhrase('temporary');
-        $this->productIndexManager->removeProduct(1);
+        $resultsBefore = $this->productIndexManager->searchByPhrase($product->getName());
+        $this->productIndexManager->removeProduct($product->getId());
         $this->refreshIndex();
-        $resultsAfter = $this->productIndexManager->searchByPhrase('temporary');
+        $resultsAfter = $this->productIndexManager->searchByPhrase($product->getName());
 
         $this->assertCount(1, $resultsBefore);
         $this->assertCount(0, $resultsAfter);
     }
 
-    private function getFancyProductDTO(): ProductDTO
+    private function persistProduct(Product $product): Product
     {
-        return new ProductDTO(
-            1,
-            'Fancy product',
-            99.99,
-            'super-fancy-product',
-            new DateTimeImmutable(),
-            new DateTimeImmutable(),
-        );
-    }
+        $createProductDto = new CreateProductDTO($product->getName(), $product->getPrice());
+        $createProductCommand = new CreateProductCommand($createProductDto);
+        $syncCommandBus = self::getContainer()->get(SyncCommandBusInterface::class);
+        $commandResult = $syncCommandBus->handle($createProductCommand);
 
-    private function getNikeAirMaxProductDTO(): ProductDTO
-    {
-        return new ProductDTO(
-            2,
-            'Nike Air Max',
-            49.50,
-            'nike-air-max',
-            new DateTimeImmutable(),
-            new DateTimeImmutable(),
-        );
-    }
-
-    private function getTemporaryProductDTO(): ProductDTO
-    {
-        return new ProductDTO(
-            1,
-            'Temporary Item',
-            10.00,
-            'temporary-item',
-            new DateTimeImmutable(),
-            new DateTimeImmutable(),
-        );
+        $productRepository = self::getContainer()->get(ProductRepositoryInterface::class);
+        return $productRepository->getReference($commandResult->entityId);
     }
 }
