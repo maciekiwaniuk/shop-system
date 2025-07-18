@@ -7,9 +7,8 @@ on:
         branches: [main]
 
 jobs:
-    phpcs:
+    build:
         runs-on: ubuntu-latest
-
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
@@ -19,8 +18,418 @@ jobs:
               with:
                   php-version: '8.4'
 
+            - name: Cache Composer dependencies
+              uses: actions/cache@v4
+              with:
+                  path: vendor
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-composer-
+
             - name: Install Composer dependencies
               run: composer install --no-progress --prefer-dist --optimize-autoloader
 
+            - name: Upload build artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                  name: build-files
+                  path: |
+                      vendor/
+                      composer.lock
+                  retention-days: 1
+
+    phpcs:
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.4'
+
+            - name: Download build artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  name: build-files
+
+            - name: Restore executable permissions
+              run: chmod +x vendor/bin/*
+
             - name: Run PHP_CodeSniffer
               run: vendor/bin/phpcs
+
+    deptrac:
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.4'
+
+            - name: Download build artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  name: build-files
+
+            - name: Restore executable permissions
+              run: chmod +x vendor/bin/*
+
+            - name: Run Deptrac
+              run: vendor/bin/deptrac analyse
+
+    phpstan:
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.4'
+
+            - name: Download build artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  name: build-files
+
+            - name: Restore executable permissions
+              run: chmod +x vendor/bin/*
+
+            - name: Run PHPStan
+              run: vendor/bin/phpstan analyse
+
+    unit-tests:
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.4'
+
+            - name: Download build artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  name: build-files
+
+            - name: Restore executable permissions
+              run: chmod +x vendor/bin/*
+
+            - name: Run Unit Tests
+              run: vendor/bin/phpunit --group unit
+
+    integration-tests:
+        runs-on: ubuntu-latest
+        needs: build
+        services:
+            mysql:
+                image: mysql:9.1
+                env:
+                    MYSQL_ROOT_PASSWORD: root_password
+                    MYSQL_DATABASE: shop_system_auth
+                    MYSQL_USER: shop_user
+                    MYSQL_PASSWORD: shop_password
+                ports:
+                    - 3306:3306
+                options: >-
+                    --health-cmd="mysqladmin ping --silent"
+                    --health-interval=10s
+                    --health-timeout=5s
+                    --health-retries=5
+
+            redis:
+                image: redis:7.4
+                ports:
+                    - 6379:6379
+                options: >-
+                    --health-cmd="redis-cli ping"
+                    --health-interval=10s
+                    --health-timeout=5s
+                    --health-retries=5
+
+            elasticsearch:
+                image: docker.elastic.co/elasticsearch/elasticsearch:8.18.0
+                env:
+                    discovery.type: single-node
+                    bootstrap.memory_lock: true
+                    ES_JAVA_OPTS: -Xms512m -Xmx512m
+                    xpack.security.enabled: false
+                ports:
+                    - 9200:9200
+                options: >-
+                    --health-cmd="curl http://localhost:9200/_cluster/health"
+                    --health-interval=10s
+                    --health-timeout=5s
+                    --health-retries=10
+
+            rabbitmq:
+                image: rabbitmq:4.1-management
+                ports:
+                    - 5672:5672
+                    - 15672:15672
+
+            mailhog:
+                image: mailhog/mailhog
+                ports:
+                    - 8025:8025
+                    - 1025:1025
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.4'
+                  extensions: pdo, pdo_mysql, zip, xsl, gd, intl, opcache, exif, mbstring, redis, amqp
+
+            - name: Install Redis CLI
+              run: sudo apt-get install -y redis-tools
+
+            - name: Download build artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  name: build-files
+
+            - name: Restore executable permissions
+              run: chmod +x vendor/bin/*
+
+            - name: Generate JWT key pair
+              run: php bin/console lexik:jwt:generate-keypair --no-interaction --overwrite
+
+            - name: Wait for services to be ready
+              run: |
+                  echo "Waiting for MySQL to be ready..."
+                  while ! mysqladmin ping -h"127.0.0.1" -P"3306" -u"shop_user" -p"shop_password" --silent; do
+                    echo "MySQL not ready, waiting..."
+                    sleep 2
+                  done
+                  echo "MySQL is ready!"
+                  
+                  echo "Waiting for Redis to be ready..."
+                  while ! redis-cli -h 127.0.0.1 -p 6379 ping; do
+                    echo "Redis not ready, waiting..."
+                    sleep 2
+                  done
+                  echo "Redis is ready!"
+                  
+                  echo "Waiting for Elasticsearch to be ready..."
+                  while ! curl -s -f "http://127.0.0.1:9200/_cluster/health?wait_for_status=yellow&timeout=5s" > /dev/null; do
+                    echo "Elasticsearch not ready, waiting..."
+                    sleep 2
+                  done
+                  echo "Elasticsearch is ready!"
+
+            - name: Initialize test databases and grants
+              run: |
+                  mysql -h 127.0.0.1 -P 3306 -u root -proot_password <<SQL
+                  CREATE DATABASE IF NOT EXISTS \`shop_system_auth\`;
+                  CREATE DATABASE IF NOT EXISTS \`shop_system_auth_test\`;
+                  CREATE DATABASE IF NOT EXISTS \`shop_system_commerce\`;
+                  CREATE DATABASE IF NOT EXISTS \`shop_system_commerce_test\`;
+                  GRANT ALL PRIVILEGES ON *.* TO 'shop_user'@'%';
+                  FLUSH PRIVILEGES;
+                  SQL
+
+            - name: Run database migrations
+              run: php bin/console doctrine:migrations:migrate --no-interaction
+              env:
+                  MYSQL_HOST: 127.0.0.1
+                  DB_HOST: mysql
+                  DB_PORT: 3306
+                  DB_DATABASE: shop_system_auth
+                  DB_USERNAME: shop_user
+                  DB_PASSWORD: shop_password
+
+            - name: Create Elasticsearch indices
+              run: |
+                  php bin/console commerce:elasticsearch:create-product-index --env=test --no-interaction
+              env:
+                  MYSQL_HOST: 127.0.0.1
+                  DB_HOST: mysql
+                  DB_PORT: 3306
+                  DB_DATABASE: shop_system_auth
+                  DB_USERNAME: shop_user
+                  DB_PASSWORD: shop_password
+                  REDIS_URL: redis://127.0.0.1:6379/1
+                  ELASTICSEARCH_HOST: 127.0.0.1
+                  ELASTICSEARCH_PORT: 9200
+
+            - name: Run Integration Tests
+              run: vendor/bin/phpunit --group integration
+              env:
+                  MYSQL_HOST: 127.0.0.1
+                  DB_HOST: mysql
+                  DB_PORT: 3306
+                  DB_DATABASE: shop_system_auth
+                  DB_USERNAME: shop_user
+                  DB_PASSWORD: shop_password
+                  REDIS_URL: redis://127.0.0.1:6379/1
+                  ELASTICSEARCH_HOST: 127.0.0.1
+                  ELASTICSEARCH_PORT: 9200
+
+    application-tests:
+        runs-on: ubuntu-latest
+        needs: build
+        services:
+            mysql:
+                image: mysql:9.1
+                env:
+                    MYSQL_ROOT_PASSWORD: root_password
+                    MYSQL_DATABASE: shop_system_auth
+                    MYSQL_USER: shop_user
+                    MYSQL_PASSWORD: shop_password
+                ports:
+                    - 3306:3306
+                options: >-
+                    --health-cmd="mysqladmin ping --silent"
+                    --health-interval=10s
+                    --health-timeout=5s
+                    --health-retries=5
+
+            redis:
+                image: redis:7.4
+                ports:
+                    - 6379:6379
+                options: >-
+                    --health-cmd="redis-cli ping"
+                    --health-interval=10s
+                    --health-timeout=5s
+                    --health-retries=5
+
+            elasticsearch:
+                image: docker.elastic.co/elasticsearch/elasticsearch:8.18.0
+                env:
+                    discovery.type: single-node
+                    bootstrap.memory_lock: true
+                    ES_JAVA_OPTS: -Xms512m -Xmx512m
+                    xpack.security.enabled: false
+                ports:
+                    - 9200:9200
+                options: >-
+                    --health-cmd="curl http://localhost:9200/_cluster/health"
+                    --health-interval=10s
+                    --health-timeout=5s
+                    --health-retries=10
+
+            rabbitmq:
+                image: rabbitmq:4.1-management
+                ports:
+                    - 5672:5672
+                    - 15672:15672
+
+            mailhog:
+                image: mailhog/mailhog
+                ports:
+                    - 8025:8025
+                    - 1025:1025
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.4'
+                  extensions: pdo, pdo_mysql, zip, xsl, gd, intl, opcache, exif, mbstring, redis, amqp
+
+            - name: Install Redis CLI
+              run: sudo apt-get install -y redis-tools
+
+            - name: Download build artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  name: build-files
+
+            - name: Restore executable permissions
+              run: chmod +x vendor/bin/*
+
+            - name: Generate JWT key pair
+              run: php bin/console lexik:jwt:generate-keypair --no-interaction --overwrite
+
+            - name: Wait for services to be ready
+              run: |
+                  echo "Waiting for MySQL to be ready..."
+                  while ! mysqladmin ping -h"127.0.0.1" -P"3306" -u"shop_user" -p"shop_password" --silent; do
+                    echo "MySQL not ready, waiting..."
+                    sleep 2
+                  done
+                  echo "MySQL is ready!"
+                  
+                  echo "Waiting for Redis to be ready..."
+                  while ! redis-cli -h 127.0.0.1 -p 6379 ping; do
+                    echo "Redis not ready, waiting..."
+                    sleep 2
+                  done
+                  echo "Redis is ready!"
+                  
+                  echo "Waiting for Elasticsearch to be ready..."
+                  while ! curl -s -f "http://127.0.0.1:9200/_cluster/health?wait_for_status=yellow&timeout=5s" > /dev/null; do
+                    echo "Elasticsearch not ready, waiting..."
+                    sleep 2
+                  done
+                  echo "Elasticsearch is ready!"
+
+            - name: Initialize test databases and grants
+              run: |
+                  mysql -h 127.0.0.1 -P 3306 -u root -proot_password <<SQL
+                  CREATE DATABASE IF NOT EXISTS \`shop_system_auth\`;
+                  CREATE DATABASE IF NOT EXISTS \`shop_system_auth_test\`;
+                  CREATE DATABASE IF NOT EXISTS \`shop_system_commerce\`;
+                  CREATE DATABASE IF NOT EXISTS \`shop_system_commerce_test\`;
+                  GRANT ALL PRIVILEGES ON *.* TO 'shop_user'@'%';
+                  FLUSH PRIVILEGES;
+                  SQL
+
+            - name: Run database migrations
+              run: php bin/console doctrine:migrations:migrate --no-interaction
+              env:
+                  MYSQL_HOST: 127.0.0.1
+                  DB_HOST: mysql
+                  DB_PORT: 3306
+                  DB_DATABASE: shop_system_auth
+                  DB_USERNAME: shop_user
+                  DB_PASSWORD: shop_password
+
+            - name: Create Elasticsearch indices
+              run: |
+                  php bin/console commerce:elasticsearch:create-product-index --env=test --no-interaction
+              env:
+                  MYSQL_HOST: 127.0.0.1
+                  DB_HOST: mysql
+                  DB_PORT: 3306
+                  DB_DATABASE: shop_system_auth
+                  DB_USERNAME: shop_user
+                  DB_PASSWORD: shop_password
+                  REDIS_URL: redis://127.0.0.1:6379/1
+                  ELASTICSEARCH_HOST: 127.0.0.1
+                  ELASTICSEARCH_PORT: 9200
+
+            - name: Run Integration Tests
+              run: vendor/bin/phpunit --group application
+              env:
+                  MYSQL_HOST: 127.0.0.1
+                  DB_HOST: mysql
+                  DB_PORT: 3306
+                  DB_DATABASE: shop_system_auth
+                  DB_USERNAME: shop_user
+                  DB_PASSWORD: shop_password
+                  REDIS_URL: redis://127.0.0.1:6379/1
+                  ELASTICSEARCH_HOST: 127.0.0.1
+                  ELASTICSEARCH_PORT: 9200
+
+
