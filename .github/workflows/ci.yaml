@@ -38,108 +38,28 @@ jobs:
                       composer.lock
                   retention-days: 1
 
-    common-minimal-setup:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - uses: shivammathur/setup-php@v2
-              with:
-                php-version: '8.4'
-            - uses: actions/download-artifact@v4
-              with:
-                name: build-files
-            - run: chmod +x vendor/bin/*
-
-    common-total-setup:
-        runs-on: ubuntu-latest
-        steps:
-            -   name: Checkout code
-                uses: actions/checkout@v4
-
-            -   name: Setup PHP
-                uses: shivammathur/setup-php@v2
-                with:
-                    php-version: '8.4'
-                    extensions: pdo, pdo_mysql, zip, xsl, gd, intl, opcache, exif, mbstring, redis, amqp
-
-            -   name: Install Redis CLI
-                run: sudo apt-get install -y redis-tools
-
-            -   name: Download build artifacts
-                uses: actions/download-artifact@v4
-                with:
-                    name: build-files
-
-            -   name: Restore executable permissions
-                run: chmod +x vendor/bin/*
-
-            -   name: Generate JWT key pair
-                run: php bin/console lexik:jwt:generate-keypair --no-interaction --overwrite
-
-            -   name: Wait for services to be ready
-                run: |
-                    echo "Waiting for MySQL to be ready..."
-                    while ! mysqladmin ping -h"127.0.0.1" -P"3306" -u"shop_user" -p"shop_password" --silent; do
-                      echo "MySQL not ready, waiting..."
-                      sleep 2
-                    done
-                    echo "MySQL is ready!"
-
-                    echo "Waiting for Redis to be ready..."
-                    while ! redis-cli -h 127.0.0.1 -p 6379 ping; do
-                      echo "Redis not ready, waiting..."
-                      sleep 2
-                    done
-                    echo "Redis is ready!"
-
-                    echo "Waiting for Elasticsearch to be ready..."
-                    while ! curl -s -f "http://127.0.0.1:9200/_cluster/health?wait_for_status=yellow&timeout=5s" > /dev/null; do
-                      echo "Elasticsearch not ready, waiting..."
-                      sleep 2
-                    done
-                    echo "Elasticsearch is ready!"
-
-            -   name: Initialize test databases and grants
-                run: |
-                    mysql -h 127.0.0.1 -P 3306 -u root -proot_password <<SQL
-                    CREATE DATABASE IF NOT EXISTS \`shop_system_auth\`;
-                    CREATE DATABASE IF NOT EXISTS \`shop_system_auth_test\`;
-                    CREATE DATABASE IF NOT EXISTS \`shop_system_commerce\`;
-                    CREATE DATABASE IF NOT EXISTS \`shop_system_commerce_test\`;
-                    GRANT ALL PRIVILEGES ON *.* TO 'shop_user'@'%';
-                    FLUSH PRIVILEGES;
-                    SQL
-
-            -   name: Run database migrations
-                run: |
-                    set -a
-                    source .github/.env.pipeline
-                    set +a
-                    php bin/console doctrine:migrations:migrate --no-interaction
-
-            -   name: Create Elasticsearch indices
-                run: |
-                    set -a
-                    source .github/.env.pipeline
-                    set +a
-                    php bin/console commerce:elasticsearch:create-product-index --env=test --no-interaction
-
     coding-standards:
         runs-on: ubuntu-latest
         needs: build
         steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
             - name: Minimal setup
-              uses: common-minimal-setup
+              uses: ./.github/actions/common-minimal-setup
 
             - name: Run PHP_CodeSniffer
-              run: vendor/bin/coding-standards
+              run: vendor/bin/phpcs
 
     architecture:
         runs-on: ubuntu-latest
         needs: build
         steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
             - name: Minimal setup
-              uses: common-minimal-setup
+              uses: ./.github/actions/common-minimal-setup
 
             - name: Run Deptrac
               run: vendor/bin/deptrac analyse
@@ -148,8 +68,11 @@ jobs:
         runs-on: ubuntu-latest
         needs: build
         steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
             - name: Minimal setup
-              uses: common-minimal-setup
+              uses: ./.github/actions/common-minimal-setup
 
             - name: Run PHPStan
               run: vendor/bin/phpstan analyse
@@ -158,8 +81,11 @@ jobs:
         runs-on: ubuntu-latest
         needs: build
         steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
             - name: Minimal setup
-              uses: common-minimal-setup
+              uses: ./.github/actions/common-minimal-setup
 
             - name: Run Unit Tests
               run: vendor/bin/phpunit --group unit
@@ -221,8 +147,11 @@ jobs:
                     - 1025:1025
 
         steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
             - name: Total setup
-              uses: common-total-setup
+              uses: ./.github/actions/common-total-setup
 
             - name: Run Integration Tests
               run: |
@@ -288,8 +217,11 @@ jobs:
                     - 1025:1025
 
         steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
             - name: Total setup
-              uses: common-total-setup
+              uses: ./.github/actions/common-total-setup
 
             - name: Run Integration Tests
               run: |

@@ -1,0 +1,85 @@
+name: "Common Total Setup"
+description: >
+    Performs the initial setup for PHP-based CI jobs:
+    installs PHP with required extensions,
+    installs Redis CLI, downloads build artifacts, restores permissions,
+    generates JWT keys, waits for MySQL/Redis/Elasticsearch to be healthy,
+    initializes test databases and grants, runs migrations,
+    and creates Elasticsearch indices.
+runs:
+    using: "composite"
+    steps:
+        -   name: Setup PHP
+            uses: shivammathur/setup-php@v2
+            with:
+                php-version: '8.4'
+                extensions: pdo, pdo_mysql, zip, xsl, gd, intl, opcache, exif, mbstring, redis, amqp
+
+        -   name: Install Redis CLI
+            shell: bash
+            run: sudo apt-get install -y redis-tools
+
+        -   name: Download build artifacts
+            uses: actions/download-artifact@v4
+            with:
+                name: build-files
+
+        -   name: Restore executable permissions
+            shell: bash
+            run: chmod +x vendor/bin/*
+
+        -   name: Generate JWT key pair
+            shell: bash
+            run: php bin/console lexik:jwt:generate-keypair --no-interaction --overwrite
+
+        -   name: Wait for services to be ready
+            shell: bash
+            run: |
+                echo "Waiting for MySQL to be ready..."
+                while ! mysqladmin ping -h"127.0.0.1" -P"3306" -u"shop_user" -p"shop_password" --silent; do
+                  echo "MySQL not ready, waiting..."
+                  sleep 2
+                done
+                echo "MySQL is ready!"
+                
+                echo "Waiting for Redis to be ready..."
+                while ! redis-cli -h 127.0.0.1 -p 6379 ping; do
+                  echo "Redis not ready, waiting..."
+                  sleep 2
+                done
+                echo "Redis is ready!"
+                
+                echo "Waiting for Elasticsearch to be ready..."
+                while ! curl -s -f "http://127.0.0.1:9200/_cluster/health?wait_for_status=yellow&timeout=5s" > /dev/null; do
+                  echo "Elasticsearch not ready, waiting..."
+                  sleep 2
+                done
+                echo "Elasticsearch is ready!"
+
+        -   name: Initialize test databases and grants
+            shell: bash
+            run: |
+                mysql -h 127.0.0.1 -P 3306 -u root -proot_password <<SQL
+                CREATE DATABASE IF NOT EXISTS \`shop_system_auth\`;
+                CREATE DATABASE IF NOT EXISTS \`shop_system_auth_test\`;
+                CREATE DATABASE IF NOT EXISTS \`shop_system_commerce\`;
+                CREATE DATABASE IF NOT EXISTS \`shop_system_commerce_test\`;
+                GRANT ALL PRIVILEGES ON *.* TO 'shop_user'@'%';
+                FLUSH PRIVILEGES;
+                SQL
+
+        -   name: Run database migrations
+            shell: bash
+            run: |
+                set -a
+                source .github/.env.pipeline
+                set +a
+                php bin/console doctrine:migrations:migrate --no-interaction
+
+        -   name: Create Elasticsearch indices
+            shell: bash
+            run: |
+                set -a
+                source .github/.env.pipeline
+                set +a
+                php bin/console commerce:elasticsearch:create-product-index --env=test --no-interaction
