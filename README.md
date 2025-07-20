@@ -190,5 +190,27 @@ class ProductIndexingListener
 
 ### Run tests
 ```bash
-./bin/tests.sh
+docker compose exec shop-system-backend ./bin/tests.sh
+```
+
+### Continuous Integration
+
+Existing CI pipeline ensures code quality and reliability through automated testing and analysis.
+
+![Continuous Integration Pipeline](docs/images/continuous-integration.png)
+
+### Pipeline Architecture
+
+```
+Build Job
+├── Install PHP
+├── Install Composer dependencies
+└── Upload build artifacts
+    │
+    ├── Coding Standards
+    ├── Architecture Analysis  
+    ├── Static Analysis
+    ├── Unit Tests
+    ├── Integration Tests (with services)
+    └── Application Tests (with services)
 ```
