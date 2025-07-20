@@ -72,7 +72,7 @@ runs:
             shell: bash
             run: |
                 set -a
-                source .github/.env.pipeline
+                source .env.pipeline
                 set +a
                 php bin/console doctrine:migrations:migrate --no-interaction
 
@@ -80,6 +80,6 @@ runs:
             shell: bash
             run: |
                 set -a
-                source .github/.env.pipeline
+                source .env.pipeline
                 set +a
                 php bin/console commerce:elasticsearch:create-product-index --env=test --no-interaction

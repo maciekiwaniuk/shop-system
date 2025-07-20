@@ -156,7 +156,7 @@ jobs:
             - name: Run Integration Tests
               run: |
                   set -a
-                  source .github/.env.pipeline
+                  source .env.pipeline
                   set +a
                   vendor/bin/phpunit --group integration
 
@@ -226,6 +226,6 @@ jobs:
             - name: Run Integration Tests
               run: |
                   set -a
-                  source .github/.env.pipeline
+                  source .env.pipeline
                   set +a
                   vendor/bin/phpunit --group application
