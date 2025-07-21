@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata: 
+    name: rabbitmq
+    namespace: shop-system
+spec:
+    serviceName: rabbitmq
+    replicas: 1
+    selector: { matchLabels: { app: rabbitmq } }
+    template:
+        metadata: { labels: { app: rabbitmq } }
+        spec:
+            containers:
+                - name: rabbitmq
+                  image: rabbitmq:4.1-management
+                  ports:
+                      - containerPort: 5672
+                      - containerPort: 15672
+                  volumeMounts:
+                      - mountPath: /var/lib/rabbitmq
+                        name: rabbit-storage
+            volumes:
+                - name: rabbit-storage
+                  persistentVolumeClaim:
+                      claimName: rabbitmq-pvc
+---
+apiVersion: v1
+kind: Service
+metadata: 
+    name: rabbitmq
+    namespace: shop-system
+spec:
+    ports:
+        - name: amqp
+          port: 5672
+        - name: management
+          port: 15672
+    selector: { app: rabbitmq }

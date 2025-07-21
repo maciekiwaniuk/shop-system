@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: shop-backend
+    namespace: shop-system
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: shop-backend
+    template:
+        metadata:
+            labels:
+                app: shop-backend
+        spec:
+            containers:
+                - name: backend
+                  image: maciekiwaniuk/shop-system-backend:latest
+                  env:
+                      - name: DATABASE_URL
+                        value: mysql://shop_user:shop_password@mysql:3306/shop_system_auth
+                      - name: MESSENGER_TRANSPORT_DSN
+                        value: amqp://guest:guest@rabbitmq:5672
+                  ports:
+                      - containerPort: 9000
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: shop-backend
+    namespace: shop-system
+spec:
+    selector:
+        app: shop-backend
+    ports:
+        - protocol: TCP
+          port: 9000
+          targetPort: 9000

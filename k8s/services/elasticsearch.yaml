@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: elasticsearch
+    namespace: shop-system
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: elasticsearch
+    template:
+        metadata:
+            labels:
+                app: elasticsearch
+        spec:
+            containers:
+                - name: elasticsearch
+                  image: docker.elastic.co/elasticsearch/elasticsearch:8.18.0
+                  ports:
+                      - containerPort: 9200
+                  env:
+                      - name: discovery.type
+                        value: single-node
+                      - name: bootstrap.memory_lock
+                        value: "true"
+                      - name: ES_JAVA_OPTS
+                        value: "-Xms512m -Xmx512m"
+                      - name: xpack.security.enabled
+                        value: "false"
+                  resources:
+                      requests:
+                          memory: 1Gi
+                          cpu: "0.5"
+                      limits:
+                          memory: 1Gi
+                          cpu: "1"
+                  volumeMounts:
+                      - name: elasticsearch-data
+                        mountPath: /usr/share/elasticsearch/data
+                  securityContext:
+                      capabilities:
+                          add: ["IPC_LOCK"]
+                      runAsUser: 1000
+                      runAsGroup: 1000
+            volumes:
+                - name: elasticsearch-data
+                  persistentVolumeClaim:
+                      claimName: elasticsearch-pvc
+---
+apiVersion: v1
+kind: Service
+metadata: 
+    name: elasticsearch
+    namespace: shop-system
+spec:
+    ports: [{ port: 9200 }]
+    selector: { app: elasticsearch }
