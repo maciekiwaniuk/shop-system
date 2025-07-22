@@ -21,7 +21,7 @@ data:
             location ~ \.php$ {
                 try_files $uri =404;
                 fastcgi_split_path_info ^(.+\.php)(/.+)$;
-                fastcgi_pass 127.0.0.1:9000;
+                fastcgi_pass shop-backend.shop-system.svc.cluster.local:9000
                 fastcgi_read_timeout 3600;
                 fastcgi_index index.php;
                 include fastcgi_params;
@@ -86,4 +86,4 @@ spec:
           targetPort: 80
           nodePort: 30080
     selector:
-        app: shop-nginx 
+        app: shop-nginx
