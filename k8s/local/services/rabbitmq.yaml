@@ -1,14 +1,18 @@
 apiVersion: apps/v1
 kind: StatefulSet
-metadata: 
+metadata:
     name: rabbitmq
     namespace: shop-system
 spec:
     serviceName: rabbitmq
     replicas: 1
-    selector: { matchLabels: { app: rabbitmq } }
+    selector:
+        matchLabels:
+            app: rabbitmq
     template:
-        metadata: { labels: { app: rabbitmq } }
+        metadata:
+            labels:
+                app: rabbitmq
         spec:
             containers:
                 - name: rabbitmq
@@ -26,13 +30,18 @@ spec:
 ---
 apiVersion: v1
 kind: Service
-metadata: 
+metadata:
     name: rabbitmq
     namespace: shop-system
 spec:
+    type: NodePort
+    selector:
+        app: rabbitmq
     ports:
         - name: amqp
           port: 5672
+          targetPort: 5672
         - name: management
           port: 15672
-    selector: { app: rabbitmq }
+          targetPort: 15672
+          nodePort: 30672

@@ -3,32 +3,32 @@ set -e
 
 echo "🚀 Deploying Shop System Backend to Kubernetes..."
 
-# Check if minikube is running
 if ! minikube status | grep -q "Running"; then
     echo "❌ Minikube is not running. Starting minikube..."
     minikube start --driver=docker
     minikube addons enable storage-provisioner
 fi
 
-# Get minikube IP
 MINIKUBE_IP=$(minikube ip)
 echo "📍 Minikube IP: $MINIKUBE_IP"
 
-# Create namespace
 echo "📦 Creating namespace..."
-kubectl apply -f ../k8s/namespace.yaml
+kubectl apply -f ../k8s/local/namespace.yaml
 
-# Deploy storage first
 echo "💾 Deploying storage..."
-kubectl apply -f ../k8s/storage/
+kubectl apply -f ../k8s/local/storage/
 
-# Deploy services
+echo "🔧 Deploying configmaps..."
+kubectl apply -f ../k8s/local/configmaps/
+
+echo "🔧 Deploying secrets..."
+kubectl apply -f ../k8s/local/secrets/
+
 echo "🔧 Deploying services..."
-kubectl apply -f ../k8s/services/
+kubectl apply -f ../k8s/local/services/
 
-# Deploy applications
 echo "🚀 Deploying applications..."
-kubectl apply -f ../k8s/app/
+kubectl apply -f ../k8s/local/app/
 
 echo "✅ Deployment completed!"
 echo ""

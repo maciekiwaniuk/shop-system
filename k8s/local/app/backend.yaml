@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: shop-backend
+    namespace: shop-system
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: shop-backend
+    template:
+        metadata:
+            labels:
+                app: shop-backend
+        spec:
+            initContainers:
+                - name: setup-code
+                  image: maciekiwaniuk/shop-system-backend:latest
+                  command: ["cp", "-r",  "/var/www/", "/app"]
+                  volumeMounts:
+                      - name: app-code
+                        mountPath: /app
+            containers:
+                - name: backend
+                  image: maciekiwaniuk/shop-system-backend:latest
+                  ports:
+                      - containerPort: 9000
+                  envFrom:
+                      - configMapRef: { name: shop-backend-config }
+                      - secretRef:    { name: shop-backend-secrets }
+                  volumeMounts:
+                      - name: app-code
+                        mountPath: /app
+                  resources:
+                      requests: { cpu: "200m", memory: "256Mi" }
+                      limits:   { cpu: "500m", memory: "512Mi" }
+            volumes:
+                - name: app-code
+                  emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: shop-backend
+    namespace: shop-system
+spec:
+    type: ClusterIP
+    selector:
+        app: shop-backend
+    ports:
+        - protocol: TCP
+          port: 9000
+          targetPort: 9000

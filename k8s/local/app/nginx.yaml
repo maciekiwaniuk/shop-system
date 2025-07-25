@@ -21,7 +21,7 @@ data:
             location ~ \.php$ {
                 try_files $uri =404;
                 fastcgi_split_path_info ^(.+\.php)(/.+)$;
-                fastcgi_pass shop-backend.shop-system.svc.cluster.local:9000
+                fastcgi_pass shop-backend:9000;
                 fastcgi_read_timeout 3600;
                 fastcgi_index index.php;
                 include fastcgi_params;
@@ -49,6 +49,12 @@ spec:
             labels:
                 app: shop-nginx
         spec:
+            volumes: # Add this section
+                - name: app-code
+                  emptyDir: { }
+                - name: nginx-config
+                  configMap:
+                        name: nginx-config
             containers:
                 - name: nginx
                   image: nginx:1.27.2-alpine
@@ -67,12 +73,7 @@ spec:
                       limits:
                           memory: "128Mi"
                           cpu: "100m"
-            volumes:
-                - name: nginx-config
-                  configMap:
-                      name: nginx-config
-                - name: app-code
-                  emptyDir: {}
+
 ---
 apiVersion: v1
 kind: Service

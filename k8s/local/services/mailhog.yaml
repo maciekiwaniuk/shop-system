@@ -18,13 +18,19 @@ spec:
 ---
 apiVersion: v1
 kind: Service
-metadata: 
+metadata:
     name: mailhog
     namespace: shop-system
 spec:
+    type: NodePort
+    selector:
+        app: mailhog
     ports:
         - name: ui
           port: 8025
+          targetPort: 8025
+          nodePort: 30225
         - name: smtp
           port: 1025
-    selector: { app: mailhog }
+          targetPort: 1025
+          nodePort: 30226
