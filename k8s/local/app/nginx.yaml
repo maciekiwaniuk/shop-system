@@ -21,7 +21,7 @@ data:
             location ~ \.php$ {
                 try_files $uri =404;
                 fastcgi_split_path_info ^(.+\.php)(/.+)$;
-                fastcgi_pass shop-backend:9000;
+                fastcgi_pass backend:9000;
                 fastcgi_read_timeout 3600;
                 fastcgi_index index.php;
                 include fastcgi_params;
@@ -37,17 +37,17 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: shop-nginx
+    name: nginx
     namespace: shop-system
 spec:
     replicas: 1
     selector:
         matchLabels:
-            app: shop-nginx
+            app: nginx
     template:
         metadata:
             labels:
-                app: shop-nginx
+                app: nginx
         spec:
             initContainers:
                 - name: setup-code
@@ -77,7 +77,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-    name: shop-nginx
+    name: nginx
     namespace: shop-system
 spec:
     type: NodePort
@@ -86,4 +86,4 @@ spec:
           targetPort: 80
           nodePort: 30080
     selector:
-        app: shop-nginx
+        app: nginx

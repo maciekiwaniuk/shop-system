@@ -34,8 +34,8 @@ spec:
                   image: maciekiwaniuk/shop-system-backend:latest
                   command: ["php", "/var/www/bin/console", "messenger:consume", "async", "--memory-limit=128M", "--time-limit=3600", "-vv"]
                   envFrom:
-                      - configMapRef: { name: shop-backend-config }
-                      - secretRef:    { name: shop-backend-secrets }
+                      - configMapRef: { name: backend-config }
+                      - secretRef:    { name: backend-secrets }
                   volumeMounts:
                       - name: app-code
                         mountPath: /var/www

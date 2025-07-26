@@ -3,7 +3,7 @@ set -e
 
 echo "Initialization of backend"
 
-BACKEND_POD=$(kubectl get pods -n shop-system -l app=shop-backend -o jsonpath='{.items[0].metadata.name}')
+BACKEND_POD=$(kubectl get pods -n shop-system -l app=backend -o jsonpath='{.items[0].metadata.name}')
 kubectl wait --for=condition=ready pod/$BACKEND_POD -n shop-system --timeout=300s
 
 kubectl exec -it $BACKEND_POD -n shop-system -- composer install --optimize-autoloader --no-interaction --no-progress

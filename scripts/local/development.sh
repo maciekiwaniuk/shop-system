@@ -5,3 +5,5 @@ if ! minikube status | grep -q "Running"; then
 else
     echo "Minikube is already working"
 fi
+
+./display-access.sh

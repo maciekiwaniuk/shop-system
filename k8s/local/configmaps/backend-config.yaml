@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-    name: shop-backend-config
+    name: backend-config
     namespace: shop-system
 data:
     APP_ENV: "dev"

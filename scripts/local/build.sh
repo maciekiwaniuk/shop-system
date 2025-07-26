@@ -36,17 +36,4 @@ sleep 10
 echo "Running scripts..."
 ./init-mysql.sh
 ./init-backend.sh
-
-echo "✅ Deployment completed!"
-echo ""
-echo "🌐 Access your application:"
-echo "   Backend API: http://$MINIKUBE_IP:30080"
-echo "   API Endpoints: http://$MINIKUBE_IP:30080/api/v1/"
-echo "   MailHog: http://$MINIKUBE_IP:30225"
-echo "   RabbitMQ Management: http://$MINIKUBE_IP:30672"
-echo ""
-echo "📊 Check deployment status:"
-echo "   kubectl get pods -n shop-system"
-echo ""
-echo "🧪 Test the API:"
-echo "   curl http://$MINIKUBE_IP:30080/api/v1/register"
+./display-access.sh
