@@ -49,6 +49,13 @@ spec:
             labels:
                 app: shop-nginx
         spec:
+            initContainers:
+                - name: setup-code
+                  image: maciekiwaniuk/shop-system-backend:latest
+                  command: [ "cp", "-a",  "/var/www/.", "/app" ]
+                  volumeMounts:
+                     -   name: app-code
+                         mountPath: /app
             volumes:
                 - name: app-code
                   emptyDir: {}

@@ -31,9 +31,14 @@ spec:
 ---
 apiVersion: v1
 kind: Service
-metadata: 
+metadata:
     name: mysql
     namespace: shop-system
 spec:
-    ports: [{ port: 3306 }]
+    type: NodePort
     selector: { app: mysql }
+    ports:
+        - name: mysql
+          port: 3306
+          targetPort: 3306
+          nodePort: 30306

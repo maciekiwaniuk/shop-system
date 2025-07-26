@@ -20,6 +20,9 @@ spec:
                   volumeMounts:
                       - name: app-code
                         mountPath: /app
+            volumes:
+                -   name: app-code
+                    emptyDir: { }
             containers:
                 - name: backend
                   image: maciekiwaniuk/shop-system-backend:latest
@@ -31,10 +34,6 @@ spec:
                   volumeMounts:
                       - name: app-code
                         mountPath: /var/www
-            volumes:
-                - name: app-code
-                  emptyDir: {}
-
 ---
 apiVersion: v1
 kind: Service
