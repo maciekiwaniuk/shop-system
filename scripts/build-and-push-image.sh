@@ -18,7 +18,7 @@ echo "Logging in to Docker Hub as ${DOCKERHUB_USERNAME}"
 echo "${DOCKERHUB_PASSWORD}" | docker login --username "${DOCKERHUB_USERNAME}" --password-stdin
 
 echo "Building backend image: ${FULL_BACKEND_IMAGE}"
-docker build -t "${FULL_BACKEND_IMAGE}" -f ../Dockerfile .
+(cd .. && docker build -t "${FULL_BACKEND_IMAGE}" -f Dockerfile .)
 
 echo "Pushing backend image: ${FULL_BACKEND_IMAGE}"
 docker push "${FULL_BACKEND_IMAGE}"
