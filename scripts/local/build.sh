@@ -3,11 +3,7 @@ set -e
 
 echo "Deploying system to kubernetes..."
 
-if ! minikube status | grep -q "Running"; then
-    echo "Minikube is not working. Starting minikube..."
-    minikube start --driver=docker
-    minikube addons enable storage-provisioner
-fi
+./development.sh
 
 MINIKUBE_IP=$(minikube ip)
 echo "Minikube IP: $MINIKUBE_IP"
