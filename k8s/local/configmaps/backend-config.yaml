@@ -3,6 +3,10 @@ kind: ConfigMap
 metadata:
     name: backend-config
     namespace: shop-system
+    labels:
+        app.kubernetes.io/name: shop-system
+        app.kubernetes.io/component: backend
+        app.kubernetes.io/instance: local
 data:
     APP_ENV: "dev"
     APP_SECRET: "d657ff74809d228235168b242d0269aa"

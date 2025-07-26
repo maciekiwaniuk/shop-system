@@ -12,7 +12,7 @@ fi
 echo "MYSQL pod is running"
 
 echo "Waiting for mysql pod to be ready for script"
-MYSQL_POD=$(kubectl get pods -n shop-system -l app=mysql -o jsonpath='{.items[0].metadata.name}')
+MYSQL_POD=$(kubectl get pods -n shop-system -l app.kubernetes.io/component=mysql -o jsonpath='{.items[0].metadata.name}')
 while ! kubectl exec -it $MYSQL_POD -n shop-system -- mysqladmin ping -h"127.0.0.1" --silent; do
     sleep 1
 done

@@ -3,11 +3,19 @@ kind: Deployment
 metadata: 
     name: mailhog
     namespace: shop-system
+    labels:
+        app.kubernetes.io/name: shop-system
+        app.kubernetes.io/component: mailhog
+        app.kubernetes.io/instance: local
 spec:
     replicas: 1
-    selector: { matchLabels: { app: mailhog } }
+    selector: { matchLabels: { app.kubernetes.io/component: mailhog } }
     template:
-        metadata: { labels: { app: mailhog } }
+        metadata: 
+            labels: 
+                app.kubernetes.io/name: shop-system
+                app.kubernetes.io/component: mailhog
+                app.kubernetes.io/instance: local
         spec:
             containers:
                 - name: mailhog
@@ -21,10 +29,14 @@ kind: Service
 metadata:
     name: mailhog
     namespace: shop-system
+    labels:
+        app.kubernetes.io/name: shop-system
+        app.kubernetes.io/component: mailhog
+        app.kubernetes.io/instance: local
 spec:
     type: NodePort
     selector:
-        app: mailhog
+        app.kubernetes.io/component: mailhog
     ports:
         - name: ui
           port: 8025

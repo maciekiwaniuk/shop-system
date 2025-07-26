@@ -3,6 +3,10 @@ kind: ConfigMap
 metadata:
     name: nginx-config
     namespace: shop-system
+    labels:
+        app.kubernetes.io/name: shop-system
+        app.kubernetes.io/component: nginx
+        app.kubernetes.io/instance: local
 data:
     default.conf: |
         server {
@@ -39,15 +43,21 @@ kind: Deployment
 metadata:
     name: nginx
     namespace: shop-system
+    labels:
+        app.kubernetes.io/name: shop-system
+        app.kubernetes.io/component: nginx
+        app.kubernetes.io/instance: local
 spec:
     replicas: 1
     selector:
         matchLabels:
-            app: nginx
+            app.kubernetes.io/component: nginx
     template:
         metadata:
             labels:
-                app: nginx
+                app.kubernetes.io/name: shop-system
+                app.kubernetes.io/component: nginx
+                app.kubernetes.io/instance: local
         spec:
             initContainers:
                 - name: setup-code
@@ -79,6 +89,10 @@ kind: Service
 metadata:
     name: nginx
     namespace: shop-system
+    labels:
+        app.kubernetes.io/name: shop-system
+        app.kubernetes.io/component: nginx
+        app.kubernetes.io/instance: local
 spec:
     type: NodePort
     ports:
@@ -86,4 +100,4 @@ spec:
           targetPort: 80
           nodePort: 30080
     selector:
-        app: nginx
+        app.kubernetes.io/component: nginx

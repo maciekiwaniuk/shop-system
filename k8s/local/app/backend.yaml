@@ -3,15 +3,21 @@ kind: Deployment
 metadata:
     name: backend
     namespace: shop-system
+    labels:
+        app.kubernetes.io/name: shop-system
+        app.kubernetes.io/component: backend
+        app.kubernetes.io/instance: local
 spec:
     replicas: 1
     selector:
         matchLabels:
-            app: backend
+            app.kubernetes.io/component: backend
     template:
         metadata:
             labels:
-                app: backend
+                app.kubernetes.io/name: shop-system
+                app.kubernetes.io/component: backend
+                app.kubernetes.io/instance: local
         spec:
             initContainers:
                 - name: setup-code
@@ -40,10 +46,14 @@ kind: Service
 metadata:
     name: backend
     namespace: shop-system
+    labels:
+        app.kubernetes.io/name: shop-system
+        app.kubernetes.io/component: backend
+        app.kubernetes.io/instance: local
 spec:
     type: ClusterIP
     selector:
-        app: backend
+        app.kubernetes.io/component: backend
     ports:
         - protocol: TCP
           port: 9000
