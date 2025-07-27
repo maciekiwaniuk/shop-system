@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 echo '######## Running codeSniffer tests ########'
 php vendor/bin/phpcs
