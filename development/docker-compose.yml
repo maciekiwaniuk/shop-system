@@ -69,6 +69,17 @@ services:
             - shop-system-rabbitmq
             - shop-system-mailhog
 
+    shop-system-queue:
+        container_name: shop-system-queue
+        build:
+            context: ./docker/php
+        restart: always
+        volumes:
+            - ../:/var/www:cached
+        depends_on:
+            - shop-system-backend
+        command: sh -c "sleep 10 && php bin/console messenger:consume async -vv"
+
     shop-system-frontend:
         container_name: shop-system-frontend
         image: node:23-alpine
