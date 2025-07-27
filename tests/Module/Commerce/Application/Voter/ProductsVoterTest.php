@@ -163,4 +163,20 @@ class ProductsVoterTest extends AbstractUnitTestCase
             ),
         );
     }
+
+    #[Test]
+    public function it_should_allow_client_to_search_products(): void
+    {
+        $this->assertTrue(
+            $this->useMethod(
+                object: $this->clientVoter,
+                method: 'voteOnAttribute',
+                args: [
+                    ProductsVoter::SEARCH,
+                    null,
+                    $this->token,
+                ],
+            ),
+        );
+    }
 }

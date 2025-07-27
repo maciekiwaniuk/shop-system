@@ -191,4 +191,29 @@ class OrdersVoterTest extends AbstractUnitTestCase
             ),
         );
     }
+
+    #[Test]
+    public function it_should_allow_admin_to_show_any_order(): void
+    {
+        $clientTwo = $this->createMock(Client::class);
+        $clientTwo
+            ->method('getId')
+            ->willReturn($this->clientTwoId);
+        $order = $this->createMock(Order::class);
+        $order
+            ->method('getClient')
+            ->willReturn($clientTwo);
+
+        $this->assertTrue(
+            $this->useMethod(
+                object: $this->adminVoter,
+                method: 'voteOnAttribute',
+                args: [
+                    OrdersVoter::SHOW,
+                    $order,
+                    $this->token,
+                ],
+            ),
+        );
+    }
 }

@@ -9,4 +9,6 @@ enum OrderStatus: string
     case WAITING_FOR_PAYMENT = 'waiting_for_payment';
     case IN_DELIVERY = 'in_delivery';
     case DELIVERED = 'delivered';
+    case PAID = 'paid';
+    case CANCELLED = 'cancelled';
 }
