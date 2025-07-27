@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: backend-config
+    namespace: shop-system-prod
+    labels:
+        app.kubernetes.io/name: shop-system
+        app.kubernetes.io/component: backend
+        app.kubernetes.io/instance: prod
+data:
+    APP_ENV: "prod"
+    COMPOSE_PROJECT_NAME: "shop_system"
+    MYSQL_HOST: "mysql"
+    AUTH_MYSQL_DATABASE: "shop_system_auth"
+    COMMERCE_MYSQL_DATABASE: "shop_system_commerce"
+    REDIS_URL: ""
+    MESSENGER_TRANSPORT_DSN: ""
+    JWT_TOKEN_TTL: "3600"
+    MAILER_DSN: ""
+    CORS_ALLOW_ORIGIN: ""
+    ELASTICSEARCH_HOST: ""
+    ELASTICSEARCH_PORT: ""
+    ELASTICSEARCH_SCHEME: "http"

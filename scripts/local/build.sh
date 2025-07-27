@@ -3,7 +3,7 @@ set -e
 
 echo "Deploying system to kubernetes..."
 
-./development.sh
+./run.sh
 
 MINIKUBE_IP=$(minikube ip)
 echo "Minikube IP: $MINIKUBE_IP"
@@ -16,8 +16,8 @@ kubectl apply -f namespace.yaml
 echo "Deploying storage..."
 kubectl apply -f storage/
 
-echo "Deploying configmaps..."
-kubectl apply -f configmaps/
+echo "Deploying config maps..."
+kubectl apply -f config-maps/
 
 echo "Deploying secrets..."
 kubectl apply -f secrets/
