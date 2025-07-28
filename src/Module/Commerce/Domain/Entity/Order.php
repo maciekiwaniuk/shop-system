@@ -48,11 +48,11 @@ class Order
     #[Groups(['default'])]
     private Collection $ordersStatusUpdates;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(name: 'completed_at', nullable: true)]
     #[Groups(['default'])]
     private ?DateTimeImmutable $completedAt;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(name: 'created_at', length: 255)]
     #[Groups(['default'])]
     private readonly DateTimeImmutable $createdAt;
 

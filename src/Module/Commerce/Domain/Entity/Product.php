@@ -39,15 +39,15 @@ class Product
     #[Groups(['default'])]
     private float $price;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(name: 'deleted_at', length: 255, nullable: true)]
     #[Groups(['product_deleted_at'])]
     private ?DateTimeImmutable $deletedAt = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(name: 'updated_at', length: 255)]
     #[Groups(['default'])]
     private DateTimeImmutable $updatedAt;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(name: 'created_at', length: 255)]
     #[Groups(['default'])]
     private readonly DateTimeImmutable $createdAt;
 

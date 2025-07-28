@@ -30,11 +30,11 @@ class OrderProduct
     #[Groups(['default'])]
     private readonly Product $product;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(name: 'product_quantity', length: 255)]
     #[Groups(['default'])]
     private readonly int $productQuantity;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(name: 'product_price_per_piece', length: 255)]
     #[Groups(['default'])]
     private readonly float $productPricePerPiece;
 

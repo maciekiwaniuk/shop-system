@@ -28,7 +28,7 @@ class OrderStatusUpdate
     #[Groups(['default'])]
     private readonly OrderStatus $status;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(name: 'created_at', length: 255)]
     #[Groups(['default'])]
     private readonly DateTimeImmutable $createdAt;
 

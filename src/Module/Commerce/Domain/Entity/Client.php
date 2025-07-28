@@ -38,11 +38,11 @@ class Client
     #[Groups(['default'])]
     private string $surname;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(name: 'updated_at', length: 255)]
     #[Groups(['default'])]
     private DateTimeImmutable $updatedAt;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(name: 'created_at', length: 255)]
     #[Groups(['default'])]
     private readonly DateTimeImmutable $createdAt;
 

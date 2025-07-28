@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DoctrineMigrations;
+namespace CommerceDoctrineMigrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
@@ -22,7 +22,7 @@ final class Version20241208191817 extends AbstractMigration
     public function up(Schema $schema): void
     {
         foreach (self::DATABASE_MAPPER as $env => $databaseSufix) {
-            $this->write("-------- MIGRATING shop_system_commerce{$databaseSufix}");
+            $this->write("-------- MIGRATING #1 shop_system_commerce{$databaseSufix}");
 
             $this->addSql("CREATE TABLE `shop_system_commerce{$databaseSufix}`.`client` (
               id VARCHAR(255) NOT NULL,

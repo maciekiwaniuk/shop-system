@@ -52,11 +52,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['default'])]
     private array $roles;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(name: 'updated_at', length: 255)]
     #[Groups(['default'])]
     private DateTimeImmutable $updatedAt;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(name: 'created_at', length: 255)]
     #[Groups(['default'])]
     private readonly DateTimeImmutable $createdAt;
 
