@@ -69,6 +69,19 @@ services:
             - shop-system-rabbitmq
             - shop-system-mailhog
 
+    shop-system-payments:
+        container_name: shop-system-payments
+        build:
+            context: ../microservices/payments
+            dockerfile: ../../development/docker/golang/Dockerfile
+        restart: always
+        ports:
+            - "8080:8080"
+        volumes:
+            - ../microservices/payments/:/var/www/microservices/payments/:cached
+        depends_on:
+            - shop-system-backend
+
     shop-system-queue:
         container_name: shop-system-queue
         build:
