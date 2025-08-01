@@ -1,4 +1,6 @@
-FROM golang:1.24-alpine AS builder
+FROM golang:1.24-alpine
+
+RUN apk --no-cache add ca-certificates
 
 WORKDIR /app
 
@@ -8,15 +10,9 @@ RUN go mod download
 
 COPY . .
 
+RUN go mod tidy
+
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags='-w -s' -o main ./cmd/main.go
-
-FROM alpine:3.20
-
-RUN apk --no-cache add ca-certificates
-
-WORKDIR /app
-
-COPY --from=builder /app/main .
 
 RUN chmod +x main
 

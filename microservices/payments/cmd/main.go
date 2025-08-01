@@ -7,7 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 )
 
 func main() {
@@ -22,8 +22,11 @@ func main() {
 	}
 
 	// Initialize logger
-	logger := logrus.New()
-	logger.SetFormatter(&logrus.JSONFormatter{})
+	logger, err := zap.NewProduction()
+	if err != nil {
+		log.Fatalf("Failed to initialize logger: %v", err)
+	}
+	defer logger.Sync()
 
 	// Create Gin router
 	r := gin.Default()
@@ -56,8 +59,8 @@ func main() {
 		port = "8080"
 	}
 
-	logger.Infof("Starting payments service on port %s", port)
+	logger.Info("Starting payments service", zap.String("port", port))
 	if err := r.Run(":" + port); err != nil {
-		logger.Fatalf("Failed to start server: %v", err)
+		logger.Fatal("Failed to start server", zap.Error(err))
 	}
 } 
