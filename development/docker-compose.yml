@@ -73,7 +73,6 @@ services:
         container_name: shop-system-payments
         build:
             context: ../microservices/payments
-            dockerfile: ../../development/docker/golang/Dockerfile
         restart: always
         ports:
             - "8080:8080"
