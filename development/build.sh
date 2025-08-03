@@ -1,6 +1,7 @@
 ./remove-containers-data.sh
 
 cp ../.env.dist ../.env
+cp ../microservices/payments/env.example ../microservices/payments/.env
 
 docker ps -a -q --filter network=shop_system_network | xargs -r docker rm -f
 docker compose up -d --build --force-recreate
