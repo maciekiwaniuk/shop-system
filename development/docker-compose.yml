@@ -77,7 +77,17 @@ services:
         ports:
             - "8080:8080"
         volumes:
-            - ../microservices/payments/:/var/www/microservices/payments/:cached
+            - ../microservices/payments:/app
+            - /app/tmp
+        environment:
+            - GIN_MODE=debug
+            - PORT=8080
+            - DB_HOST=shop-system-mysql
+            - DB_PORT=3306
+            - DB_USER=shop_user
+            - DB_PASSWORD=shop_password
+            - DB_NAME=shop_system_auth
+            - RABBITMQ_URL=amqp://guest:guest@shop-system-rabbitmq:5672/
         depends_on:
             - shop-system-backend
 

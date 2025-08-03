@@ -1,21 +1,25 @@
 FROM golang:1.24-alpine
 
-RUN apk --no-cache add ca-certificates
+RUN go install github.com/air-verse/air@latest
+
+RUN apk --no-cache add ca-certificates git
 
 WORKDIR /app
 
 COPY go.mod go.sum ./
 
 RUN go mod download
+RUN go mod verify
+RUN go mod tidy
+
+COPY .air.toml ./
 
 COPY . .
 
-RUN go mod tidy
+RUN mkdir -p tmp
 
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags='-w -s' -o main ./cmd/main.go
-
-RUN chmod +x main
+RUN go mod download
 
 EXPOSE 8080
 
-CMD ["./main"]
+CMD ["air", "-c", ".air.toml"]
