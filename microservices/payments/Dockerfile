@@ -1,6 +1,7 @@
 FROM golang:1.24-alpine
 
 RUN go install github.com/air-verse/air@latest
+RUN go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
 
 RUN apk --no-cache add ca-certificates git
 
