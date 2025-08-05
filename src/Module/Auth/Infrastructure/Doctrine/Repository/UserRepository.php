@@ -37,4 +37,9 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function getReference(string $id): User
+    {
+        return $this->getEntityManager()->getReference(User::class, $id);
+    }
 }

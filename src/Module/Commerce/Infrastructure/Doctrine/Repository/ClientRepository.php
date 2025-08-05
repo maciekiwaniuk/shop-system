@@ -37,4 +37,9 @@ class ClientRepository extends ServiceEntityRepository implements ClientReposito
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function getReference(string $id): Client
+    {
+        return $this->getEntityManager()->getReference(Client::class, $id);
+    }
 }

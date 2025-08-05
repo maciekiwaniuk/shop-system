@@ -58,4 +58,9 @@ class OrderRepository extends ServiceEntityRepository implements OrderRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function getReference(string $id): Order
+    {
+        return $this->getEntityManager()->getReference(Order::class, $id);
+    }
 }
