@@ -11,4 +11,6 @@ interface UserRepositoryInterface
     public function save(User $user, bool $flush = false): void;
 
     public function findUserByEmail(string $email): ?User;
+
+    public function getReference(string $id): User;
 }

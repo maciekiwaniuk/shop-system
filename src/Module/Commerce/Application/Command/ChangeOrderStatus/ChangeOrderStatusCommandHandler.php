@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Module\Commerce\Application\Command\ChangeOrderStatus;
 
 use App\Common\Application\AsyncCommand\AsyncCommandHandlerInterface;
-use App\Module\Commerce\Domain\Entity\Order;
 use App\Module\Commerce\Domain\Entity\OrderStatusUpdate;
+use App\Module\Commerce\Domain\Repository\OrderRepositoryInterface;
 use App\Module\Commerce\Domain\Repository\OrderStatusUpdateRepositoryInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Throwable;
@@ -18,7 +17,7 @@ readonly class ChangeOrderStatusCommandHandler implements AsyncCommandHandlerInt
 {
     public function __construct(
         private OrderStatusUpdateRepositoryInterface $orderStatusUpdateRepository,
-        private EntityManagerInterface $commerceEntityManager,
+        private OrderRepositoryInterface $orderRepository,
         private LoggerInterface $logger,
     ) {
     }
@@ -27,7 +26,7 @@ readonly class ChangeOrderStatusCommandHandler implements AsyncCommandHandlerInt
     {
         try {
             $changeOrderStatus = new OrderStatusUpdate(
-                order: $this->commerceEntityManager->getReference(Order::class, $command->uuid),
+                order: $this->orderRepository->getReference($command->uuid),
                 status: $command->dto->status,
             );
             $this->orderStatusUpdateRepository->save($changeOrderStatus, true);

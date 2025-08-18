@@ -38,26 +38,6 @@ services:
             $redisUrl: '%redis_url%'
             $redisAppPrefix: '%redis_app_prefix%'
 
-    App\Module\Commerce\Application\Command\CreateOrder\CreateOrderCommandHandler:
-        arguments:
-            $commerceEntityManager: '@doctrine.orm.commerce_entity_manager'
-
-    App\Module\Commerce\Application\Command\UpdateProduct\UpdateProductCommandHandler:
-        arguments:
-            $commerceEntityManager: '@doctrine.orm.commerce_entity_manager'
-
-    App\Module\Commerce\Application\Command\ChangeOrderStatus\ChangeOrderStatusCommandHandler:
-        arguments:
-            $commerceEntityManager: '@doctrine.orm.commerce_entity_manager'
-
-    App\Module\Commerce\Interface\Controller\ProductsController:
-        arguments:
-            $commerceEntityManager: '@doctrine.orm.commerce_entity_manager'
-
-    App\Module\Commerce\Interface\Controller\OrdersController:
-        arguments:
-            $commerceEntityManager: '@doctrine.orm.commerce_entity_manager'
-
     Elastic\Elasticsearch\Client:
         factory: [ 'App\Module\Commerce\Infrastructure\Elasticsearch\ElasticsearchClientFactory', 'createClient' ]
         arguments:

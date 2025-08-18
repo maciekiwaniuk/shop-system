@@ -18,8 +18,7 @@ use App\Module\Commerce\Application\Query\FindProductBySlug\FindProductBySlugQue
 use App\Module\Commerce\Application\Query\GetPaginatedProducts\GetPaginatedProductsQuery;
 use App\Module\Commerce\Application\Query\SearchProductsByPhrase\SearchProductsByPhraseQuery;
 use App\Module\Commerce\Application\Voter\ProductsVoter;
-use App\Module\Commerce\Domain\Entity\Product;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Module\Commerce\Domain\Repository\ProductRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,7 +32,7 @@ class ProductsController extends AbstractController
     public function __construct(
         private readonly SyncCommandBusInterface $syncCommandBus,
         private readonly QueryBusInterface $queryBus,
-        private readonly EntityManagerInterface $commerceEntityManager,
+        private readonly ProductRepositoryInterface $productRepository,
     ) {
     }
 
@@ -126,7 +125,7 @@ class ProductsController extends AbstractController
 
         $queryResult = $this->queryBus->handle(new FindProductByIdQuery($id));
         if ($queryResult->data !== null) {
-            $product = $this->commerceEntityManager->getReference(Product::class, $queryResult->data['id']);
+            $product = $this->productRepository->getReference($queryResult->data['id']);
             $commandResult = $this->syncCommandBus->handle(new UpdateProductCommand($product, $dto));
         }
 
@@ -153,7 +152,7 @@ class ProductsController extends AbstractController
     {
         $queryResult = $this->queryBus->handle(new FindProductByIdQuery($id));
         if ($queryResult->data !== null) {
-            $product = $this->commerceEntityManager->getReference(Product::class, $queryResult->data['id']);
+            $product = $this->productRepository->getReference($queryResult->data['id']);
             $commandResult = $this->syncCommandBus->handle(new DeleteProductCommand($product));
         }
 

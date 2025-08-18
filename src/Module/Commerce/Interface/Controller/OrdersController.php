@@ -15,8 +15,7 @@ use App\Module\Commerce\Application\DTO\Validation\CreateOrderDTO;
 use App\Module\Commerce\Application\Query\FindOrderByUuid\FindOrderByUuidQuery;
 use App\Module\Commerce\Application\Query\GetPaginatedOrders\GetPaginatedOrdersQuery;
 use App\Module\Commerce\Application\Voter\OrdersVoter;
-use App\Module\Commerce\Domain\Entity\Order;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Module\Commerce\Domain\Repository\OrderRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,7 +30,7 @@ class OrdersController extends AbstractController
         private readonly SyncCommandBusInterface $syncCommandBus,
         private readonly AsyncCommandBusInterface $asyncCommandBus,
         private readonly QueryBusInterface $queryBus,
-        private readonly EntityManagerInterface $commerceEntityManager,
+        private readonly OrderRepositoryInterface $orderRepository,
     ) {
     }
 
@@ -66,7 +65,7 @@ class OrdersController extends AbstractController
     {
         $queryResult = $this->queryBus->handle(new FindOrderByUuidQuery($uuid));
 
-        $order = $this->commerceEntityManager->getReference(Order::class, $queryResult->data['id']);
+        $order = $this->orderRepository->getReference($queryResult->data['id']);
         if (!$this->isGranted(OrdersVoter::SHOW, $order)) {
             throw $this->createAccessDeniedException();
         }

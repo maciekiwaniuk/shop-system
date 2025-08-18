@@ -9,8 +9,7 @@ use App\Common\Application\Bus\SyncCommandBus\SyncCommandBusInterface;
 use App\Module\Auth\Application\Command\CreateUser\CreateUserCommand;
 use App\Module\Auth\Application\DTO\Validation\CreateUserDTO;
 use App\Module\Auth\Application\Query\FindUserByEmail\FindUserByEmailQuery;
-use App\Module\Auth\Domain\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +24,7 @@ class UserController extends AbstractController
         private readonly SyncCommandBusInterface $syncCommandBus,
         private readonly QueryBusInterface $queryBus,
         private readonly JWTTokenManagerInterface $JWTTokenManager,
-        private readonly EntityManagerInterface $entityManager,
+        private readonly UserRepositoryInterface $userRepository,
     ) {
     }
 
@@ -42,7 +41,7 @@ class UserController extends AbstractController
         $commandResult = $this->syncCommandBus->handle(new CreateUserCommand($dto));
         $queryResult = $this->queryBus->handle(new FindUserByEmailQuery($dto->email));
         if ($queryResult->data !== null) {
-            $user = $this->entityManager->getReference(User::class, $queryResult->data['id']);
+            $user = $this->userRepository->getReference($queryResult->data['id']);
         }
 
         $result = match (true) {

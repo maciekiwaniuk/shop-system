@@ -20,4 +20,6 @@ interface ProductRepositoryInterface
     public function findById(int $id): ?Product;
 
     public function softDelete(Product $product): bool;
+
+    public function getReference(int $id): Product;
 }

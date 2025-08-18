@@ -11,4 +11,6 @@ interface ClientRepositoryInterface
     public function save(Client $client, bool $flush = false): void;
 
     public function findClientByEmail(string $email): ?Client;
+
+    public function getReference(string $id): Client;
 }

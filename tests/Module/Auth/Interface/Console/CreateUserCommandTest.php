@@ -44,7 +44,7 @@ class CreateUserCommandTest extends AbstractIntegrationTestCase
                 syncCommandBus: $syncCommandBus,
                 queryBus: $queryBus,
                 validator: $validator,
-                entityManager: $this->entityManager,
+                userRepository: $this->userRepository,
             ),
         );
     }

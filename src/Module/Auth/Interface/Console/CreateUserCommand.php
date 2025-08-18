@@ -10,8 +10,7 @@ use App\Module\Auth\Application\Command\CreateUser\CreateUserCommand as CreateUs
 use App\Module\Auth\Application\Command\SetUserAsAdmin\SetUserAsAdminCommand;
 use App\Module\Auth\Application\DTO\Validation\CreateUserDTO;
 use App\Module\Auth\Application\Query\FindUserByEmail\FindUserByEmailQuery;
-use App\Module\Auth\Domain\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Module\Auth\Domain\Repository\UserRepositoryInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -30,7 +29,7 @@ final class CreateUserCommand extends Command
         private readonly SyncCommandBusInterface $syncCommandBus,
         private readonly QueryBusInterface $queryBus,
         private readonly ValidatorInterface $validator,
-        private readonly EntityManagerInterface $entityManager,
+        private readonly UserRepositoryInterface $userRepository,
     ) {
         parent::__construct();
     }
@@ -69,7 +68,7 @@ final class CreateUserCommand extends Command
 
             $queryResult = $this->queryBus->handle(new FindUserByEmailQuery($dto->email));
             if (array_key_exists('id', $queryResult->data)) {
-                $user = $this->entityManager->getReference(User::class, $queryResult->data['id']);
+                $user = $this->userRepository->getReference($queryResult->data['id']);
                 $commandResult = $this->syncCommandBus->handle(new SetUserAsAdminCommand($user));
 
                 if ($commandResult->success) {

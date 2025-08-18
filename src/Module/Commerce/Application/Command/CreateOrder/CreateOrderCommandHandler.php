@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Module\Commerce\Application\Command\CreateOrder;
 
-use App\Module\Commerce\Domain\Entity\Client;
 use App\Module\Commerce\Domain\Entity\Order;
+use App\Module\Commerce\Domain\Repository\ClientRepositoryInterface;
 use App\Module\Commerce\Domain\Repository\OrderRepositoryInterface;
-use App\Module\Commerce\Domain\Entity\Product;
 use App\Common\Application\BusResult\CommandResult;
 use App\Common\Application\SyncCommand\SyncCommandHandlerInterface;
 use App\Common\Application\Security\UserContextInterface;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Module\Commerce\Domain\Repository\ProductRepositoryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -22,7 +21,8 @@ readonly class CreateOrderCommandHandler implements SyncCommandHandlerInterface
 {
     public function __construct(
         private OrderRepositoryInterface $orderRepository,
-        private EntityManagerInterface $commerceEntityManager,
+        private ClientRepositoryInterface $clientRepository,
+        private ProductRepositoryInterface $productRepository,
         private LoggerInterface $logger,
         private UserContextInterface $userContext,
     ) {
@@ -33,11 +33,11 @@ readonly class CreateOrderCommandHandler implements SyncCommandHandlerInterface
         $user = $this->userContext->getUser();
         try {
             $order = new Order(
-                $this->commerceEntityManager->getReference(Client::class, $user->getUserIdentifier()),
+                $this->clientRepository->getReference($user->getUserIdentifier()),
             );
             foreach ($command->dto->products as $product) {
                 $order->addProduct(
-                    $this->commerceEntityManager->getReference(Product::class, $product['id']),
+                    $this->productRepository->getReference($product['id']),
                     $product['quantity'],
                     $product['pricePerPiece'],
                 );
