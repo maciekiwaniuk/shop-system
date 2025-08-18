@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Module\Commerce\Application\ValueResolver\ProductsController;
 
-use App\Common\Application\DTO\PaginationIdDTO;
 use App\Module\Commerce\Application\DTO\Validation\SearchProductsDTO;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsTargetedValueResolver;

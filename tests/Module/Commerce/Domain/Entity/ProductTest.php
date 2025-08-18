@@ -8,7 +8,6 @@ use App\Module\Commerce\Domain\Entity\Product;
 use App\Tests\AbstractUnitTestCase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\Attributes\DataProvider;
 
 #[Group('unit')]
 class ProductTest extends AbstractUnitTestCase

@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace App\Module\Commerce\Infrastructure\Doctrine\Repository;
 
 use App\Module\Commerce\Domain\Entity\Order;
-use App\Module\Commerce\Domain\Entity\OrderProduct;
 use App\Module\Commerce\Domain\Repository\OrderRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**

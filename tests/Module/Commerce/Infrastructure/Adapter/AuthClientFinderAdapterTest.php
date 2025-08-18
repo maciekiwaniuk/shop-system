@@ -12,7 +12,6 @@ use App\Module\Commerce\Application\Query\FindClientByEmail\FindClientByEmailQue
 use App\Module\Commerce\Domain\Entity\Client;
 use App\Module\Commerce\Infrastructure\Adapter\AuthClientFinderAdapter;
 use App\Tests\AbstractUnitTestCase;
-use Exception;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\HttpFoundation\Response;

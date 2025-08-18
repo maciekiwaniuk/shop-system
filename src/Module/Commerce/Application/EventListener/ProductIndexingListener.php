@@ -8,7 +8,6 @@ use App\Module\Commerce\Domain\Event\ProductCreatedEvent;
 use App\Module\Commerce\Domain\Event\ProductDeletedEvent;
 use App\Module\Commerce\Domain\Event\ProductUpdatedEvent;
 use App\Module\Commerce\Domain\Repository\ProductSearchRepositoryInterface;
-use App\Module\Commerce\Infrastructure\Elasticsearch\ProductIndexManager;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
 readonly class ProductIndexingListener

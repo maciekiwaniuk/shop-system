@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Module\Commerce\Infrastructure\Elasticsearch;
 
-use App\Module\Commerce\Application\DTO\Communication\ProductDTO;
 use App\Module\Commerce\Domain\Entity\Product;
 use App\Module\Commerce\Domain\Repository\ProductSearchRepositoryInterface;
-use App\Module\Commerce\Infrastructure\Elasticsearch\ElasticsearchIndexException;
 use Elastic\Elasticsearch\Client;
 use Elastic\Elasticsearch\Exception\ClientResponseException;
 use Elastic\Elasticsearch\Exception\MissingParameterException;

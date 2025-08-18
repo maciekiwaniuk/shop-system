@@ -6,7 +6,6 @@ namespace App\Module\Commerce\Application\Command\UpdateProduct;
 
 use App\Common\Domain\Cache\CacheCreatorInterface;
 use App\Common\Domain\Cache\CacheProxyInterface;
-use App\Module\Commerce\Application\DTO\Communication\ProductDTO;
 use App\Module\Commerce\Domain\Entity\Product;
 use App\Common\Application\BusResult\CommandResult;
 use App\Common\Application\SyncCommand\SyncCommandInterface;
