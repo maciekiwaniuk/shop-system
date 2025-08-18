@@ -14,6 +14,7 @@ data:
     AUTH_MYSQL_DATABASE: "shop_system_auth"
     COMMERCE_MYSQL_DATABASE: "shop_system_commerce"
     REDIS_URL: "redis://redis/0"
+    REDIS_APP_PREFIX: "shop_system_local"
     MESSENGER_TRANSPORT_DSN: "amqp://guest:guest@rabbitmq:5672/%2f/messages"
     JWT_TOKEN_TTL: "3600"
     MAILER_DSN: "smtp://mailhog:1025"

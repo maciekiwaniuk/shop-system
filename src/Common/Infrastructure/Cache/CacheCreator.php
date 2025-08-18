@@ -15,6 +15,7 @@ readonly class CacheCreator implements CacheCreatorInterface
     public function __construct(
         private LoggerInterface $logger,
         private string $redisUrl,
+        private string $redisAppPrefix,
     ) {
     }
 
@@ -24,7 +25,7 @@ readonly class CacheCreator implements CacheCreatorInterface
         return new CacheProxy(
             $adapter::createConnection($this->redisUrl),
             $this->logger,
-            $prefix,
+            $this->redisAppPrefix . ':' . $prefix,
         );
     }
 }

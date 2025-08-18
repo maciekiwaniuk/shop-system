@@ -89,7 +89,7 @@ readonly class CacheProxy implements CacheProxyInterface
     {
         try {
             $this->cache->del(array_map(
-                fn($key) => $this->prefix . $key,
+                fn($key) => $key,
                 $keys,
             ));
             return true;

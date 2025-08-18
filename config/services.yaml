@@ -1,5 +1,6 @@
 parameters:
     redis_url: '%env(REDIS_URL)%'
+    redis_app_prefix: '%env(REDIS_APP_PREFIX)%'
     elasticsearch_host: '%env(ELASTICSEARCH_HOST)%'
     elasticsearch_port: '%env(int:ELASTICSEARCH_PORT)%'
     elasticsearch_scheme: '%env(ELASTICSEARCH_SCHEME)%'
@@ -35,6 +36,7 @@ services:
     App\Common\Infrastructure\Cache\CacheCreator:
         arguments:
             $redisUrl: '%redis_url%'
+            $redisAppPrefix: '%redis_app_prefix%'
 
     App\Module\Commerce\Application\Command\CreateOrder\CreateOrderCommandHandler:
         arguments:
