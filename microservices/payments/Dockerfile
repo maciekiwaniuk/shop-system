@@ -3,8 +3,11 @@ FROM golang:1.24-alpine
 # hot reload
 RUN go install github.com/air-verse/air@latest
 
-# generating sql tool
+# sql to golang tool
 RUN go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+
+# golang-migrate for database migrations
+RUN go install -tags 'mysql' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 
 RUN apk --no-cache add ca-certificates git
 
