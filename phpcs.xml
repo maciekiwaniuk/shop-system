@@ -24,7 +24,6 @@
     </rule>
     <rule ref="PSR12" />
     <rule ref="Generic.PHP.RequireStrictTypes" />
-    <rule ref="Generic.PHP.RequireStrictTypes" />
 
     <file>bin/</file>
     <file>config/</file>
