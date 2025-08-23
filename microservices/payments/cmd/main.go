@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	"os"
-	"payments/internal/interface/http"
+	"payments/internal/ports/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
