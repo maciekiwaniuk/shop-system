@@ -1,3 +1,7 @@
+controllers_common:
+    resource: ../src/Common/Interface/Controller
+    type: attribute
+
 controllers_auth:
     resource: ../src/Module/Auth/Interface/Controller
     type: attribute
