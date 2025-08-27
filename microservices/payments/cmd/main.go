@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"payments/internal/adapters/db"
 	"payments/internal/ports/http"
 
 	"github.com/gin-gonic/gin"
@@ -12,7 +13,7 @@ import (
 
 func main() {
 	if err := godotenv.Load(); err != nil {
-		log.Println("No .env file found, using system environment variables")
+		log.Println("no .env file found, using system environment variables")
 	}
 
 	if os.Getenv("GIN_MODE") == "release" {
@@ -21,9 +22,17 @@ func main() {
 
 	logger, err := zap.NewProduction()
 	if err != nil {
-		log.Fatalf("Failed to initialize logger: %v", err)
+		log.Fatalf("failed to initialize logger: %v", err)
 	}
 	defer logger.Sync()
+
+	database, err := db.Connect()
+	if err != nil {
+		logger.Fatal("failed to connect to database", zap.Error(err))
+	}
+	defer database.Close()
+
+	logger.Info("successfully connected to database")
 
 	router := http.SetupRouter()
 
@@ -32,8 +41,8 @@ func main() {
 		port = "8080"
 	}
 
-	logger.Info("Starting payments service", zap.String("port", port))
+	logger.Info("starting payments service", zap.String("port", port))
 	if err := router.Run(":" + port); err != nil {
-		logger.Fatal("Failed to start server", zap.Error(err))
+		logger.Fatal("failed to start server", zap.Error(err))
 	}
 }
