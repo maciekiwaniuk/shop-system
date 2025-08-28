@@ -25,7 +25,7 @@ class ChangeOrderStatusDTOTest extends AbstractIntegrationTestCase
     #[Test]
     public function it_should_pass_validation_when_status_is_valid(): void
     {
-        $dto = new ChangeOrderStatusDTO(status: OrderStatus::IN_DELIVERY);
+        $dto = new ChangeOrderStatusDTO(status: OrderStatus::SENT);
 
         $errors = $this->validator->validate($dto);
 
@@ -43,9 +43,9 @@ class ChangeOrderStatusDTOTest extends AbstractIntegrationTestCase
     }
 
     #[Test]
-    public function it_should_pass_validation_when_status_is_paid(): void
+    public function it_should_pass_validation_when_status_is_preparing_for_delivery(): void
     {
-        $dto = new ChangeOrderStatusDTO(status: OrderStatus::PAID);
+        $dto = new ChangeOrderStatusDTO(status: OrderStatus::PREPARING_FOR_DELIVERY);
 
         $errors = $this->validator->validate($dto);
 
@@ -55,7 +55,7 @@ class ChangeOrderStatusDTOTest extends AbstractIntegrationTestCase
     #[Test]
     public function it_should_pass_validation_when_status_is_in_delivery(): void
     {
-        $dto = new ChangeOrderStatusDTO(status: OrderStatus::IN_DELIVERY);
+        $dto = new ChangeOrderStatusDTO(status: OrderStatus::SENT);
 
         $errors = $this->validator->validate($dto);
 

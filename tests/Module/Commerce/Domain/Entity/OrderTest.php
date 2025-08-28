@@ -77,9 +77,9 @@ class OrderTest extends AbstractUnitTestCase
         $order = new Order($this->client);
         $initialStatusCount = $order->getOrdersStatusUpdates()->count();
 
-        $order->updateStatus(OrderStatus::IN_DELIVERY);
+        $order->updateStatus(OrderStatus::SENT);
 
-        $this->assertEquals(OrderStatus::IN_DELIVERY->value, $order->getCurrentStatus());
+        $this->assertEquals(OrderStatus::SENT->value, $order->getCurrentStatus());
         $this->assertCount($initialStatusCount + 1, $order->getOrdersStatusUpdates());
     }
 
@@ -100,9 +100,9 @@ class OrderTest extends AbstractUnitTestCase
     {
         $order = new Order($this->client);
 
-        $order->updateStatus(OrderStatus::IN_DELIVERY);
+        $order->updateStatus(OrderStatus::SENT);
 
-        $this->assertEquals(OrderStatus::IN_DELIVERY->value, $order->getCurrentStatus());
+        $this->assertEquals(OrderStatus::SENT->value, $order->getCurrentStatus());
         $this->assertNull($order->getCompletedAt());
     }
 
@@ -110,7 +110,7 @@ class OrderTest extends AbstractUnitTestCase
     public function it_should_maintain_status_history_in_order(): void
     {
         $order = new Order($this->client);
-        $order->updateStatus(OrderStatus::IN_DELIVERY);
+        $order->updateStatus(OrderStatus::SENT);
         $order->updateStatus(OrderStatus::DELIVERED);
 
         $this->assertCount(3, $order->getOrdersStatusUpdates());
