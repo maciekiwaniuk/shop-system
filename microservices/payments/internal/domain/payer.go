@@ -3,10 +3,10 @@ package domain
 import "time"
 
 type Payer struct {
-	id        string
-	email     string
-	name      string
-	surname   string
-	updatedAt time.Time
-	createdAt time.Time
+	Id        string
+	Email     string
+	Name      string
+	Surname   string
+	UpdatedAt time.Time
+	CreatedAt time.Time
 }

@@ -31,7 +31,6 @@ func main() {
 		logger.Fatal("failed to connect to database", zap.Error(err))
 	}
 	defer database.Close()
-
 	logger.Info("successfully connected to database")
 
 	router := http.SetupRouter()

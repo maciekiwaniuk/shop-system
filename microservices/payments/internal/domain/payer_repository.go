@@ -1,5 +1,7 @@
 package domain
 
+import "context"
+
 type PayerRepository interface {
-	Save(payer *Payer) error
+	CreatePayer(ctx context.Context, payer *Payer) error
 }
