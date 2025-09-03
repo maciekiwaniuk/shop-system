@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
-	generated "payments/internal/adapters/db/query/generated"
+	"payments/internal/adapters/db/query/generated"
 	"payments/internal/domain"
 )
 

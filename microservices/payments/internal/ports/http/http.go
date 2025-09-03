@@ -1,6 +1,18 @@
 package http
 
-import "github.com/gin-gonic/gin"
+import (
+	"payments/internal/app"
+
+	"github.com/gin-gonic/gin"
+)
+
+type HttpServer struct {
+	app app.Application
+}
+
+func NewHttpServer(app app.Application) HttpServer {
+	return HttpServer{app}
+}
 
 func SetupRouter() *gin.Engine {
 	r := gin.Default()

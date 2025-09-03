@@ -3,7 +3,7 @@
 //   sqlc v1.29.0
 // source: payer.sql
 
-package db
+package generated
 
 import (
 	"context"
