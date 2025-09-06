@@ -23,11 +23,7 @@ func main() {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
-	logger, err := zap.NewProduction()
-	if err != nil {
-		log.Fatalf("Failed to initialize logger: %v", err)
-	}
-	defer logger.Sync()
+	zap.ReplaceGlobals(zap.Must(zap.NewProduction()))
 
 	a := newApplication()
 	server := http.NewHttpServer(a)
@@ -37,9 +33,9 @@ func main() {
 		port = "8080"
 	}
 
-	logger.Info("Starting payments service", zap.String("port", port))
+	zap.L().Info("Starting payments service", zap.String("port", port))
 	if err := server.SetupRouter(":" + port); err != nil {
-		logger.Error("Failed to setup router", zap.Error(err))
+		zap.L().Error("Failed to setup router", zap.Error(err))
 	}
 }
 
@@ -49,7 +45,7 @@ func newApplication() app.Application {
 		panic(err)
 	}
 
-	payerRepository := repository.NewPayerRepository(dbConn)
+	payerRepository := adapters.NewPayerRepository(dbConn)
 
 	return app.Application{
 		Commands: app.Commands{

@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 type HttpServer struct {
@@ -18,11 +19,11 @@ func NewHttpServer(app app.Application) HttpServer {
 	return HttpServer{app}
 }
 
-type IncomingPayer struct {
-	Id      string `json:"id"`
-	Email   string `json:"email"`
-	Name    string `json:"name"`
-	Surname string `json:"surname"`
+type CreatePayerRequest struct {
+	Id      string `json:"id" binding:"required"`
+	Email   string `json:"email" binding:"required,email,min=3,max=100"`
+	Name    string `json:"name" binding:"required,min=2,max=100"`
+	Surname string `json:"surname" binding:"required,min=2,max=100"`
 }
 
 func (h HttpServer) SetupRouter(port string) error {
@@ -30,7 +31,7 @@ func (h HttpServer) SetupRouter(port string) error {
 
 	v1 := r.Group("/v1")
 	v1.GET("/health", func(c *gin.Context) {
-		c.JSON(200, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"success": true,
 			"message": "Payments service is working",
 		})
@@ -38,26 +39,29 @@ func (h HttpServer) SetupRouter(port string) error {
 
 	p := v1.Group("/payers")
 	p.POST("/create", func(c *gin.Context) {
-		var payer IncomingPayer
-		if err := c.ShouldBind(&payer); err != nil {
+		var req CreatePayerRequest
+		if err := c.ShouldBindJSON(&req); err != nil {
+			zap.L().Error("nie tak", zap.Error(err))
 			c.JSON(http.StatusBadRequest, gin.H{
 				"success": false,
-				"message": "Invalid request",
+				"message": err,
 			})
+			return
 		}
 
 		cmd := command.CreatePayer{
 			Payer: domain.Payer{
-				Id:        payer.Id,
-				Email:     payer.Email,
-				Name:      payer.Name,
-				Surname:   payer.Surname,
+				Id:        req.Id,
+				Email:     req.Email,
+				Name:      req.Name,
+				Surname:   req.Surname,
 				CreatedAt: time.Now(),
 				UpdatedAt: time.Now(),
 			},
 		}
 
 		if err := h.app.Commands.CreatePayer.Handle(c.Request.Context(), cmd); err != nil {
+			zap.L().Error("Failed to create payer", zap.Error(err))
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"success": false,
 				"message": "Something went wrong while creating payer",

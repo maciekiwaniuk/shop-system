@@ -1,6 +1,9 @@
 package domain
 
-import "time"
+import (
+	"context"
+	"time"
+)
 
 type Payer struct {
 	Id        string
@@ -9,4 +12,8 @@ type Payer struct {
 	Surname   string
 	UpdatedAt time.Time
 	CreatedAt time.Time
+}
+
+type PayerRepository interface {
+	CreatePayer(ctx context.Context, payer *Payer) error
 }

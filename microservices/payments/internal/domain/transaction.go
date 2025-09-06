@@ -10,3 +10,6 @@ type Transaction struct {
 	CompletedAt *time.Time
 	CreatedAt   time.Time
 }
+
+type TransactionRepository interface {
+}
