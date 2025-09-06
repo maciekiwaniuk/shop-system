@@ -4,6 +4,9 @@ import (
 	"log"
 	"os"
 	"payments/internal/adapters/db"
+	"payments/internal/adapters/db/repository"
+	"payments/internal/app"
+	"payments/internal/app/command"
 	"payments/internal/ports/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,7 +16,7 @@ import (
 
 func main() {
 	if err := godotenv.Load(); err != nil {
-		log.Println("no .env file found, using system environment variables")
+		log.Println("No .env file found, using system environment variables")
 	}
 
 	if os.Getenv("GIN_MODE") == "release" {
@@ -22,26 +25,36 @@ func main() {
 
 	logger, err := zap.NewProduction()
 	if err != nil {
-		log.Fatalf("failed to initialize logger: %v", err)
+		log.Fatalf("Failed to initialize logger: %v", err)
 	}
 	defer logger.Sync()
 
-	database, err := db.Connect()
-	if err != nil {
-		logger.Fatal("failed to connect to database", zap.Error(err))
-	}
-	defer database.Close()
-	logger.Info("successfully connected to database")
-
-	router := http.SetupRouter()
+	a := newApplication()
+	server := http.NewHttpServer(a)
 
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 
-	logger.Info("starting payments service", zap.String("port", port))
-	if err := router.Run(":" + port); err != nil {
-		logger.Fatal("failed to start server", zap.Error(err))
+	logger.Info("Starting payments service", zap.String("port", port))
+	if err := server.SetupRouter(":" + port); err != nil {
+		logger.Error("Failed to setup router", zap.Error(err))
+	}
+}
+
+func newApplication() app.Application {
+	dbConn, err := db.Connect()
+	if err != nil {
+		panic(err)
+	}
+
+	payerRepository := repository.NewPayerRepository(dbConn)
+
+	return app.Application{
+		Commands: app.Commands{
+			CreatePayer: command.NewCreatePayerHandler(payerRepository),
+		},
+		Queries: app.Queries{},
 	}
 }

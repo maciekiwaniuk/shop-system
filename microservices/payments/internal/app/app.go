@@ -8,7 +8,7 @@ type Application struct {
 }
 
 type Commands struct {
-	CreatePayer command.CreatePayer
+	CreatePayer command.CreatePayerHandler
 }
 
 type Queries struct {
