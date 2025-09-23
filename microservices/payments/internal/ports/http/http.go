@@ -16,9 +16,10 @@ func NewHttpServer(app app.Application) HttpServer {
 }
 
 type Response struct {
-	Success bool        `json:"success"`
-	Message string      `json:"message"`
-	Data    interface{} `json:"data,omitempty"`
+	Success bool              `json:"success"`
+	Message string            `json:"message"`
+	Errors  map[string]string `json:"errors,omitempty"`
+	Data    interface{}       `json:"data,omitempty"`
 }
 
 func (h HttpServer) SetupRouter(port string) error {
