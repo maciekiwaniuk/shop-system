@@ -17,7 +17,7 @@ func NewHttpServer(app app.Application) HttpServer {
 
 type Response struct {
 	Success bool              `json:"success"`
-	Message string            `json:"message"`
+	Message string            `json:"message,omitempty"`
 	Errors  map[string]string `json:"errors,omitempty"`
 	Data    interface{}       `json:"data,omitempty"`
 }

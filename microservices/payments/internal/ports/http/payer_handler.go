@@ -5,6 +5,7 @@ import (
 	"payments/internal/app"
 	"payments/internal/app/command"
 	"payments/internal/domain"
+	"payments/internal/ports/validation"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -19,20 +20,31 @@ func NewPayerHandler(app app.Application) PayerHandler {
 	return PayerHandler{app: app}
 }
 
-type CreatePayerRequest struct {
-	Id      string `json:"id" binding:"required"`
-	Email   string `json:"email" binding:"required,email,min=3,max=100"`
-	Name    string `json:"name" binding:"required,min=2,max=100"`
-	Surname string `json:"surname" binding:"required,min=2,max=100"`
-}
-
 func (h PayerHandler) CreatePayer(c *gin.Context) {
-	var req CreatePayerRequest
+	var req validation.CreatePayerRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		zap.L().Error("binding create payer request failed", zap.Error(err))
 		c.JSON(http.StatusBadRequest, Response{
 			Success: false,
 			Message: "Something went wrong while binding payer request",
+		})
+		return
+	}
+
+	validationErrors, err := validation.ValidateStruct(req)
+	if err != nil {
+		zap.L().Error("validation system error", zap.Error(err))
+		c.JSON(http.StatusInternalServerError, Response{
+			Success: false,
+			Message: "Validation system error",
+		})
+		return
+	}
+
+	if len(validationErrors) > 0 {
+		c.JSON(http.StatusBadRequest, Response{
+			Success: false,
+			Errors:  validationErrors,
 		})
 		return
 	}
