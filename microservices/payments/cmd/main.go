@@ -45,11 +45,12 @@ func newApplication() app.Application {
 		panic(err)
 	}
 
-	payerRepository := adapters.NewPayerRepository(dbConn)
+	payerRepo := adapters.NewPayerRepository(dbConn)
+	transactionRepo := adapters.NewTransactionRepository(dbConn)
 
 	return app.Application{
 		Commands: app.Commands{
-			CreatePayer: command.NewCreatePayerHandler(payerRepository),
+			CreatePayer: command.NewCreatePayerHandler(payerRepo),
 		},
 		Queries: app.Queries{},
 	}

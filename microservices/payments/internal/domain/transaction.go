@@ -1,6 +1,9 @@
 package domain
 
-import "time"
+import (
+	"context"
+	"time"
+)
 
 type Transaction struct {
 	Id          string
@@ -12,4 +15,7 @@ type Transaction struct {
 }
 
 type TransactionRepository interface {
+	CreateTransaction(ctx context.Context, transaction *Transaction) error
+	GetTransactionById(ctx context.Context, transactionId string) (*Transaction, error)
+	GetTransactionsByPayerId(ctx context.Context, payerId string) ([]Transaction, error)
 }
