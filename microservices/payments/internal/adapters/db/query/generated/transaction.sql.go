@@ -94,3 +94,19 @@ func (q *Queries) GetOneTransactionById(ctx context.Context, id string) (Transac
 	)
 	return i, err
 }
+
+const updateTransactionStatus = `-- name: UpdateTransactionStatus :execresult
+UPDATE ` + "`" + `transaction` + "`" + `
+SET status = ?, completed_at = ?
+WHERE id = ?
+`
+
+type UpdateTransactionStatusParams struct {
+	Status      string       `json:"status"`
+	CompletedAt sql.NullTime `json:"completed_at"`
+	ID          string       `json:"id"`
+}
+
+func (q *Queries) UpdateTransactionStatus(ctx context.Context, arg UpdateTransactionStatusParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, updateTransactionStatus, arg.Status, arg.CompletedAt, arg.ID)
+}

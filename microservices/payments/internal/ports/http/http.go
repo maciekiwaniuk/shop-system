@@ -47,3 +47,7 @@ func setupPayerRoutes(rg *gin.RouterGroup, app app.Application) {
 		p.POST("/create", h.CreatePayer)
 	}
 }
+
+func setupTransactionRoutes(rg *gin.RouterGroup, app app.Application) {
+
+}

@@ -15,6 +15,7 @@ type Querier interface {
 	GetManyTransactionsByPayerId(ctx context.Context, payerID string) ([]Transaction, error)
 	GetOnePayerById(ctx context.Context) (Payer, error)
 	GetOneTransactionById(ctx context.Context, id string) (Transaction, error)
+	UpdateTransactionStatus(ctx context.Context, arg UpdateTransactionStatusParams) (sql.Result, error)
 }
 
 var _ Querier = (*Queries)(nil)

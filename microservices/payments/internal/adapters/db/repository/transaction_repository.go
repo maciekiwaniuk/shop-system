@@ -27,11 +27,37 @@ func (t transactionRepository) CreateTransaction(ctx context.Context, transactio
 		ID:          transaction.Id,
 		PayerID:     transaction.PayerId,
 		Amount:      fmt.Sprintf("%.2f", transaction.Amount),
-		Status:      transaction.Status,
+		Status:      string(transaction.Status),
 		CompletedAt: completedAt,
 		CreatedAt:   transaction.CreatedAt,
 	}
 	_, err := t.q.CreateTransaction(ctx, arg)
+	return err
+}
+
+func (t transactionRepository) MarkTransactionAsPaid(ctx context.Context, transactionId string) error {
+	arg := generated.UpdateTransactionStatusParams{
+		Status: string(domain.StatusPaid),
+		CompletedAt: sql.NullTime{
+			Time:  time.Now(),
+			Valid: true,
+		},
+		ID: transactionId,
+	}
+	_, err := t.q.UpdateTransactionStatus(ctx, arg)
+	return err
+}
+
+func (t transactionRepository) MarkTransactionAsCanceled(ctx context.Context, transactionId string) error {
+	arg := generated.UpdateTransactionStatusParams{
+		Status: string(domain.StatusCanceled),
+		CompletedAt: sql.NullTime{
+			Time:  time.Now(),
+			Valid: true,
+		},
+		ID: transactionId,
+	}
+	_, err := t.q.UpdateTransactionStatus(ctx, arg)
 	return err
 }
 
@@ -55,7 +81,7 @@ func (t transactionRepository) GetTransactionById(ctx context.Context, transacti
 		Id:          record.ID,
 		PayerId:     record.PayerID,
 		Amount:      float32(amount),
-		Status:      record.Status,
+		Status:      domain.TransactionStatus(record.Status),
 		CompletedAt: completedAt,
 		CreatedAt:   record.CreatedAt,
 	}, nil
@@ -83,7 +109,7 @@ func (t transactionRepository) GetTransactionsByPayerId(ctx context.Context, pay
 			Id:          record.ID,
 			PayerId:     record.PayerID,
 			Amount:      float32(amount),
-			Status:      record.Status,
+			Status:      domain.TransactionStatus(record.Status),
 			CompletedAt: completedAt,
 			CreatedAt:   record.CreatedAt,
 		}

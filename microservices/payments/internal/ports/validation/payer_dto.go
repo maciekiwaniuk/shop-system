@@ -1,9 +1,8 @@
 package validation
 
 type CreatePayerRequest struct {
-	Id          string `json:"id" validate:"required,min=1,max=100"`
-	Email       string `json:"email" validate:"required,email,min=3,max=100"`
-	Name        string `json:"name" validate:"required,min=2,max=100"`
-	Surname     string `json:"surname" validate:"required,min=2,max=100"`
-	SurnameTest string `json:"surname_test" validate:"required,min=2,max=100"`
+	Id      string `json:"id" validate:"required,min=1,max=100"`
+	Email   string `json:"email" validate:"required,email,min=3,max=100"`
+	Name    string `json:"name" validate:"required,min=2,max=100"`
+	Surname string `json:"surname" validate:"required,min=2,max=100"`
 }

@@ -50,7 +50,10 @@ func newApplication() app.Application {
 
 	return app.Application{
 		Commands: app.Commands{
-			CreatePayer: command.NewCreatePayerHandler(payerRepo),
+			CreatePayer:         command.NewCreatePayerHandler(payerRepo),
+			InitiateTransaction: command.NewInitiateTransactionHandler(transactionRepo),
+			CompleteTransaction: command.NewCompleteTransactionHandler(transactionRepo),
+			CancelTransaction:   command.NewCancelTransactionHandler(transactionRepo),
 		},
 		Queries: app.Queries{},
 	}

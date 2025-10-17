@@ -5,6 +5,11 @@ INSERT INTO `transaction` (
     ?, ?, ?, ?, ?, ?
 );
 
+-- name: UpdateTransactionStatus :execresult
+UPDATE `transaction`
+SET status = ?, completed_at = ?
+WHERE id = ?;
+
 -- name: GetOneTransactionById :one
 SELECT *
 FROM `transaction`
