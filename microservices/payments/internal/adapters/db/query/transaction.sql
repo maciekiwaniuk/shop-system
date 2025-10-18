@@ -1,13 +1,13 @@
 -- name: CreateTransaction :execresult
 INSERT INTO `transaction` (
-    id, payer_id, status, amount, completed_at, created_at
+    id, payer_id, status, amount, finished_at, created_at
 ) VALUES (
     ?, ?, ?, ?, ?, ?
 );
 
 -- name: UpdateTransactionStatus :execresult
 UPDATE `transaction`
-SET status = ?, completed_at = ?
+SET status = ?, finished_at = ?
 WHERE id = ?;
 
 -- name: GetOneTransactionById :one

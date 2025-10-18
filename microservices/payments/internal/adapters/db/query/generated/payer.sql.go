@@ -39,14 +39,14 @@ func (q *Queries) CreatePayer(ctx context.Context, arg CreatePayerParams) (sql.R
 	)
 }
 
-const getOnePayerById = `-- name: GetOnePayerById :one
+const findPayerById = `-- name: FindPayerById :one
 SELECT id, email, name, surname, updated_at, created_at
 FROM payer
-WHERE id = $1
+WHERE id = ?
 `
 
-func (q *Queries) GetOnePayerById(ctx context.Context) (Payer, error) {
-	row := q.db.QueryRowContext(ctx, getOnePayerById)
+func (q *Queries) FindPayerById(ctx context.Context, id string) (Payer, error) {
+	row := q.db.QueryRowContext(ctx, findPayerById, id)
 	var i Payer
 	err := row.Scan(
 		&i.ID,

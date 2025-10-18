@@ -38,6 +38,16 @@ class ClientRepository extends ServiceEntityRepository implements ClientReposito
             ->getOneOrNullResult();
     }
 
+    public function findClientById(string $id): ?Client
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c')
+            ->where('c.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function getReference(string $id): Client
     {
         return $this->getEntityManager()->getReference(Client::class, $id);

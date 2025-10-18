@@ -4,6 +4,7 @@ parameters:
     elasticsearch_host: '%env(ELASTICSEARCH_HOST)%'
     elasticsearch_port: '%env(int:ELASTICSEARCH_PORT)%'
     elasticsearch_scheme: '%env(ELASTICSEARCH_SCHEME)%'
+    payments_service_url: '%env(PAYMENTS_SERVICE_URL)%'
 
 services:
     _defaults:
@@ -49,6 +50,12 @@ services:
         arguments:
             $elasticsearchClient: '@Elastic\Elasticsearch\Client'
             $environment: '%kernel.environment%'
+
+    App\Module\Commerce\Infrastructure\Adapter\PaymentsInitializerAdapter:
+        arguments:
+            $httpClient: '@http_client'
+            $logger: '@Psr\Log\LoggerInterface'
+            $paymentsServiceUrl: '%payments_service_url%'
 
 imports:
     - { resource: 'services/commands.yaml' }

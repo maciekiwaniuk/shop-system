@@ -18,5 +18,5 @@ func NewCreatePayerHandler(repo domain.PayerRepository) CreatePayerHandler {
 }
 
 func (h CreatePayerHandler) Handle(ctx context.Context, cmd CreatePayer) error {
-	return h.repo.CreatePayer(ctx, &cmd.Payer)
+	return h.repo.Create(ctx, &cmd.Payer)
 }

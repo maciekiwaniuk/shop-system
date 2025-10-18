@@ -144,4 +144,13 @@ class Order
     {
         return $this->createdAt;
     }
+
+    public function getTotalCost(): float
+    {
+        $totalCost = 0;
+        foreach ($this->ordersProducts as $orderProduct) {
+            $totalCost += $orderProduct->getTotalAmount() * $orderProduct->getQuantity();
+        }
+        return $totalCost;
+    }
 }

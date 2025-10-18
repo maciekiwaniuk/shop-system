@@ -5,7 +5,7 @@ INSERT INTO payer (
     ?, ?, ?, ?, ?, ?
 );
 
--- name: GetOnePayerById :one
+-- name: FindPayerById :one
 SELECT *
 FROM payer
-WHERE id = $1;
+WHERE id = ?;

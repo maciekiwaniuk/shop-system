@@ -34,6 +34,7 @@ func (h HttpServer) SetupRouter(port string) error {
 	})
 
 	setupPayerRoutes(v1, h.app)
+	setupTransactionRoutes(v1, h.app)
 
 	err := r.Run(port)
 	return err
@@ -49,5 +50,14 @@ func setupPayerRoutes(rg *gin.RouterGroup, app app.Application) {
 }
 
 func setupTransactionRoutes(rg *gin.RouterGroup, app app.Application) {
+	h := NewTransactionHandler(app)
 
+	t := rg.Group("/transactions")
+	{
+		t.POST("/initiate", h.Initiate)
+		t.PUT("/complete/{id}", h.Complete)
+		t.PUT("/cancel/{id}", h.Cancel)
+		t.GET("/{id}", h.OneById)
+		t.GET("/{payer_id}", h.ManyByPayerId)
+	}
 }

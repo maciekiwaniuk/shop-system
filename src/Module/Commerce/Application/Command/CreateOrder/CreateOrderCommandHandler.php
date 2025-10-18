@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\Commerce\Application\Command\CreateOrder;
 
+use App\Module\Commerce\Application\Port\PaymentsInitializerInterface;
 use App\Module\Commerce\Domain\Entity\Order;
+use App\Module\Commerce\Domain\Exception\FailedToInitializePaymentException;
 use App\Module\Commerce\Domain\Repository\ClientRepositoryInterface;
 use App\Module\Commerce\Domain\Repository\OrderRepositoryInterface;
 use App\Common\Application\BusResult\CommandResult;
@@ -25,6 +27,7 @@ readonly class CreateOrderCommandHandler implements SyncCommandHandlerInterface
         private ProductRepositoryInterface $productRepository,
         private LoggerInterface $logger,
         private UserContextInterface $userContext,
+        private PaymentsInitializerInterface $paymentsInitializer,
     ) {
     }
 
@@ -42,7 +45,16 @@ readonly class CreateOrderCommandHandler implements SyncCommandHandlerInterface
                     $product['pricePerPiece'],
                 );
             }
-            $this->orderRepository->save($order, true);
+            $orderId = $this->orderRepository->save($order, true);
+            $result = $this->paymentsInitializer->init(
+                $orderId,
+                $user->getUserIdentifier(),
+                $order->getTotalCost(),
+            );
+            if (!$result) {
+                throw new FailedToInitializePaymentException();
+                // TODO: retry after while
+            }
         } catch (Throwable $exception) {
             $this->logger->error('Failed to create order', [
                 'error' => $exception->getMessage(),

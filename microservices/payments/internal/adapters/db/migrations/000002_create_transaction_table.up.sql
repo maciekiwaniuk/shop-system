@@ -3,7 +3,7 @@ CREATE TABLE `transaction` (
     payer_id VARCHAR(255) NOT NULL,
     amount DECIMAL(15, 2) NOT NULL,
     status VARCHAR(255) NOT NULL,
-    completed_at TIMESTAMP DEFAULT NULL,
+    finished_at TIMESTAMP DEFAULT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (payer_id) REFERENCES payer(id) ON DELETE CASCADE
 );

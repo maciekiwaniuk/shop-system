@@ -12,9 +12,11 @@ use App\Module\Commerce\Application\Command\ChangeOrderStatus\ChangeOrderStatusC
 use App\Module\Commerce\Application\Command\CreateOrder\CreateOrderCommand;
 use App\Module\Commerce\Application\DTO\Validation\ChangeOrderStatusDTO;
 use App\Module\Commerce\Application\DTO\Validation\CreateOrderDTO;
+use App\Module\Commerce\Application\Query\FindClientById\FindClientByIdQuery;
 use App\Module\Commerce\Application\Query\FindOrderByUuid\FindOrderByUuidQuery;
 use App\Module\Commerce\Application\Query\GetPaginatedOrders\GetPaginatedOrdersQuery;
 use App\Module\Commerce\Application\Voter\OrdersVoter;
+use App\Module\Commerce\Domain\Repository\ClientRepositoryInterface;
 use App\Module\Commerce\Domain\Repository\OrderRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,6 +33,7 @@ class OrdersController extends AbstractController
         private readonly AsyncCommandBusInterface $asyncCommandBus,
         private readonly QueryBusInterface $queryBus,
         private readonly OrderRepositoryInterface $orderRepository,
+        private readonly ClientRepositoryInterface $clientRepository,
     ) {
     }
 
@@ -128,5 +131,30 @@ class OrdersController extends AbstractController
             'success' => true,
             'message' => 'Successfully queued update status of order.',
         ], Response::HTTP_ACCEPTED);
+    }
+
+    #[Route('/get-client-details/{id}', methods: [Request::METHOD_GET])]
+    public function getClientDetails(string $id): Response
+    {
+        $queryResult = $this->queryBus->handle(new FindClientByIdQuery($id));
+        if ($queryResult->data !== null) {
+            $client = $this->clientRepository->getReference($queryResult->data['id']);
+        }
+
+        $result = match (true) {
+            $queryResult->success && isset($client) => [
+                'success' => true,
+                'data' => [
+                    'email' => $client->getEmail(),
+                    'name' => $client->getName(),
+                    'surname' => $client->getSurname(),
+                ],
+            ],
+            default => [
+                'success' => false,
+                'message' => 'Something went wrong while fetching details about client.',
+            ]
+        };
+        return $this->json($result, $queryResult->statusCode);
     }
 }

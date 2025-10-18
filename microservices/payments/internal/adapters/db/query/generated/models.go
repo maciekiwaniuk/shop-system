@@ -19,10 +19,10 @@ type Payer struct {
 }
 
 type Transaction struct {
-	ID          string       `json:"id"`
-	PayerID     string       `json:"payer_id"`
-	Amount      string       `json:"amount"`
-	Status      string       `json:"status"`
-	CompletedAt sql.NullTime `json:"completed_at"`
-	CreatedAt   time.Time    `json:"created_at"`
+	ID         string       `json:"id"`
+	PayerID    string       `json:"payer_id"`
+	Amount     string       `json:"amount"`
+	Status     string       `json:"status"`
+	FinishedAt sql.NullTime `json:"finished_at"`
+	CreatedAt  time.Time    `json:"created_at"`
 }

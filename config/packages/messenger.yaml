@@ -23,6 +23,7 @@ framework:
             'App\Module\Commerce\Application\Query\FindProductBySlug\FindProductBySlugQuery': sync
             'App\Module\Commerce\Application\Query\GetPaginatedOrders\GetPaginatedOrdersQuery': sync
             'App\Module\Commerce\Application\Query\GetPaginatedProducts\GetPaginatedProductsQuery': sync
+            'App\Module\Commerce\Application\Query\FindClientById\FindClientByIdQuery': sync
 
 when@test:
     framework:

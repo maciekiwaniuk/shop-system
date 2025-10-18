@@ -14,18 +14,18 @@ const (
 )
 
 type Transaction struct {
-	Id          string
-	PayerId     string
-	Amount      float32
-	Status      TransactionStatus
-	CompletedAt *time.Time
-	CreatedAt   time.Time
+	Id         string
+	PayerId    string
+	Amount     float32
+	Status     TransactionStatus
+	FinishedAt *time.Time
+	CreatedAt  time.Time
 }
 
 type TransactionRepository interface {
-	CreateTransaction(ctx context.Context, transaction *Transaction) error
-	MarkTransactionAsPaid(ctx context.Context, transactionId string) error
-	MarkTransactionAsCanceled(ctx context.Context, transactionId string) error
-	GetTransactionById(ctx context.Context, transactionId string) (*Transaction, error)
-	GetTransactionsByPayerId(ctx context.Context, payerId string) ([]Transaction, error)
+	Create(ctx context.Context, transaction *Transaction) error
+	MarkAsPaidById(ctx context.Context, id string) error
+	MarkAsCanceledById(ctx context.Context, id string) error
+	GetOneById(ctx context.Context, id string) (*Transaction, error)
+	GetManyByPayerId(ctx context.Context, payerId string) ([]Transaction, error)
 }

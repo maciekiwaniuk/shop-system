@@ -15,5 +15,6 @@ type Payer struct {
 }
 
 type PayerRepository interface {
-	CreatePayer(ctx context.Context, payer *Payer) error
+	Create(ctx context.Context, payer *Payer) error
+	FindById(ctx context.Context, id string) (*Payer, error)
 }

@@ -18,5 +18,5 @@ func NewCompleteTransactionHandler(repo domain.TransactionRepository) CompleteTr
 }
 
 func (h CompleteTransactionHandler) Handle(ctx context.Context, cmd CompleteTransaction) error {
-	return h.repo.MarkTransactionAsPaid(ctx, cmd.Transaction.Id)
+	return h.repo.MarkAsPaidById(ctx, cmd.Transaction.Id)
 }

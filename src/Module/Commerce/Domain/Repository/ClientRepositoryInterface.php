@@ -12,5 +12,7 @@ interface ClientRepositoryInterface
 
     public function findClientByEmail(string $email): ?Client;
 
+    public function findClientById(string $id): ?Client;
+
     public function getReference(string $id): Client;
 }

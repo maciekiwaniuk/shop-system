@@ -12,8 +12,8 @@ import (
 type Querier interface {
 	CreatePayer(ctx context.Context, arg CreatePayerParams) (sql.Result, error)
 	CreateTransaction(ctx context.Context, arg CreateTransactionParams) (sql.Result, error)
+	FindPayerById(ctx context.Context, id string) (Payer, error)
 	GetManyTransactionsByPayerId(ctx context.Context, payerID string) ([]Transaction, error)
-	GetOnePayerById(ctx context.Context) (Payer, error)
 	GetOneTransactionById(ctx context.Context, id string) (Transaction, error)
 	UpdateTransactionStatus(ctx context.Context, arg UpdateTransactionStatusParams) (sql.Result, error)
 }

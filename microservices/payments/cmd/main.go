@@ -5,6 +5,7 @@ import (
 	"os"
 	"payments/internal/adapters/db"
 	"payments/internal/adapters/db/repository"
+	"payments/internal/adapters/service"
 	"payments/internal/app"
 	"payments/internal/app/command"
 	"payments/internal/ports/http"
@@ -48,10 +49,12 @@ func newApplication() app.Application {
 	payerRepo := adapters.NewPayerRepository(dbConn)
 	transactionRepo := adapters.NewTransactionRepository(dbConn)
 
+	clientService := service.NewClient(os.Getenv("MONOLITH_URL"), zap.L())
+
 	return app.Application{
 		Commands: app.Commands{
 			CreatePayer:         command.NewCreatePayerHandler(payerRepo),
-			InitiateTransaction: command.NewInitiateTransactionHandler(transactionRepo),
+			InitiateTransaction: command.NewInitiateTransactionHandler(payerRepo, transactionRepo, clientService),
 			CompleteTransaction: command.NewCompleteTransactionHandler(transactionRepo),
 			CancelTransaction:   command.NewCancelTransactionHandler(transactionRepo),
 		},

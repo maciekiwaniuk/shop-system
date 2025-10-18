@@ -13,19 +13,19 @@ import (
 
 const createTransaction = `-- name: CreateTransaction :execresult
 INSERT INTO ` + "`" + `transaction` + "`" + ` (
-    id, payer_id, status, amount, completed_at, created_at
+    id, payer_id, status, amount, finished_at, created_at
 ) VALUES (
     ?, ?, ?, ?, ?, ?
 )
 `
 
 type CreateTransactionParams struct {
-	ID          string       `json:"id"`
-	PayerID     string       `json:"payer_id"`
-	Status      string       `json:"status"`
-	Amount      string       `json:"amount"`
-	CompletedAt sql.NullTime `json:"completed_at"`
-	CreatedAt   time.Time    `json:"created_at"`
+	ID         string       `json:"id"`
+	PayerID    string       `json:"payer_id"`
+	Status     string       `json:"status"`
+	Amount     string       `json:"amount"`
+	FinishedAt sql.NullTime `json:"finished_at"`
+	CreatedAt  time.Time    `json:"created_at"`
 }
 
 func (q *Queries) CreateTransaction(ctx context.Context, arg CreateTransactionParams) (sql.Result, error) {
@@ -34,13 +34,13 @@ func (q *Queries) CreateTransaction(ctx context.Context, arg CreateTransactionPa
 		arg.PayerID,
 		arg.Status,
 		arg.Amount,
-		arg.CompletedAt,
+		arg.FinishedAt,
 		arg.CreatedAt,
 	)
 }
 
 const getManyTransactionsByPayerId = `-- name: GetManyTransactionsByPayerId :many
-SELECT id, payer_id, amount, status, completed_at, created_at
+SELECT id, payer_id, amount, status, finished_at, created_at
 FROM ` + "`" + `transaction` + "`" + `
 WHERE payer_id LIKE ?
 `
@@ -59,7 +59,7 @@ func (q *Queries) GetManyTransactionsByPayerId(ctx context.Context, payerID stri
 			&i.PayerID,
 			&i.Amount,
 			&i.Status,
-			&i.CompletedAt,
+			&i.FinishedAt,
 			&i.CreatedAt,
 		); err != nil {
 			return nil, err
@@ -76,7 +76,7 @@ func (q *Queries) GetManyTransactionsByPayerId(ctx context.Context, payerID stri
 }
 
 const getOneTransactionById = `-- name: GetOneTransactionById :one
-SELECT id, payer_id, amount, status, completed_at, created_at
+SELECT id, payer_id, amount, status, finished_at, created_at
 FROM ` + "`" + `transaction` + "`" + `
 WHERE id LIKE ?
 `
@@ -89,7 +89,7 @@ func (q *Queries) GetOneTransactionById(ctx context.Context, id string) (Transac
 		&i.PayerID,
 		&i.Amount,
 		&i.Status,
-		&i.CompletedAt,
+		&i.FinishedAt,
 		&i.CreatedAt,
 	)
 	return i, err
@@ -97,16 +97,16 @@ func (q *Queries) GetOneTransactionById(ctx context.Context, id string) (Transac
 
 const updateTransactionStatus = `-- name: UpdateTransactionStatus :execresult
 UPDATE ` + "`" + `transaction` + "`" + `
-SET status = ?, completed_at = ?
+SET status = ?, finished_at = ?
 WHERE id = ?
 `
 
 type UpdateTransactionStatusParams struct {
-	Status      string       `json:"status"`
-	CompletedAt sql.NullTime `json:"completed_at"`
-	ID          string       `json:"id"`
+	Status     string       `json:"status"`
+	FinishedAt sql.NullTime `json:"finished_at"`
+	ID         string       `json:"id"`
 }
 
 func (q *Queries) UpdateTransactionStatus(ctx context.Context, arg UpdateTransactionStatusParams) (sql.Result, error) {
-	return q.db.ExecContext(ctx, updateTransactionStatus, arg.Status, arg.CompletedAt, arg.ID)
+	return q.db.ExecContext(ctx, updateTransactionStatus, arg.Status, arg.FinishedAt, arg.ID)
 }
