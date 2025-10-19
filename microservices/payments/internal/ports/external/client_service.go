@@ -10,5 +10,5 @@ type ClientDetails struct {
 }
 
 type ClientService interface {
-	GetClientDetails(ctx context.Context, ClientID string) (*ClientDetails, error)
+	GetDetails(ctx context.Context, clientID string) (*ClientDetails, error)
 }

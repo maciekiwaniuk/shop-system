@@ -24,7 +24,7 @@ func NewClient(baseURL string, logger *zap.Logger) *ClientServiceImpl {
 	}
 }
 
-func (c ClientServiceImpl) GetClientDetails(ctx context.Context, clientID string) (*external.ClientDetails, error) {
+func (c ClientServiceImpl) GetDetails(ctx context.Context, clientID string) (*external.ClientDetails, error) {
 	url := fmt.Sprintf("%s/api/v1/clients/details/%s", c.baseURL, clientID)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)

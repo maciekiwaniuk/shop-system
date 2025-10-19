@@ -24,19 +24,20 @@ readonly class PaymentsInitializerAdapter implements PaymentsInitializerInterfac
         try {
             $response = $this->httpClient->request('POST', $this->paymentsServiceUrl . '/v1/transactions/initiate', [
                 'json' => [
-                    'order_id' => $orderId,
-                    'user_id' => $userId,
-                    'total_cost' => $totalCost,
+                    'id' => $orderId,
+                    'payer_id' => $userId,
+                    'amount' => $totalCost,
                 ],
                 'headers' => [
                     'Content-Type' => 'application/json',
                 ],
             ]);
-            return $response->getStatusCode() === Response::HTTP_OK;
+            return $response->getStatusCode() === Response::HTTP_CREATED;
         } catch (Throwable $exception) {
             $this->logger->error('Failed to initialize payment', [
-                'order_id' => $orderId,
-                'user_id' => $userId,
+                'id' => $orderId,
+                'payer_id' => $userId,
+                'amount' => $totalCost,
                 'error' => $exception->getMessage(),
             ]);
             return false;

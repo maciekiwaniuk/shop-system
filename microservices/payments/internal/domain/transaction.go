@@ -14,12 +14,12 @@ const (
 )
 
 type Transaction struct {
-	Id         string
-	PayerId    string
-	Amount     float32
-	Status     TransactionStatus
-	FinishedAt *time.Time
-	CreatedAt  time.Time
+	Id         string            `json:"id"`
+	PayerId    string            `json:"payer_id"`
+	Amount     float32           `json:"amount"`
+	Status     TransactionStatus `json:"status"`
+	FinishedAt *time.Time        `json:"finished_at"`
+	CreatedAt  time.Time         `json:"created_at"`
 }
 
 type TransactionRepository interface {

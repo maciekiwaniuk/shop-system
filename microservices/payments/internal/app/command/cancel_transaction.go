@@ -6,7 +6,7 @@ import (
 )
 
 type CancelTransaction struct {
-	Transaction domain.Transaction
+	Id string
 }
 
 type CancelTransactionHandler struct {
@@ -18,5 +18,5 @@ func NewCancelTransactionHandler(repo domain.TransactionRepository) CancelTransa
 }
 
 func (h CancelTransactionHandler) Handle(ctx context.Context, cmd CancelTransaction) error {
-	return h.repo.MarkAsCanceledById(ctx, cmd.Transaction.Id)
+	return h.repo.MarkAsCanceledById(ctx, cmd.Id)
 }

@@ -6,7 +6,7 @@ import (
 )
 
 type TransactionById struct {
-	id string
+	Id string
 }
 
 type TransactionByIdHandler struct {
@@ -18,5 +18,5 @@ func NewTransactionByIdHandler(repo domain.TransactionRepository) TransactionByI
 }
 
 func (h TransactionByIdHandler) Handle(ctx context.Context, cmd TransactionById) (*domain.Transaction, error) {
-	return h.repo.GetOneById(ctx, cmd.id)
+	return h.repo.GetOneById(ctx, cmd.Id)
 }

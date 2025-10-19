@@ -6,12 +6,12 @@ import (
 )
 
 type Payer struct {
-	Id        string
-	Email     string
-	Name      string
-	Surname   string
-	UpdatedAt time.Time
-	CreatedAt time.Time
+	Id        string    `json:"id""`
+	Email     string    `json:"email"`
+	Name      string    `json:"name"`
+	Surname   string    `json:"surname"`
+	UpdatedAt time.Time `json:"updated_at"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 type PayerRepository interface {

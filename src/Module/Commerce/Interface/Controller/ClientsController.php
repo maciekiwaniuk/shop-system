@@ -22,7 +22,7 @@ class ClientsController extends AbstractController
     }
 
     #[Route('/details/{id}', methods: [Request::METHOD_GET])]
-    public function getClientDetails(string $id): Response
+    public function getDetails(string $id): Response
     {
         $queryResult = $this->queryBus->handle(new FindClientByIdQuery($id));
         if ($queryResult->data !== null) {

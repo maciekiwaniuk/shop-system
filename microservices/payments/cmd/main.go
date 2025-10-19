@@ -8,6 +8,7 @@ import (
 	"payments/internal/adapters/service"
 	"payments/internal/app"
 	"payments/internal/app/command"
+	"payments/internal/app/query"
 	"payments/internal/ports/http"
 
 	"github.com/gin-gonic/gin"
@@ -58,6 +59,9 @@ func newApplication() app.Application {
 			CompleteTransaction: command.NewCompleteTransactionHandler(transactionRepo),
 			CancelTransaction:   command.NewCancelTransactionHandler(transactionRepo),
 		},
-		Queries: app.Queries{},
+		Queries: app.Queries{
+			GetTransactionById:       query.NewTransactionByIdHandler(transactionRepo),
+			GetTransactionsByPayerId: query.NewTransactionsByPayerIdHandler(transactionRepo),
+		},
 	}
 }

@@ -55,9 +55,9 @@ func setupTransactionRoutes(rg *gin.RouterGroup, app app.Application) {
 	t := rg.Group("/transactions")
 	{
 		t.POST("/initiate", h.Initiate)
-		t.PUT("/complete/{id}", h.Complete)
-		t.PUT("/cancel/{id}", h.Cancel)
-		t.GET("/{id}", h.OneById)
-		t.GET("/{payer_id}", h.ManyByPayerId)
+		t.PUT("/complete/:id", h.Complete)
+		t.PUT("/cancel/:id", h.Cancel)
+		t.GET("/by-id/:id", h.OneById)
+		t.GET("/by-payer-id/:payer_id", h.ManyByPayerId)
 	}
 }

@@ -149,7 +149,7 @@ class Order
     {
         $totalCost = 0;
         foreach ($this->ordersProducts as $orderProduct) {
-            $totalCost += $orderProduct->getTotalAmount() * $orderProduct->getQuantity();
+            $totalCost += $orderProduct->getProductQuantity() * $orderProduct->getProductPricePerPiece();
         }
         return $totalCost;
     }

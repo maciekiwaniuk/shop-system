@@ -6,7 +6,7 @@ import (
 )
 
 type TransactionsByPayerId struct {
-	payerId string
+	PayerId string
 }
 
 type TransactionsByPayerIdHandler struct {
@@ -18,5 +18,5 @@ func NewTransactionsByPayerIdHandler(repo domain.TransactionRepository) Transact
 }
 
 func (h TransactionsByPayerIdHandler) Handle(ctx context.Context, cmd TransactionsByPayerId) ([]domain.Transaction, error) {
-	return h.repo.GetManyByPayerId(ctx, cmd.payerId)
+	return h.repo.GetManyByPayerId(ctx, cmd.PayerId)
 }
