@@ -29,3 +29,13 @@ type TransactionRepository interface {
 	GetOneById(ctx context.Context, id string) (*Transaction, error)
 	GetManyByPayerId(ctx context.Context, payerId string) ([]Transaction, error)
 }
+
+type TransactionCompletedEvent struct {
+	TransactionId string `json:"transaction_id"`
+	CompletedAt   string `json:"completed_at"`
+}
+
+type TransactionCanceledEvent struct {
+	TransactionId string `json:"transaction_id"`
+	CanceledAt    string `json:"canceled_at"`
+}
