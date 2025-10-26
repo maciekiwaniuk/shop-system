@@ -35,7 +35,15 @@ type TransactionCompletedEvent struct {
 	CompletedAt   string `json:"completed_at"`
 }
 
+func (t TransactionCompletedEvent) AggregateId() string {
+	return t.TransactionId
+}
+
 type TransactionCanceledEvent struct {
 	TransactionId string `json:"transaction_id"`
 	CanceledAt    string `json:"canceled_at"`
+}
+
+func (t TransactionCanceledEvent) AggregateId() string {
+	return t.TransactionId
 }

@@ -5,6 +5,7 @@ import (
 	"os"
 	"payments/internal/adapters/db"
 	"payments/internal/adapters/db/repository"
+	"payments/internal/adapters/messaging"
 	"payments/internal/adapters/service"
 	"payments/internal/app"
 	"payments/internal/app/command"
@@ -37,7 +38,7 @@ func main() {
 
 	zap.L().Info("Starting payments service", zap.String("port", port))
 	if err := server.SetupRouter(":" + port); err != nil {
-		zap.L().Error("Failed to setup router", zap.Error(err))
+		zap.L().Error("failed to setup router", zap.Error(err))
 	}
 }
 
@@ -52,12 +53,17 @@ func newApplication() app.Application {
 
 	clientService := service.NewClient(os.Getenv("MONOLITH_URL"), zap.L())
 
+	eventPublisher, err := messaging.NewRabbitMQEventPublisher(os.Getenv("RABBITMQ_URL"), zap.L())
+	if err != nil {
+		zap.L().Fatal("failed to initialize event publisher", zap.Error(err))
+	}
+
 	return app.Application{
 		Commands: app.Commands{
 			CreatePayer:         command.NewCreatePayerHandler(payerRepo),
 			InitiateTransaction: command.NewInitiateTransactionHandler(payerRepo, transactionRepo, clientService),
-			CompleteTransaction: command.NewCompleteTransactionHandler(transactionRepo),
-			CancelTransaction:   command.NewCancelTransactionHandler(transactionRepo),
+			CompleteTransaction: command.NewCompleteTransactionHandler(transactionRepo, eventPublisher),
+			CancelTransaction:   command.NewCancelTransactionHandler(transactionRepo, eventPublisher),
 		},
 		Queries: app.Queries{
 			GetTransactionById:       query.NewTransactionByIdHandler(transactionRepo),

@@ -2,7 +2,7 @@
 
 A **simple e-commerce system** built with modern, popular technologies, showcasing advanced software architecture patterns and best practices.
 
-#### This project is kind of sandbox for me for experimenting and learning new techniques and technologies. It’s more meant to be an ongoing project rather than something finished once and for all. I also see it as a great way to showcase my work and coding skills. Not everything here is optimized for maximum efficiency and how I should approach to these problems in real commercial projects - some parts, such as the communication between the payment microservice and the monolith, are intentionally implemented using mixed - sync and async communication because I wanted to test pros and cons and that's for me best way of learning something in efficient way.
+#### This project is kind of sandbox for me for experimenting and learning new techniques and technologies. It’s more meant to be an ongoing project rather than something finished once and for all. I also see it as a great way to showcase my work and coding skills. Not everything here is optimized for maximum efficiency and how I would approach to these problems in real commercial projects - some parts, such as the communication between the payment microservice and the monolith, are intentionally implemented using mixed - sync and async communication because I wanted to test pros and cons and that's for me best way of learning something in efficient way.
 
 ### Initial commit to this repo was made 27th August 2023
 

@@ -3,6 +3,8 @@ package command
 import (
 	"context"
 	"payments/internal/domain"
+	"payments/internal/ports/outbound"
+	"time"
 )
 
 type CompleteTransaction struct {
@@ -10,13 +12,23 @@ type CompleteTransaction struct {
 }
 
 type CompleteTransactionHandler struct {
-	repo domain.TransactionRepository
+	repo           domain.TransactionRepository
+	eventPublisher outbound.EventPublisher
 }
 
-func NewCompleteTransactionHandler(repo domain.TransactionRepository) CompleteTransactionHandler {
-	return CompleteTransactionHandler{repo: repo}
+func NewCompleteTransactionHandler(repo domain.TransactionRepository, eventPublisher outbound.EventPublisher) CompleteTransactionHandler {
+	return CompleteTransactionHandler{repo: repo, eventPublisher: eventPublisher}
 }
 
 func (h CompleteTransactionHandler) Handle(ctx context.Context, cmd CompleteTransaction) error {
-	return h.repo.MarkAsPaidById(ctx, cmd.Id)
+	err := h.repo.MarkAsPaidById(ctx, cmd.Id)
+	if err != nil {
+		return err
+	}
+
+	event := domain.TransactionCompletedEvent{
+		TransactionId: cmd.Id,
+		CompletedAt:   time.Now().Format(time.RFC3339),
+	}
+	return h.eventPublisher.TransactionCompleted(ctx, event)
 }

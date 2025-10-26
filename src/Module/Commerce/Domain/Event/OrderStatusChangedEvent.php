@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Module\Commerce\Domain\Event;
 
-class OrderStatusChangedEvent
+readonly class OrderStatusChangedEvent
 {
-
+    public function __construct(
+        public string $orderId,
+    ) {
+    }
 }
