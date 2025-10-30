@@ -40,21 +40,3 @@ spec:
                   volumeMounts:
                       - name: app-code
                         mountPath: /var/www
----
-apiVersion: v1
-kind: Service
-metadata:
-    name: backend
-    namespace: shop-system
-    labels:
-        app.kubernetes.io/name: shop-system
-        app.kubernetes.io/component: backend
-        app.kubernetes.io/instance: local
-spec:
-    type: ClusterIP
-    selector:
-        app.kubernetes.io/component: backend
-    ports:
-        - protocol: TCP
-          port: 9000
-          targetPort: 9000

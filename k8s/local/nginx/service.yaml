@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: nginx
+    namespace: shop-system
+    labels:
+        app.kubernetes.io/name: shop-system
+        app.kubernetes.io/component: nginx
+        app.kubernetes.io/instance: local
+spec:
+    type: NodePort
+    ports:
+        - port: 80
+          targetPort: 80
+          nodePort: 30080
+    selector:
+        app.kubernetes.io/component: nginx

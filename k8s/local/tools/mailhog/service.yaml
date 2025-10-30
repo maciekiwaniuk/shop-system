@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: mailhog
+    namespace: shop-system
+    labels:
+        app.kubernetes.io/name: shop-system
+        app.kubernetes.io/component: mailhog
+        app.kubernetes.io/instance: local
+spec:
+    type: NodePort
+    selector:
+        app.kubernetes.io/component: mailhog
+    ports:
+        - name: ui
+          port: 8025
+          targetPort: 8025
+          nodePort: 30225
+        - name: smtp
+          port: 1025
+          targetPort: 1025
