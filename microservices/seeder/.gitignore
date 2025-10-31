@@ -1,0 +1,68 @@
+###> Lua ###
+# Compiled Lua files
+*.luac
+*.lua~
+
+# LuaRocks
+lib/
+lua_modules/
+.rocks/
+luarocks.lock
+
+# Lua test coverage
+luacov.stats.out
+luacov.report.out
+
+###< Lua ###
+
+###> Environment ###
+.env
+.env.local
+.env.*.local
+
+###< Environment ###
+
+###> IDE ###
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+###< IDE ###
+
+###> Build / Runtime ###
+*.log
+tmp/
+temp/
+*.tmp
+*.pid
+*.sock
+
+###< Build / Runtime ###
+
+###> Docker ###
+.dockerignore
+
+###< Docker ###
+
+###> Dependencies ###
+# LuaRocks installed packages
+deps/
+modules/
+
+###< Dependencies ###
+
+###> Test ###
+test-results/
+coverage/
+*.test.lua
+
+###< Test ###
+
+###> OS ###
+Thumbs.db
+.DS_Store
+
+###< OS ###

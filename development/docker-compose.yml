@@ -84,6 +84,20 @@ services:
         depends_on:
             - shop-system-backend
 
+    shop-system-seeder:
+        container_name: shop-system-seeder
+        build:
+            context: ../microservices/seeder
+        restart: always
+        ports:
+            - "8081:8081"
+        volumes:
+            - ../microservices/seeder:/app
+        env_file:
+            ../microservices/seeder/.env
+        depends_on:
+            - shop-system-mysql
+
     shop-system-queue:
         container_name: shop-system-queue
         build:
