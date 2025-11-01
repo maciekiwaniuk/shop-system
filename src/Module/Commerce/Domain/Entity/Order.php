@@ -118,7 +118,7 @@ class Order
                 status: $orderStatusUpdate,
             ),
         );
-        if ($orderStatusUpdate->value === OrderStatus::DELIVERED->value) {
+        if (in_array($orderStatusUpdate->value, [OrderStatus::COMPLETED->value, OrderStatus::CANCELED->value])) {
             $this->setCompletedAt(new DateTimeImmutable());
         }
         return $this;

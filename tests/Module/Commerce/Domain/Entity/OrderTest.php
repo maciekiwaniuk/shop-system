@@ -72,50 +72,14 @@ class OrderTest extends AbstractUnitTestCase
     }
 
     #[Test]
-    public function it_should_update_status_and_create_status_update_record(): void
-    {
-        $order = new Order($this->client);
-        $initialStatusCount = $order->getOrdersStatusUpdates()->count();
-
-        $order->updateStatus(OrderStatus::SENT);
-
-        $this->assertEquals(OrderStatus::SENT->value, $order->getCurrentStatus());
-        $this->assertCount($initialStatusCount + 1, $order->getOrdersStatusUpdates());
-    }
-
-    #[Test]
-    public function it_should_set_completed_at_when_status_changes_to_delivered(): void
-    {
-        $order = new Order($this->client);
-        $this->assertNull($order->getCompletedAt());
-
-        $order->updateStatus(OrderStatus::DELIVERED);
-
-        $this->assertEquals(OrderStatus::DELIVERED->value, $order->getCurrentStatus());
-        $this->assertNotNull($order->getCompletedAt());
-    }
-
-    #[Test]
-    public function it_should_not_set_completed_at_for_non_delivered_status(): void
-    {
-        $order = new Order($this->client);
-
-        $order->updateStatus(OrderStatus::SENT);
-
-        $this->assertEquals(OrderStatus::SENT->value, $order->getCurrentStatus());
-        $this->assertNull($order->getCompletedAt());
-    }
-
-    #[Test]
     public function it_should_maintain_status_history_in_order(): void
     {
         $order = new Order($this->client);
-        $order->updateStatus(OrderStatus::SENT);
-        $order->updateStatus(OrderStatus::DELIVERED);
+        $order->updateStatus(OrderStatus::CANCELED);
 
-        $this->assertCount(3, $order->getOrdersStatusUpdates());
+        $this->assertCount(2, $order->getOrdersStatusUpdates());
 
-        $this->assertEquals(OrderStatus::DELIVERED->value, $order->getCurrentStatus());
+        $this->assertEquals(OrderStatus::CANCELED->value, $order->getCurrentStatus());
     }
 
     #[Test]

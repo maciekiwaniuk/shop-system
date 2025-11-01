@@ -25,7 +25,7 @@ class ChangeOrderStatusDTOTest extends AbstractIntegrationTestCase
     #[Test]
     public function it_should_pass_validation_when_status_is_valid(): void
     {
-        $dto = new ChangeOrderStatusDTO(status: OrderStatus::SENT);
+        $dto = new ChangeOrderStatusDTO(status: OrderStatus::CANCELED);
 
         $errors = $this->validator->validate($dto);
 
@@ -43,39 +43,9 @@ class ChangeOrderStatusDTOTest extends AbstractIntegrationTestCase
     }
 
     #[Test]
-    public function it_should_pass_validation_when_status_is_preparing_for_delivery(): void
-    {
-        $dto = new ChangeOrderStatusDTO(status: OrderStatus::PREPARING_FOR_DELIVERY);
-
-        $errors = $this->validator->validate($dto);
-
-        $this->assertEmpty($errors);
-    }
-
-    #[Test]
-    public function it_should_pass_validation_when_status_is_in_delivery(): void
-    {
-        $dto = new ChangeOrderStatusDTO(status: OrderStatus::SENT);
-
-        $errors = $this->validator->validate($dto);
-
-        $this->assertEmpty($errors);
-    }
-
-    #[Test]
-    public function it_should_pass_validation_when_status_is_delivered(): void
-    {
-        $dto = new ChangeOrderStatusDTO(status: OrderStatus::DELIVERED);
-
-        $errors = $this->validator->validate($dto);
-
-        $this->assertEmpty($errors);
-    }
-
-    #[Test]
     public function it_should_pass_validation_when_status_is_cancelled(): void
     {
-        $dto = new ChangeOrderStatusDTO(status: OrderStatus::CANCELLED);
+        $dto = new ChangeOrderStatusDTO(status: OrderStatus::CANCELED);
 
         $errors = $this->validator->validate($dto);
 

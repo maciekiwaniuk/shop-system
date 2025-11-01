@@ -29,7 +29,7 @@ func NewRabbitMQEventPublisher(amqpURL string, logger *zap.Logger) (outbound.Eve
 	}
 
 	err = ch.ExchangeDeclare(
-		"payments_events",
+		"commerce.payments_events",
 		"topic",
 		true,
 		false,
@@ -49,9 +49,32 @@ func NewRabbitMQEventPublisher(amqpURL string, logger *zap.Logger) (outbound.Eve
 }
 
 func (p *RabbitMQEventPublisher) publishEvent(ctx context.Context, routingKey string, event domain.Event) error {
+	eventMap := map[string]interface{}{
+		"routing_key": routingKey,
+	}
+
 	body, err := json.Marshal(event)
 	if err != nil {
-		return nil
+		return err
+	}
+
+	var eventData map[string]interface{}
+	if err := json.Unmarshal(body, &eventData); err != nil {
+		return err
+	}
+
+	eventMap["transaction_id"] = eventData["transaction_id"]
+
+	switch event.(type) {
+	case domain.TransactionCompletedEvent:
+		eventMap["completed_at"] = eventData["completed_at"]
+	case domain.TransactionCanceledEvent:
+		eventMap["canceled_at"] = eventData["canceled_at"]
+	}
+
+	finalBody, err := json.Marshal(eventMap)
+	if err != nil {
+		return err
 	}
 
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -59,13 +82,13 @@ func (p *RabbitMQEventPublisher) publishEvent(ctx context.Context, routingKey st
 
 	return p.channel.PublishWithContext(
 		ctx,
-		"payments_events",
+		"commerce.payments_events",
 		routingKey,
 		false,
 		false,
 		amqp091.Publishing{
 			ContentType:  "application/json",
-			Body:         body,
+			Body:         finalBody,
 			Timestamp:    time.Now(),
 			DeliveryMode: amqp091.Persistent,
 			MessageId:    event.AggregateId(),

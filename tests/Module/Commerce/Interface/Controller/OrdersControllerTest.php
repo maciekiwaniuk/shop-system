@@ -169,7 +169,7 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
             method: Request::METHOD_POST,
             uri: $this->url . '/change-status/' . $order->getId(),
             content: json_encode([
-                'status' => OrderStatus::SENT->value,
+                'status' => OrderStatus::CANCELED->value,
             ]),
         );
 
@@ -178,6 +178,6 @@ class OrdersControllerTest extends AbstractApplicationCommerceTestCase
         $this->assertResponseIsSuccessful();
         $this->assertTrue($responseData['success']);
         $this->assertNotEquals($statusBeforeAction, $orderAfterAction->getCurrentStatus());
-        $this->assertEquals(OrderStatus::SENT->value, $orderAfterAction->getCurrentStatus());
+        $this->assertEquals(OrderStatus::CANCELED->value, $orderAfterAction->getCurrentStatus());
     }
 }

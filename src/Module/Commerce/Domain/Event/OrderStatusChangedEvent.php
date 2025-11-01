@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Module\Commerce\Domain\Event;
 
-readonly class OrderStatusChangedEvent
+use Symfony\Contracts\EventDispatcher\Event;
+
+final class OrderStatusChangedEvent extends Event
 {
     public function __construct(
-        public string $orderId,
+        public readonly string $orderId,
     ) {
     }
 }
