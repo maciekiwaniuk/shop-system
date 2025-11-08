@@ -1,104 +1,145 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useState, useEffect, useCallback, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { ProductGrid } from '@/components/product/ProductGrid';
+import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import { Button } from '@/components/ui/Button';
+import { productsApi } from '@/lib/api/products';
+import { Product } from '@/types/product';
+import { toast } from 'react-hot-toast';
 
-interface Product {
-    id: number;
-    name: string;
-    slug: string;
-    price: number;
-    updatedAt: string;
-    createdAt: string;
-}
+function HomePageContent() {
+    const searchParams = useSearchParams();
+    const searchPhrase = searchParams.get('search');
 
-interface ApiResponse {
-    success: boolean;
-    data: Product[];
-}
-
-const SkeletonProduct: React.FC = () => (
-    <div className="animate-pulse rounded-md bg-gray-100 p-4">
-        <div className="h-48 w-full rounded-md bg-gray-200" />
-        <div className="mt-4 space-y-2">
-            <div className="h-4 w-3/4 rounded bg-gray-200" />
-            <div className="h-3 w-1/2 rounded bg-gray-200" />
-        </div>
-    </div>
-);
-
-export default function Home() {
     const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [offset, setOffset] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const response = await fetch('http://localhost/api/v1/products/get-paginated?offset=1&limit=20');
-                if (!response.ok) throw new Error('Failed to fetch products');
+    const loadProducts = useCallback(async (currentOffset: number, search?: string | null) => {
+        try {
+            if (search) {
+                const response = await productsApi.search(search);
+                if (response.success && response.data) {
+                    const productsList = Array.isArray(response.data) ? response.data : [];
+                    setProducts(productsList);
+                    setHasMore(false);
+                } else {
+                    toast.error(response.message || 'Failed to search products');
+                }
+            } else {
+                const response = await productsApi.getPaginated({
+                    offset: currentOffset,
+                    limit: 12,
+                });
 
-                const data: ApiResponse = await response.json();
-                if (!data.success) throw new Error('API returned an error');
+                if (response.success && response.data) {
+                    // Handle both array response and PaginatedProducts object
+                    let productsList: Product[] = [];
+                    let hasMoreProducts = false;
 
-                setProducts(data.data);
-            } catch (err) {
-                console.log(err);
-                setError(err instanceof Error ? err.message : 'An unexpected error occurred');
-            } finally {
-                setIsLoading(false);
+                    if (Array.isArray(response.data)) {
+                        // Backend returns array directly
+                        productsList = response.data;
+                        hasMoreProducts = productsList.length === 12;
+                    } else if (response.data.products && Array.isArray(response.data.products)) {
+                        // Backend returns PaginatedProducts object
+                        productsList = response.data.products;
+                        const paginatedData = response.data;
+                        hasMoreProducts =
+                            productsList.length === 12 &&
+                            paginatedData.offset !== undefined &&
+                            paginatedData.total !== undefined &&
+                            paginatedData.offset + productsList.length < paginatedData.total;
+                    }
+
+                    if (currentOffset === 1) {
+                        setProducts(productsList);
+                    } else {
+                        setProducts((prev) => [...prev, ...productsList]);
+                    }
+                    setHasMore(hasMoreProducts);
+                } else {
+                    toast.error(response.message || 'Failed to load products');
+                }
             }
-        };
-
-        fetchProducts();
+        } catch (error) {
+            console.error('Error loading products:', error);
+            toast.error('An error occurred while loading products');
+        } finally {
+            setIsLoading(false);
+            setIsLoadingMore(false);
+        }
     }, []);
 
-    const getRandomImage = (id: number) => `https://picsum.photos/seed/${id}-${Date.now()}/400/400.webp`;
+    useEffect(() => {
+        setIsLoading(true);
+        setOffset(1);
+        setProducts([]);
+        loadProducts(1, searchPhrase);
+    }, [searchPhrase, loadProducts]);
+
+    const loadMore = () => {
+        if (!isLoadingMore && hasMore && !searchPhrase) {
+            setIsLoadingMore(true);
+            const nextOffset = offset + 12;
+            setOffset(nextOffset);
+            loadProducts(nextOffset);
+        }
+    };
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-                <h2 className="text-2xl font-bold text-gray-900">Customers Also Purchased</h2>
-
-                {error && (
-                    <div className="mt-6 rounded-md bg-red-50 p-4 text-center text-sm text-red-600">
-                        {error}
+            {/* Main Content */}
+            <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
+                {/* Search Results Header */}
+                {searchPhrase && (
+                    <div className="mb-8">
+                        <h1 className="text-3xl font-bold text-gray-900">
+                            Search Results
+                        </h1>
+                        <p className="mt-2 text-gray-600">
+                            Found <span className="font-semibold text-gray-900">{products.length}</span>{' '}
+                            {products.length === 1 ? 'product' : 'products'} for "{searchPhrase}"
+                        </p>
                     </div>
                 )}
 
-                {isLoading && (
-                    <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                        {Array(4).fill(0).map((_, index) => (
-                            <SkeletonProduct key={index} />
-                        ))}
-                    </div>
-                )}
+                {/* Products Grid */}
+                <ProductGrid products={products} isLoading={isLoading} />
 
-                {!isLoading && !error && (
-                    <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                        {products.map((product) => (
-                            <Link
-                                key={product.id}
-                                href={`/products/${product.slug}`}
-                                className="group rounded-md bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
-                            >
-                                <img
-                                    src={getRandomImage(product.id)}
-                                    alt={product.name}
-                                    className="h-48 w-full rounded-md object-cover transition-opacity group-hover:opacity-90"
-                                />
-                                <div className="mt-4 flex justify-between">
-                                    <div>
-                                        <h3 className="text-sm font-semibold text-gray-900">{product.name}</h3>
-                                        <p className="text-xs text-gray-500">ID: {product.id}</p>
-                                    </div>
-                                    <p className="text-sm font-medium text-gray-900">${product.price.toFixed(2)}</p>
-                                </div>
-                            </Link>
-                        ))}
+                {/* Load More Button */}
+                {hasMore && !searchPhrase && !isLoading && (
+                    <div className="mt-12 flex justify-center">
+                        <Button
+                            onClick={loadMore}
+                            disabled={isLoadingMore}
+                            isLoading={isLoadingMore}
+                            variant="outline"
+                            size="lg"
+                            className="min-w-[200px] border-2 border-gray-300 px-8 py-3 font-semibold hover:border-gray-400 hover:bg-gray-50"
+                        >
+                            {isLoadingMore ? 'Loading...' : 'Load More Products'}
+                        </Button>
                     </div>
                 )}
-            </main>
+            </div>
         </div>
     );
 }
+
+export default function HomePage() {
+    return (
+        <Suspense fallback={
+            <div className="flex items-center justify-center py-12">
+                <LoadingSpinner size="lg" />
+            </div>
+        }>
+            <HomePageContent />
+        </Suspense>
+    );
+}
+

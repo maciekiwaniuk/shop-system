@@ -15,7 +15,7 @@
     }
     
     log {
-        output stdout
+        output stderr
         format console
     }
 }
