@@ -1,8 +1,10 @@
-FROM php:8.4.1-fpm
+FROM dunglas/frankenphp:1-php8.4
+
+WORKDIR /var/www
 
 COPY php.ini /usr/local/etc/php/conf.d/docker-php-config.ini
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     gnupg \
     g++ \
     procps \
@@ -14,23 +16,30 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libpng-dev \
     libjpeg-dev \
-    libicu-dev  \
+    libicu-dev \
     libonig-dev \
     libxslt1-dev \
     acl \
-    librabbitmq-dev
+    librabbitmq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install -y \
-    redis-server \
-    && pecl install redis \
-    && docker-php-ext-enable redis
+RUN set -eux; \
+    install-php-extensions \
+        @composer \
+        redis \
+        amqp \
+        pdo_mysql \
+        zip \
+        xsl \
+        gd \
+        intl \
+        opcache \
+        exif \
+        mbstring
 
-RUN pecl install amqp \
-    && docker-php-ext-enable amqp
+# https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
-RUN docker-php-ext-install \
-    pdo pdo_mysql zip xsl gd intl opcache exif mbstring
+COPY Caddyfile /etc/frankenphp/Caddyfile
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-WORKDIR /var/www
+CMD [ "frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile", "--watch" ]
