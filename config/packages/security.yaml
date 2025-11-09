@@ -3,16 +3,21 @@ security:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
 
     providers:
-        users:
+        app_user_provider:
             entity:
                 class: App\Module\Auth\Domain\Entity\User
                 property: email
-
+        jwt:
+            lexik_jwt:
+                class: App\Module\Auth\Infrastructure\Security\TokenedUser
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         login:
+            pattern: ^/api/v1/login
+            stateless: true
+            provider: app_user_provider
             json_login:
                 check_path: /api/v1/login
                 username_path: email
@@ -22,9 +27,8 @@ security:
         api:
             pattern: ^/api/v1
             stateless: true
-            jwt:
-                provider: null
-                authenticator: lexik_jwt_authentication.security.jwt_authenticator
+            provider: jwt
+            jwt: ~
 
 when@test:
     security:
