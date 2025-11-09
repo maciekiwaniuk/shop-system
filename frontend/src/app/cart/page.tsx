@@ -141,7 +141,7 @@ export default function CartPage() {
                     <div className="lg:col-span-1">
                         <div className="rounded-lg bg-white p-6 shadow-sm">
                             <h2 className="mb-4 text-xl font-semibold text-gray-900">Order Summary</h2>
-                            <div className="space-y-3 border-b border-gray-200 pb-4">
+                            <div className="space-y-3 pb-4">
                                 <div className="flex justify-between text-sm">
                                     <span className="text-gray-600">Subtotal</span>
                                     <span className="font-medium text-gray-900">{formatPrice(cartTotal)}</span>

@@ -30,7 +30,8 @@ export function SearchBar() {
                     const response = await productsApi.search(debouncedSearch.trim());
                     if (response.success && response.data) {
                         const products = Array.isArray(response.data) ? response.data : [];
-                        setResults(products);
+                        // Limit to maximum 4 results to avoid scrollable list
+                        setResults(products.slice(0, 4));
                         setShowResults(true);
                     } else {
                         setResults([]);
@@ -123,10 +124,10 @@ export function SearchBar() {
                         </div>
                     ) : results.length > 0 ? (
                         <>
-                            <div className="max-h-96 overflow-y-auto">
-                                {results.map((product) => (
+                            <div>
+                                {results.map((product, index) => (
                                     <Link
-                                        key={product.id}
+                                        key={`${product.id ?? 'noid'}-${product.slug ?? index}`}
                                         href={`/products/${product.slug}`}
                                         onClick={() => {
                                             setShowResults(false);
