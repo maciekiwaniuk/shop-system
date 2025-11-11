@@ -14,6 +14,17 @@ export const ordersApi = {
         return data;
     },
 
+    async getMyPaginated(cursor?: string, limit: number = 10): Promise<ApiResponse<PaginatedOrders>> {
+        const params: Record<string, string | number> = { limit };
+        if (cursor) {
+            params.cursor = cursor;
+        }
+        const { data } = await apiClient.get<ApiResponse<PaginatedOrders>>('/orders/get-my-paginated', {
+            params,
+        });
+        return data;
+    },
+
     async getByUuid(uuid: string): Promise<ApiResponse<Order>> {
         const { data } = await apiClient.get<ApiResponse<Order>>(`/orders/show/${uuid}`);
         return data;

@@ -16,6 +16,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 class OrdersVoter extends Voter
 {
     public const string GET_PAGINATED = 'GET_PAGINATED_ORDERS';
+    public const string GET_MY_PAGINATED = 'GET_MY_PAGINATED_ORDERS';
     public const string SHOW = 'SHOW_ORDER';
     public const string CREATE = 'CREATE_ORDER';
     public const string UPDATE_STATUS = 'UPDATE_STATUS_ORDER';
@@ -27,7 +28,7 @@ class OrdersVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return in_array($attribute, [self::GET_PAGINATED, self::SHOW, self::CREATE, self::UPDATE_STATUS])
+        return in_array($attribute, [self::GET_PAGINATED, self::GET_MY_PAGINATED, self::SHOW, self::CREATE, self::UPDATE_STATUS])
             && ($subject instanceof Order || $subject === null);
     }
 
@@ -38,6 +39,7 @@ class OrdersVoter extends Voter
     {
         return match ($attribute) {
             self::GET_PAGINATED => $this->canGetPaginated(),
+            self::GET_MY_PAGINATED => $this->canGetMyPaginated(),
             self::SHOW => $this->canShow($subject, $this->userContext),
             self::CREATE => $this->canCreate(),
             self::UPDATE_STATUS => $this->canUpdateStatus($this->userContext),
@@ -47,7 +49,13 @@ class OrdersVoter extends Voter
 
     private function canGetPaginated(): bool
     {
-        return true;
+        return $this->userContext->isAdmin();
+    }
+
+    private function canGetMyPaginated(): bool
+    {
+        // TODO: COMPARE ORDER PAYER ID TO USER CONTEXT
+        return $this->userContext->getUserIdentifier() !== '';
     }
 
     private function canShow(Order $order, UserContextInterface $userContext): bool

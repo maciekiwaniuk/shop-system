@@ -11,14 +11,19 @@ import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { formatPrice, formatDate } from '@/lib/utils/format';
 import { toast } from 'react-hot-toast';
+import { useIsAdmin } from '@/lib/utils/auth';
 
 function OrdersListContent() {
     const router = useRouter();
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const isAdmin = useIsAdmin();
     const [orders, setOrders] = useState<Order[]>([]);
+    const [allOrders, setAllOrders] = useState<Order[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [cursor, setCursor] = useState<string | undefined>();
+    const [allCursor, setAllCursor] = useState<string | undefined>();
     const [hasMore, setHasMore] = useState(true);
+    const [hasMoreAll, setHasMoreAll] = useState(true);
 
     useEffect(() => {
         if (!isAuthenticated) {
@@ -28,7 +33,7 @@ function OrdersListContent() {
 
         const loadOrders = async () => {
             try {
-                const response = await ordersApi.getPaginated(cursor, 10);
+                const response = await ordersApi.getMyPaginated(cursor, 10);
                 if (response.success && response.data) {
                     if (Array.isArray(response.data)) {
                         setOrders(response.data);
@@ -51,6 +56,31 @@ function OrdersListContent() {
 
         loadOrders();
     }, [isAuthenticated, router, cursor]);
+
+    useEffect(() => {
+        if (!isAuthenticated || !isAdmin) return;
+        const loadAllOrders = async () => {
+            try {
+                const response = await ordersApi.getPaginated(allCursor, 10);
+                if (response.success && response.data) {
+                    if (Array.isArray(response.data)) {
+                        setAllOrders(response.data);
+                        setHasMoreAll(response.data.length === 10);
+                    } else if (response.data.orders) {
+                        setAllOrders(response.data.orders);
+                        setHasMoreAll(response.data.orders.length === 10);
+                        setAllCursor(response.data.cursor);
+                    }
+                } else {
+                    toast.error(response.message || 'Failed to load all orders');
+                }
+            } catch (error) {
+                console.error('Error loading all orders:', error);
+                toast.error('An error occurred while loading all orders');
+            }
+        };
+        loadAllOrders();
+    }, [isAuthenticated, isAdmin, allCursor]);
 
     if (!isAuthenticated) {
         return null;
@@ -121,6 +151,60 @@ function OrdersListContent() {
                                     </Link>
                                 );
                             })}
+                    </div>
+                )}
+
+                {isAdmin && (
+                    <div className="mt-12">
+                        <h2 className="mb-6 text-2xl font-bold text-gray-900">All Orders</h2>
+                        {allOrders.length === 0 ? (
+                            <div className="rounded-lg border-2 border-gray-200 bg-white p-6 text-sm text-gray-600">
+                                No orders to display.
+                            </div>
+                        ) : (
+                            <div className="space-y-4">
+                                {allOrders
+                                    .filter((order) => order && (order.uuid || order.id))
+                                    .map((order) => {
+                                        const orderId = order.uuid || order.id || '';
+                                        const orderDisplayId = orderId ? orderId.slice(0, 8) : 'N/A';
+                                        return (
+                                            <Link
+                                                key={`all-${orderId}`}
+                                                href={`/orders/${orderId}`}
+                                                className="block rounded-lg border-2 border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+                                            >
+                                                <div className="flex items-center justify-between">
+                                                    <div>
+                                                        <h3 className="text-lg font-semibold text-gray-900">
+                                                            Order #{orderDisplayId}
+                                                        </h3>
+                                                        <p className="mt-1 text-sm text-gray-600">
+                                                            {order.createdAt ? formatDate(order.createdAt) : 'N/A'}
+                                                        </p>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <p className="text-lg font-bold text-gray-900">
+                                                            {order.totalPrice ? formatPrice(order.totalPrice) : '$0.00'}
+                                                        </p>
+                                                        <span
+                                                            className={`mt-1 inline-block rounded-full px-3 py-1 text-xs font-semibold ${
+                                                                order.status === 'paid'
+                                                                    ? 'bg-green-100 text-green-800'
+                                                                    : order.status === 'cancelled'
+                                                                      ? 'bg-red-100 text-red-800'
+                                                                      : 'bg-yellow-100 text-yellow-800'
+                                                            }`}
+                                                        >
+                                                            {order.status || 'pending'}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </Link>
+                                        );
+                                    })}
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

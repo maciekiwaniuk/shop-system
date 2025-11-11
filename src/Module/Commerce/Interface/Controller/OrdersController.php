@@ -15,6 +15,7 @@ use App\Module\Commerce\Application\DTO\Validation\CreateOrderDTO;
 use App\Module\Commerce\Application\Query\FindClientById\FindClientByIdQuery;
 use App\Module\Commerce\Application\Query\FindOrderByUuid\FindOrderByUuidQuery;
 use App\Module\Commerce\Application\Query\GetPaginatedOrders\GetPaginatedOrdersQuery;
+use App\Module\Commerce\Application\Query\GetPaginatedOrdersForClient\GetPaginatedOrdersForClientQuery;
 use App\Module\Commerce\Application\Voter\OrdersVoter;
 use App\Module\Commerce\Domain\Repository\ClientRepositoryInterface;
 use App\Module\Commerce\Domain\Repository\OrderRepositoryInterface;
@@ -58,6 +59,35 @@ class OrdersController extends AbstractController
             default => [
                 'success' => false,
                 'message' => 'Something went wrong while getting paginated orders.',
+            ]
+        };
+        return $this->json($result, $queryResult->statusCode);
+    }
+
+    #[Route('/get-my-paginated', methods: [Request::METHOD_GET])]
+    #[IsGranted(OrdersVoter::GET_MY_PAGINATED)]
+    public function getMyPaginated(#[ValueResolver('get_paginated_orders')] PaginationUuidDTO $dto): Response
+    {
+        if ($dto->hasErrors()) {
+            return $this->json([
+                'success' => false,
+                'errors' => $dto->getErrors(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $queryResult = $this->queryBus->handle(new GetPaginatedOrdersForClientQuery(
+            $dto->cursor,
+            $dto->limit
+        ));
+
+        $result = match (true) {
+            $queryResult->success => [
+                'success' => true,
+                'data' => $queryResult->data,
+            ],
+            default => [
+                'success' => false,
+                'message' => 'Something went wrong while getting paginated orders for current user.',
             ]
         };
         return $this->json($result, $queryResult->statusCode);

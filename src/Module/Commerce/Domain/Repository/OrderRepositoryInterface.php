@@ -15,6 +15,11 @@ interface OrderRepositoryInterface
      */
     public function getPaginatedByUuid(?string $cursor, int $limit): array;
 
+    /**
+     * @return array<Order>
+     */
+    public function getPaginatedByClientId(string $clientId, ?string $cursor, int $limit): array;
+
     public function findByUuid(string $uuid): ?Order;
 
     public function getReference(string $id): Order;

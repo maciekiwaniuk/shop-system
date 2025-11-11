@@ -36,10 +36,35 @@ class OrderRepository extends ServiceEntityRepository implements OrderRepository
     public function getPaginatedByUuid(?string $cursor = null, int $limit = 10): array
     {
         $query = $this->createQueryBuilder('o')
-            ->select('o');
+            ->select('o')
+            ->orderBy('o.id', 'ASC')
+            ->setMaxResults($limit);
 
         if (isset($cursor)) {
             $query->where('o.id > :cursor')
+                ->setParameter('cursor', $cursor);
+        }
+
+        return $query
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return array<Order>
+     */
+    public function getPaginatedByClientId(string $clientId, ?string $cursor = null, int $limit = 10): array
+    {
+        $query = $this->createQueryBuilder('o')
+            ->select('o')
+            ->innerJoin('o.client', 'c')
+            ->where('c.id = :clientId')
+            ->setParameter('clientId', $clientId)
+            ->orderBy('o.id', 'ASC')
+            ->setMaxResults($limit);
+
+        if (isset($cursor)) {
+            $query->andWhere('o.id > :cursor')
                 ->setParameter('cursor', $cursor);
         }
 
