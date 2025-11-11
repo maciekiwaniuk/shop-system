@@ -1,7 +1,14 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-    /* config options here */
+	async rewrites() {
+		return [
+			{
+				source: '/payments/:path*',
+				destination: 'http://shop-system-payments:8080/api/v1/:path*',
+			},
+		];
+	},
 };
 
 export default nextConfig;

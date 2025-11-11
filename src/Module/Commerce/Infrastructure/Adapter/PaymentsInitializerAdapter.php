@@ -22,7 +22,7 @@ readonly class PaymentsInitializerAdapter implements PaymentsInitializerInterfac
     public function init(string $orderId, string $userId, float $totalCost): bool
     {
         try {
-            $response = $this->httpClient->request('POST', $this->paymentsServiceUrl . '/v1/transactions/initiate', [
+            $response = $this->httpClient->request('POST', $this->paymentsServiceUrl . '/api/v1/transactions/initiate', [
                 'json' => [
                     'id' => $orderId,
                     'payer_id' => $userId,

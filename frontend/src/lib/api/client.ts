@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'ax
 import { ApiResponse } from '@/types/api';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/api/v1';
-const PAYMENTS_API_BASE_URL = process.env.NEXT_PUBLIC_PAYMENTS_API_URL || 'http://localhost:8080/v1';
+const PAYMENTS_API_BASE_URL = process.env.NEXT_PUBLIC_PAYMENTS_URL || '/payments';
 
 // Create axios instance for main API
 export const apiClient: AxiosInstance = axios.create({

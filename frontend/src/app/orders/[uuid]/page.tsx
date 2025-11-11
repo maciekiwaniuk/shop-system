@@ -190,9 +190,9 @@ function OrderDetailContent() {
                                 <h2 className="mb-4 text-xl font-semibold text-gray-900">Order Items</h2>
                                 {order.ordersProducts && order.ordersProducts.length > 0 ? (
                                     <div className="space-y-4">
-                                        {order.ordersProducts.map((item) => (
+                                        {order.ordersProducts.map((item, index) => (
                                             <div
-                                                key={item.id}
+                                                key={`${item.product?.id ?? 'noid'}-${index}`}
                                                 className="flex items-center gap-4 border-b border-gray-200 pb-4 last:border-0 last:pb-0"
                                             >
                                                 <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-50">

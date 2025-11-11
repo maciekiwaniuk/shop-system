@@ -25,7 +25,7 @@ type Response struct {
 func (h HttpServer) SetupRouter(port string) error {
 	r := gin.Default()
 
-	v1 := r.Group("/v1")
+	v1 := r.Group("/api/v1")
 	v1.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, Response{
 			Success: true,
