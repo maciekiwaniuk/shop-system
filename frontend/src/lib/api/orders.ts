@@ -30,8 +30,8 @@ export const ordersApi = {
         return data;
     },
 
-    async create(products: Array<{ id: number; quantity: number; pricePerPiece: number }>): Promise<ApiResponse> {
-        const { data } = await apiClient.post<ApiResponse>('/orders/create', { products });
+    async create(products: Array<{ id: number; quantity: number; pricePerPiece: number }>): Promise<ApiResponse<{ id: string }>> {
+        const { data } = await apiClient.post<ApiResponse<{ id: string }>>('/orders/create', { products });
         return data;
     },
 

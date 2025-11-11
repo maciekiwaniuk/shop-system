@@ -16,6 +16,7 @@ import { useIsAdmin } from '@/lib/utils/auth';
 function OrdersListContent() {
     const router = useRouter();
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const token = useAuthStore((state) => state.token);
     const isAdmin = useIsAdmin();
     const [orders, setOrders] = useState<Order[]>([]);
     const [allOrders, setAllOrders] = useState<Order[]>([]);
@@ -26,7 +27,7 @@ function OrdersListContent() {
     const [hasMoreAll, setHasMoreAll] = useState(true);
 
     useEffect(() => {
-        if (!isAuthenticated) {
+        if (!isAuthenticated || !token) {
             router.push('/login');
             return;
         }
@@ -49,16 +50,21 @@ function OrdersListContent() {
             } catch (error) {
                 console.error('Error loading orders:', error);
                 toast.error('An error occurred while loading orders');
+                // If unauthorized, go to login
+                // @ts-ignore
+                if (error?.response?.status === 401) {
+                    router.push('/login');
+                }
             } finally {
                 setIsLoading(false);
             }
         };
 
         loadOrders();
-    }, [isAuthenticated, router, cursor]);
+    }, [isAuthenticated, token, router, cursor]);
 
     useEffect(() => {
-        if (!isAuthenticated || !isAdmin) return;
+        if (!isAuthenticated || !token || !isAdmin) return;
         const loadAllOrders = async () => {
             try {
                 const response = await ordersApi.getPaginated(allCursor, 10);
@@ -80,7 +86,7 @@ function OrdersListContent() {
             }
         };
         loadAllOrders();
-    }, [isAuthenticated, isAdmin, allCursor]);
+    }, [isAuthenticated, token, isAdmin, allCursor]);
 
     if (!isAuthenticated) {
         return null;
@@ -93,6 +99,17 @@ function OrdersListContent() {
             </div>
         );
     }
+
+    const getOrderStatus = (o: Order): string => {
+        const updates = o.ordersStatusUpdates || [];
+        const last = updates[updates.length - 1];
+        return last?.status ?? 'waiting_for_payment';
+    };
+
+    const getOrderTotal = (o: Order): number => {
+        const items = o.ordersProducts || [];
+        return items.reduce((sum, item) => sum + (item.productPricePerPiece * item.productQuantity), 0);
+    };
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -114,8 +131,10 @@ function OrdersListContent() {
                         {orders
                             .filter((order) => order && (order.uuid || order.id))
                             .map((order) => {
-                                const orderId = order.uuid || order.id || '';
+                                const orderId = order.id || '';
                                 const orderDisplayId = orderId ? orderId.slice(0, 8) : 'N/A';
+                                const total = getOrderTotal(order);
+                                const status = getOrderStatus(order);
                                 return (
                                     <Link
                                         key={orderId}
@@ -133,18 +152,18 @@ function OrdersListContent() {
                                             </div>
                                             <div className="text-right">
                                                 <p className="text-lg font-bold text-gray-900">
-                                                    {order.totalPrice ? formatPrice(order.totalPrice) : '$0.00'}
+                                                    {formatPrice(total)}
                                                 </p>
                                                 <span
                                                     className={`mt-1 inline-block rounded-full px-3 py-1 text-xs font-semibold ${
-                                                        order.status === 'paid'
+                                                        status === 'completed'
                                                             ? 'bg-green-100 text-green-800'
-                                                            : order.status === 'cancelled'
+                                                            : status === 'canceled'
                                                               ? 'bg-red-100 text-red-800'
                                                               : 'bg-yellow-100 text-yellow-800'
                                                     }`}
                                                 >
-                                                    {order.status || 'pending'}
+                                                    {status.replaceAll('_', ' ')}
                                                 </span>
                                             </div>
                                         </div>
@@ -166,8 +185,10 @@ function OrdersListContent() {
                                 {allOrders
                                     .filter((order) => order && (order.uuid || order.id))
                                     .map((order) => {
-                                        const orderId = order.uuid || order.id || '';
+                                        const orderId = order.id || '';
                                         const orderDisplayId = orderId ? orderId.slice(0, 8) : 'N/A';
+                                        const total = getOrderTotal(order);
+                                        const status = getOrderStatus(order);
                                         return (
                                             <Link
                                                 key={`all-${orderId}`}
@@ -185,18 +206,18 @@ function OrdersListContent() {
                                                     </div>
                                                     <div className="text-right">
                                                         <p className="text-lg font-bold text-gray-900">
-                                                            {order.totalPrice ? formatPrice(order.totalPrice) : '$0.00'}
+                                                            {formatPrice(total)}
                                                         </p>
                                                         <span
                                                             className={`mt-1 inline-block rounded-full px-3 py-1 text-xs font-semibold ${
-                                                                order.status === 'paid'
+                                                                status === 'completed'
                                                                     ? 'bg-green-100 text-green-800'
-                                                                    : order.status === 'cancelled'
+                                                                    : status === 'canceled'
                                                                       ? 'bg-red-100 text-red-800'
                                                                       : 'bg-yellow-100 text-yellow-800'
                                                             }`}
                                                         >
-                                                            {order.status || 'pending'}
+                                                            {status.replaceAll('_', ' ')}
                                                         </span>
                                                     </div>
                                                 </div>

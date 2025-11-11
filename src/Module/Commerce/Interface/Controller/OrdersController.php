@@ -133,6 +133,9 @@ class OrdersController extends AbstractController
             $commandResult->success => [
                 'success' => true,
                 'message' => 'Successfully created order.',
+                'data' => [
+                    'id' => $commandResult->entityId,
+                ],
             ],
             default => [
                 'success' => false,

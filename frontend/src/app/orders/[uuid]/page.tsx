@@ -51,10 +51,21 @@ function OrderDetailContent() {
         }
     }, [uuid, isAuthenticated, router]);
 
+    const getOrderStatus = (o: Order): string => {
+        const updates = o.ordersStatusUpdates || [];
+        const last = updates[updates.length - 1];
+        return last?.status ?? 'waiting_for_payment';
+    };
+
+    const getOrderTotal = (o: Order): number => {
+        const items = o.ordersProducts || [];
+        return items.reduce((sum, item) => sum + (item.productPricePerPiece * item.productQuantity), 0);
+    };
+
     const handlePay = async () => {
         if (!order) return;
 
-        const orderId = order.uuid || order.id;
+        const orderId = order.id;
         if (!orderId) {
             toast.error('Invalid order ID');
             return;
@@ -89,7 +100,7 @@ function OrderDetailContent() {
     const handleCancel = async () => {
         if (!order) return;
 
-        const orderId = order.uuid || order.id;
+        const orderId = order.id;
         if (!orderId) {
             toast.error('Invalid order ID');
             return;
@@ -137,8 +148,10 @@ function OrderDetailContent() {
         return null;
     }
 
-    const canPay = order.status === 'pending';
-    const canCancel = order.status === 'pending';
+    const status = getOrderStatus(order);
+    const canPay = status === 'waiting_for_payment';
+    const canCancel = status === 'waiting_for_payment';
+    const total = getOrderTotal(order);
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -155,20 +168,18 @@ function OrderDetailContent() {
                     <div className="mb-6 flex items-center justify-between">
                         <div>
                             <h1 className="text-3xl font-bold text-gray-900">Order Details</h1>
-                            <p className="mt-1 text-sm text-gray-600">
-                                Order #{(order.uuid || order.id || '').slice(0, 8)}
-                            </p>
+                            <p className="mt-1 text-sm text-gray-600">Order #{(order.id || '').slice(0, 8)}</p>
                         </div>
                         <span
                             className={`inline-block rounded-full px-4 py-2 text-sm font-semibold ${
-                                order.status === 'paid'
+                                status === 'completed'
                                     ? 'bg-green-100 text-green-800'
-                                    : order.status === 'cancelled'
+                                    : status === 'canceled'
                                       ? 'bg-red-100 text-red-800'
                                       : 'bg-yellow-100 text-yellow-800'
                             }`}
                         >
-                            {order.status}
+                            {status.replaceAll('_', ' ')}
                         </span>
                     </div>
 
@@ -192,12 +203,12 @@ function OrderDetailContent() {
                                                         {item.product.name}
                                                     </h3>
                                                     <p className="text-sm text-gray-600">
-                                                        {formatPrice(item.pricePerPiece)} × {item.quantity}
+                                                        {formatPrice(item.productPricePerPiece)} × {item.productQuantity}
                                                     </p>
                                                 </div>
                                                 <div className="text-right">
                                                     <p className="font-semibold text-gray-900">
-                                                        {formatPrice(item.pricePerPiece * item.quantity)}
+                                                        {formatPrice(item.productPricePerPiece * item.productQuantity)}
                                                     </p>
                                                 </div>
                                             </div>
@@ -213,16 +224,16 @@ function OrderDetailContent() {
                         <div className="lg:col-span-1">
                             <div className="rounded-lg bg-white p-6 shadow-sm">
                                 <h2 className="mb-4 text-xl font-semibold text-gray-900">Order Summary</h2>
-                                <div className="space-y-3 border-b border-gray-200 pb-4">
+                                <div className="space-y-3 pb-4">
                                     <div className="flex justify-between text-sm">
                                         <span className="text-gray-600">Subtotal</span>
                                         <span className="font-medium text-gray-900">
-                                            {formatPrice(order.totalPrice)}
+                                            {formatPrice(total)}
                                         </span>
                                     </div>
                                     <div className="flex justify-between text-sm">
                                         <span className="text-gray-600">Status</span>
-                                        <span className="font-medium text-gray-900 capitalize">{order.status}</span>
+                                        <span className="font-medium text-gray-900">{status.replaceAll('_', ' ')}</span>
                                     </div>
                                     <div className="flex justify-between text-sm">
                                         <span className="text-gray-600">Created</span>
@@ -233,9 +244,7 @@ function OrderDetailContent() {
                                 </div>
                                 <div className="mt-4 flex justify-between border-t border-gray-200 pt-4">
                                     <span className="text-lg font-semibold text-gray-900">Total</span>
-                                    <span className="text-lg font-bold text-gray-900">
-                                        {formatPrice(order.totalPrice)}
-                                    </span>
+                                    <span className="text-lg font-bold text-gray-900">{formatPrice(total)}</span>
                                 </div>
 
                                 {/* Payment Actions */}

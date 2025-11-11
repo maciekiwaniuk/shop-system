@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/Button';
 import { formatPrice } from '@/lib/utils/format';
 import { ArrowLeft } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import { useRef } from 'react';
 
 export default function CheckoutPage() {
     const router = useRouter();
@@ -19,13 +20,14 @@ export default function CheckoutPage() {
     const getItemCount = useCartStore((state) => state.getItemCount);
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const [isLoading, setIsLoading] = useState(false);
+    const isNavigatingRef = useRef(false);
 
     const cartItems = Array.isArray(items) ? items : [];
     const cartTotal = getTotal();
     const cartItemCount = getItemCount();
 
     useEffect(() => {
-        if (cartItems.length === 0) {
+        if (!isNavigatingRef.current && cartItems.length === 0) {
             router.push('/cart');
         }
         if (!isAuthenticated) {
@@ -49,10 +51,19 @@ export default function CheckoutPage() {
 
             const response = await ordersApi.create(products);
             if (response.success) {
-                clearCart();
                 toast.success('Order created successfully!');
-                // Redirect to orders page or order detail
-                router.push('/orders');
+                // Redirect to the newly created order detail
+                const orderId = response.data?.id;
+                if (orderId) {
+                    isNavigatingRef.current = true;
+                    router.push(`/orders/${orderId}`);
+                    // Clear the cart after starting navigation to avoid redirecting back to /cart
+                    clearCart();
+                } else {
+                    isNavigatingRef.current = true;
+                    router.push('/orders');
+                    clearCart();
+                }
             } else {
                 if (response.errors) {
                     Object.entries(response.errors).forEach(([field, message]) => {
