@@ -20,10 +20,48 @@ export const paymentsClient: AxiosInstance = axios.create({
     },
 });
 
-// Request interceptor to add JWT token
+// Public endpoints that must never send Authorization
+const PUBLIC_PATHS = [
+    '/products/get-paginated',
+    '/products/show',
+    '/products/search',
+    '/health',
+    '/login',
+    '/register',
+];
+
+function isPublicPath(url?: string): boolean {
+    if (!url) return false;
+    try {
+        // If a full URL is passed, extract pathname; otherwise treat as path
+        const pathname = url.startsWith('http') ? new URL(url).pathname : url;
+        return PUBLIC_PATHS.some((p) => pathname.startsWith(p));
+    } catch {
+        return PUBLIC_PATHS.some((p) => (url || '').startsWith(p));
+    }
+}
+
+function isJwtExpired(token: string): boolean {
+    try {
+        const [, payloadB64] = token.split('.');
+        if (!payloadB64) return false;
+        const json = JSON.parse(atob(payloadB64.replace(/-/g, '+').replace(/_/g, '/')));
+        if (!json.exp) return false;
+        const nowSec = Math.floor(Date.now() / 1000);
+        return nowSec >= Number(json.exp);
+    } catch {
+        return false;
+    }
+}
+
+// Request interceptor to add JWT token (skip for public endpoints)
 apiClient.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
         if (typeof window !== 'undefined') {
+            // Do not attach Authorization for public endpoints
+            if (isPublicPath(config.url)) {
+                return config;
+            }
             // Try to get token from localStorage
             let token = localStorage.getItem('auth_token');
             
@@ -41,7 +79,10 @@ apiClient.interceptors.request.use(
             }
             
             if (token && config.headers) {
-                config.headers.Authorization = `Bearer ${token}`;
+                const trimmed = token.trim();
+                if (!isJwtExpired(trimmed)) {
+                    config.headers.Authorization = `Bearer ${trimmed}`;
+                }
             } else if (!token && config.url && !config.url.includes('/login') && !config.url.includes('/register')) {
                 // Log warning if token is missing for protected routes
                 console.warn('No auth token found for request:', config.url);

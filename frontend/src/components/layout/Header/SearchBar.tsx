@@ -145,14 +145,6 @@ export function SearchBar() {
                                     </Link>
                                 ))}
                             </div>
-                            <div className="border-t border-gray-200 bg-gray-50 p-2 text-center">
-                                <button
-                                    onClick={handleSubmit}
-                                    className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
-                                >
-                                    View all results ({results.length})
-                                </button>
-                            </div>
                         </>
                     ) : debouncedSearch.trim().length >= 3 ? (
                         <div className="p-4 text-center">

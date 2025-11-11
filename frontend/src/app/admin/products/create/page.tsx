@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { ArrowLeft } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import { useIsAdmin } from '@/lib/utils/auth';
 
 const createProductSchema = z.object({
     name: z.string().min(1, 'Name is required'),
@@ -22,6 +23,7 @@ type CreateProductFormData = z.infer<typeof createProductSchema>;
 
 export default function CreateProductPage() {
     const router = useRouter();
+    const isAdmin = useIsAdmin();
     const [isLoading, setIsLoading] = useState(false);
 
     const {
@@ -33,6 +35,11 @@ export default function CreateProductPage() {
     });
 
     const onSubmit = async (data: CreateProductFormData) => {
+        if (!isAdmin) {
+            toast.error('You do not have permission to create products.');
+            router.push('/');
+            return;
+        }
         setIsLoading(true);
         try {
             const response = await productsApi.create(data);

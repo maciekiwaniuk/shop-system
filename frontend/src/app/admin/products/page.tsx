@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '@/lib/store/authStore';
+import { useIsAdmin } from '@/lib/utils/auth';
 import { productsApi } from '@/lib/api/products';
 import { Product } from '@/types/product';
 import { Button } from '@/components/ui/Button';
@@ -15,12 +16,18 @@ import { toast } from 'react-hot-toast';
 export default function AdminProductsPage() {
     const router = useRouter();
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const isAdmin = useIsAdmin();
     const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         if (!isAuthenticated) {
             router.push('/login');
+            return;
+        }
+        if (!isAdmin) {
+            toast.error('You do not have permission to access admin.');
+            router.push('/');
             return;
         }
 
@@ -44,7 +51,7 @@ export default function AdminProductsPage() {
         };
 
         loadProducts();
-    }, [isAuthenticated, router]);
+    }, [isAuthenticated, isAdmin, router]);
 
     const handleDelete = async (productId: number) => {
         if (!confirm('Are you sure you want to delete this product?')) {
@@ -81,7 +88,7 @@ export default function AdminProductsPage() {
         }
     };
 
-    if (!isAuthenticated) {
+    if (!isAuthenticated || !isAdmin) {
         return null;
     }
 

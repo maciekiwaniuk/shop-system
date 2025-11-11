@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/Input';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { ArrowLeft } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import { useIsAdmin } from '@/lib/utils/auth';
 
 const updateProductSchema = z.object({
     name: z.string().min(1, 'Name is required'),
@@ -25,6 +26,7 @@ type UpdateProductFormData = z.infer<typeof updateProductSchema>;
 function EditProductContent() {
     const params = useParams();
     const router = useRouter();
+    const isAdmin = useIsAdmin();
     const productId = parseInt(params.id as string);
     const [product, setProduct] = useState<Product | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -40,6 +42,11 @@ function EditProductContent() {
     });
 
     useEffect(() => {
+        if (!isAdmin) {
+            toast.error('You do not have permission to edit products.');
+            router.push('/');
+            return;
+        }
         const loadProduct = async () => {
             try {
                 // We need to get product by ID, but API only has getBySlug
@@ -75,10 +82,15 @@ function EditProductContent() {
         if (productId) {
             loadProduct();
         }
-    }, [productId, router, reset]);
+    }, [productId, router, reset, isAdmin]);
 
     const onSubmit = async (data: UpdateProductFormData) => {
         if (!product) return;
+        if (!isAdmin) {
+            toast.error('You do not have permission to update products.');
+            router.push('/');
+            return;
+        }
 
         setIsSaving(true);
         try {
