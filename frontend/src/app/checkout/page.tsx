@@ -19,6 +19,7 @@ export default function CheckoutPage() {
     const getTotal = useCartStore((state) => state.getTotal);
     const getItemCount = useCartStore((state) => state.getItemCount);
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const hasHydrated = useAuthStore((state) => state.hasHydrated);
     const [isLoading, setIsLoading] = useState(false);
     const isNavigatingRef = useRef(false);
 
@@ -27,13 +28,15 @@ export default function CheckoutPage() {
     const cartItemCount = getItemCount();
 
     useEffect(() => {
-        if (!isNavigatingRef.current && cartItems.length === 0) {
-            router.push('/cart');
-        }
+        if (!hasHydrated) return;
         if (!isAuthenticated) {
-            router.push('/login?redirect=/checkout');
+            router.replace('/login?redirect=/checkout');
+            return;
         }
-    }, [cartItems.length, isAuthenticated, router]);
+        if (!isNavigatingRef.current && cartItems.length === 0) {
+            router.replace('/cart');
+        }
+    }, [hasHydrated, cartItems.length, isAuthenticated, router]);
 
     const handlePlaceOrder = async () => {
         if (cartItems.length === 0) {
@@ -94,7 +97,7 @@ export default function CheckoutPage() {
         }
     };
 
-    if (cartItems.length === 0) {
+    if (!hasHydrated || cartItems.length === 0) {
         return null;
     }
 

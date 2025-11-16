@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '@/lib/store/authStore';
 import { ordersApi } from '@/lib/api/orders';
@@ -15,7 +15,9 @@ import { useIsAdmin } from '@/lib/utils/auth';
 
 function OrdersListContent() {
     const router = useRouter();
+    const pathname = usePathname();
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const hasHydrated = useAuthStore((state) => state.hasHydrated);
     const token = useAuthStore((state) => state.token);
     const isAdmin = useIsAdmin();
     const [orders, setOrders] = useState<Order[]>([]);
@@ -27,8 +29,9 @@ function OrdersListContent() {
     const [hasMoreAll, setHasMoreAll] = useState(true);
 
     useEffect(() => {
+        if (!hasHydrated) return;
         if (!isAuthenticated || !token) {
-            router.push('/login');
+            router.replace(`/login?redirect=${encodeURIComponent(pathname)}`);
             return;
         }
 
@@ -53,7 +56,7 @@ function OrdersListContent() {
                 // If unauthorized, go to login
                 // @ts-ignore
                 if (error?.response?.status === 401) {
-                    router.push('/login');
+                    router.replace(`/login?redirect=${encodeURIComponent(pathname)}`);
                 }
             } finally {
                 setIsLoading(false);
@@ -61,10 +64,10 @@ function OrdersListContent() {
         };
 
         loadOrders();
-    }, [isAuthenticated, token, router, cursor]);
+    }, [hasHydrated, isAuthenticated, token, router, cursor, pathname]);
 
     useEffect(() => {
-        if (!isAuthenticated || !token || !isAdmin) return;
+        if (!hasHydrated || !isAuthenticated || !token || !isAdmin) return;
         const loadAllOrders = async () => {
             try {
                 const response = await ordersApi.getPaginated(allCursor, 10);
@@ -86,7 +89,15 @@ function OrdersListContent() {
             }
         };
         loadAllOrders();
-    }, [isAuthenticated, token, isAdmin, allCursor]);
+    }, [hasHydrated, isAuthenticated, token, isAdmin, allCursor]);
+
+    if (!hasHydrated) {
+        return (
+            <div className="flex min-h-screen items-center justify-center">
+                <LoadingSpinner size="lg" />
+            </div>
+        );
+    }
 
     if (!isAuthenticated) {
         return null;

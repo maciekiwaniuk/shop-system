@@ -4,7 +4,9 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 interface AuthState {
     token: string | null;
     isAuthenticated: boolean;
+    hasHydrated: boolean;
     setToken: (token: string | null) => void;
+    setHasHydrated: (hasHydrated: boolean) => void;
     logout: () => void;
 }
 
@@ -24,6 +26,7 @@ export const useAuthStore = create<AuthState>()(
         (set) => ({
             token: null,
             isAuthenticated: false,
+            hasHydrated: false,
             setToken: (token) => {
                 set({
                     token,
@@ -37,6 +40,9 @@ export const useAuthStore = create<AuthState>()(
                         localStorage.removeItem('auth_token');
                     }
                 }
+            },
+            setHasHydrated: (hasHydrated: boolean) => {
+                set({ hasHydrated });
             },
             logout: () => {
                 set({
@@ -52,6 +58,10 @@ export const useAuthStore = create<AuthState>()(
             name: 'auth-storage',
             storage: createJSONStorage(() => getStorage()),
             partialize: (state) => ({ token: state.token, isAuthenticated: state.isAuthenticated }),
+            onRehydrateStorage: () => (state) => {
+                // Mark hydration finished so UI can safely gate redirects
+                state?.setHasHydrated(true);
+            },
         }
     )
 );

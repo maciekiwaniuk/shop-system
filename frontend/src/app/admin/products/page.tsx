@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useIsAdmin } from '@/lib/utils/auth';
@@ -15,14 +15,17 @@ import { toast } from 'react-hot-toast';
 
 export default function AdminProductsPage() {
     const router = useRouter();
+    const pathname = usePathname();
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const hasHydrated = useAuthStore((state) => state.hasHydrated);
     const isAdmin = useIsAdmin();
     const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        if (!hasHydrated) return;
         if (!isAuthenticated) {
-            router.push('/login');
+            router.replace(`/login?redirect=${encodeURIComponent(pathname)}`);
             return;
         }
         if (!isAdmin) {
@@ -51,7 +54,7 @@ export default function AdminProductsPage() {
         };
 
         loadProducts();
-    }, [isAuthenticated, isAdmin, router]);
+    }, [hasHydrated, isAuthenticated, isAdmin, router, pathname]);
 
     const handleDelete = async (productId: number) => {
         if (!confirm('Are you sure you want to delete this product?')) {
@@ -87,6 +90,14 @@ export default function AdminProductsPage() {
             }
         }
     };
+
+    if (!hasHydrated) {
+        return (
+            <div className="flex min-h-screen items-center justify-center">
+                <LoadingSpinner size="lg" />
+            </div>
+        );
+    }
 
     if (!isAuthenticated || !isAdmin) {
         return null;

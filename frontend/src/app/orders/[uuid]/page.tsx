@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '@/lib/store/authStore';
 import { ordersApi } from '@/lib/api/orders';
@@ -16,15 +16,18 @@ import { toast } from 'react-hot-toast';
 function OrderDetailContent() {
     const params = useParams();
     const router = useRouter();
+    const pathname = usePathname();
     const uuid = params.uuid as string;
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const hasHydrated = useAuthStore((state) => state.hasHydrated);
     const [order, setOrder] = useState<Order | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isProcessing, setIsProcessing] = useState(false);
 
     useEffect(() => {
+        if (!hasHydrated) return;
         if (!isAuthenticated) {
-            router.push('/login');
+            router.replace(`/login?redirect=${encodeURIComponent(pathname)}`);
             return;
         }
 
@@ -49,7 +52,7 @@ function OrderDetailContent() {
         if (uuid) {
             loadOrder();
         }
-    }, [uuid, isAuthenticated, router]);
+    }, [uuid, hasHydrated, isAuthenticated, router, pathname]);
 
     const getOrderStatus = (o: Order): string => {
         const updates = o.ordersStatusUpdates || [];
@@ -131,6 +134,14 @@ function OrderDetailContent() {
             setIsProcessing(false);
         }
     };
+
+    if (!hasHydrated) {
+        return (
+            <div className="flex min-h-screen items-center justify-center">
+                <LoadingSpinner size="lg" />
+            </div>
+        );
+    }
 
     if (!isAuthenticated) {
         return null;

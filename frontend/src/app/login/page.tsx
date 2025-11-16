@@ -2,7 +2,7 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useAuthStore } from '@/lib/store/authStore';
@@ -14,16 +14,20 @@ import { toast } from 'react-hot-toast';
 
 export default function LoginPage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const redirect = searchParams.get('redirect') || '/';
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const hasHydrated = useAuthStore((state) => state.hasHydrated);
     const setToken = useAuthStore((state) => state.setToken);
     const [isLoading, setIsLoading] = useState(false);
 
     // Redirect if already logged in
     useEffect(() => {
+        if (!hasHydrated) return;
         if (isAuthenticated) {
-            router.push('/');
+            router.replace(redirect);
         }
-    }, [isAuthenticated, router]);
+    }, [hasHydrated, isAuthenticated, redirect, router]);
 
     const {
         register,
@@ -34,7 +38,7 @@ export default function LoginPage() {
     });
 
     // Don't render form if already authenticated (will redirect)
-    if (isAuthenticated) {
+    if (!hasHydrated || isAuthenticated) {
         return null;
     }
 
@@ -45,7 +49,7 @@ export default function LoginPage() {
             if (response.success && response.data?.token) {
                 setToken(response.data.token);
                 toast.success('Successfully logged in!');
-                router.push('/');
+                router.replace(redirect);
                 router.refresh();
             } else {
                 // Handle validation errors from backend
