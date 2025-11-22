@@ -3,6 +3,7 @@ package messaging
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"payments/internal/domain"
 	"payments/internal/ports/outbound"
 	"time"
@@ -18,14 +19,45 @@ type RabbitMQEventPublisher struct {
 }
 
 func NewRabbitMQEventPublisher(amqpURL string, logger *zap.Logger) (outbound.EventPublisher, error) {
-	conn, err := amqp091.Dial(amqpURL)
+	var conn *amqp091.Connection
+	var err error
+	
+	// Retry connection with exponential backoff
+	maxRetries := 30
+	baseDelay := time.Second
+	
+	logger.Info("attempting to connect to RabbitMQ", zap.String("url", amqpURL))
+	
+	for i := 0; i < maxRetries; i++ {
+		conn, err = amqp091.Dial(amqpURL)
+		if err == nil {
+			logger.Info("successfully connected to RabbitMQ")
+			break
+		}
+		
+		// Calculate exponential backoff with max of 10 seconds
+		waitTime := baseDelay * time.Duration(1<<uint(i))
+		if waitTime > 10*time.Second {
+			waitTime = 10 * time.Second
+		}
+		
+		logger.Warn("failed to connect to RabbitMQ, retrying...",
+			zap.Int("attempt", i+1),
+			zap.Int("max_retries", maxRetries),
+			zap.Duration("wait_time", waitTime),
+			zap.Error(err))
+		
+		time.Sleep(waitTime)
+	}
+	
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to connect to RabbitMQ after %d attempts: %w", maxRetries, err)
 	}
 
 	ch, err := conn.Channel()
 	if err != nil {
-		return nil, err
+		conn.Close()
+		return nil, fmt.Errorf("failed to open channel: %w", err)
 	}
 
 	err = ch.ExchangeDeclare(
@@ -38,8 +70,12 @@ func NewRabbitMQEventPublisher(amqpURL string, logger *zap.Logger) (outbound.Eve
 		nil,
 	)
 	if err != nil {
-		return nil, err
+		ch.Close()
+		conn.Close()
+		return nil, fmt.Errorf("failed to declare exchange: %w", err)
 	}
+
+	logger.Info("RabbitMQ event publisher initialized successfully")
 
 	return &RabbitMQEventPublisher{
 		conn:    conn,
