@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense, useRef, useCallback } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '@/lib/store/authStore';
@@ -19,14 +19,24 @@ function OrdersListContent() {
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const hasHydrated = useAuthStore((state) => state.hasHydrated);
     const token = useAuthStore((state) => state.token);
+    const logout = useAuthStore((state) => state.logout);
     const isAdmin = useIsAdmin();
     const [orders, setOrders] = useState<Order[]>([]);
     const [allOrders, setAllOrders] = useState<Order[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [cursor, setCursor] = useState<string | undefined>();
     const [allCursor, setAllCursor] = useState<string | undefined>();
-    const [hasMore, setHasMore] = useState(true);
-    const [hasMoreAll, setHasMoreAll] = useState(true);
+    const [hasMore, setHasMore] = useState(false);
+    const [hasMoreAll, setHasMoreAll] = useState(false);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const [isLoadingMoreAll, setIsLoadingMoreAll] = useState(false);
+    const loadingRef = useRef(false); // Prevent multiple simultaneous requests
+
+    const handleAuthError = useCallback(() => {
+        logout();
+        toast.error('Session expired. Please log in again.');
+        router.replace(`/login?redirect=${encodeURIComponent(pathname)}`);
+    }, [logout, router, pathname]);
 
     useEffect(() => {
         if (!hasHydrated) return;
@@ -35,61 +45,138 @@ function OrdersListContent() {
             return;
         }
 
+        if (loadingRef.current) return; // Prevent duplicate requests
+
         const loadOrders = async () => {
+            loadingRef.current = true;
             try {
-                const response = await ordersApi.getMyPaginated(cursor, 10);
+                const response = await ordersApi.getMyPaginated(undefined, 10);
                 if (response.success && response.data) {
                     if (Array.isArray(response.data)) {
                         setOrders(response.data);
                         setHasMore(response.data.length === 10);
                     } else if (response.data.orders) {
                         setOrders(response.data.orders);
-                        setHasMore(response.data.orders.length === 10);
-                        setCursor(response.data.cursor);
+                        const nextCursor = response.data.cursor;
+                        setCursor(nextCursor);
+                        // Has more if we got a cursor and full page of results
+                        setHasMore(!!nextCursor && response.data.orders.length === 10);
                     }
                 } else {
                     toast.error(response.message || 'Failed to load orders');
                 }
             } catch (error) {
                 console.error('Error loading orders:', error);
-                toast.error('An error occurred while loading orders');
-                // If unauthorized, go to login
                 // @ts-ignore
                 if (error?.response?.status === 401) {
-                    router.replace(`/login?redirect=${encodeURIComponent(pathname)}`);
+                    handleAuthError();
+                } else {
+                    toast.error('An error occurred while loading orders');
                 }
             } finally {
                 setIsLoading(false);
+                loadingRef.current = false;
             }
         };
 
         loadOrders();
-    }, [hasHydrated, isAuthenticated, token, router, cursor, pathname]);
+    }, [hasHydrated, isAuthenticated, token, router, pathname, handleAuthError]);
+
+    const loadMoreOrders = async () => {
+        if (!cursor || isLoadingMore) return;
+        
+        setIsLoadingMore(true);
+        try {
+            const response = await ordersApi.getMyPaginated(cursor, 10);
+            if (response.success && response.data) {
+                if (Array.isArray(response.data)) {
+                    setOrders(prev => [...prev, ...response.data]);
+                    setHasMore(response.data.length === 10);
+                } else if (response.data.orders) {
+                    setOrders(prev => [...prev, ...response.data.orders]);
+                    const nextCursor = response.data.cursor;
+                    setCursor(nextCursor);
+                    setHasMore(!!nextCursor && response.data.orders.length === 10);
+                }
+            } else {
+                toast.error(response.message || 'Failed to load more orders');
+            }
+        } catch (error) {
+            console.error('Error loading more orders:', error);
+            // @ts-ignore
+            if (error?.response?.status === 401) {
+                handleAuthError();
+            } else {
+                toast.error('An error occurred while loading more orders');
+            }
+        } finally {
+            setIsLoadingMore(false);
+        }
+    };
 
     useEffect(() => {
         if (!hasHydrated || !isAuthenticated || !token || !isAdmin) return;
+        
         const loadAllOrders = async () => {
             try {
-                const response = await ordersApi.getPaginated(allCursor, 10);
+                const response = await ordersApi.getPaginated(undefined, 10);
                 if (response.success && response.data) {
                     if (Array.isArray(response.data)) {
                         setAllOrders(response.data);
                         setHasMoreAll(response.data.length === 10);
                     } else if (response.data.orders) {
                         setAllOrders(response.data.orders);
-                        setHasMoreAll(response.data.orders.length === 10);
-                        setAllCursor(response.data.cursor);
+                        const nextCursor = response.data.cursor;
+                        setAllCursor(nextCursor);
+                        setHasMoreAll(!!nextCursor && response.data.orders.length === 10);
                     }
                 } else {
                     toast.error(response.message || 'Failed to load all orders');
                 }
             } catch (error) {
                 console.error('Error loading all orders:', error);
-                toast.error('An error occurred while loading all orders');
+                // @ts-ignore
+                if (error?.response?.status === 401) {
+                    handleAuthError();
+                } else {
+                    toast.error('An error occurred while loading all orders');
+                }
             }
         };
         loadAllOrders();
-    }, [hasHydrated, isAuthenticated, token, isAdmin, allCursor]);
+    }, [hasHydrated, isAuthenticated, token, isAdmin, handleAuthError]);
+
+    const loadMoreAllOrders = async () => {
+        if (!allCursor || isLoadingMoreAll) return;
+        
+        setIsLoadingMoreAll(true);
+        try {
+            const response = await ordersApi.getPaginated(allCursor, 10);
+            if (response.success && response.data) {
+                if (Array.isArray(response.data)) {
+                    setAllOrders(prev => [...prev, ...response.data]);
+                    setHasMoreAll(response.data.length === 10);
+                } else if (response.data.orders) {
+                    setAllOrders(prev => [...prev, ...response.data.orders]);
+                    const nextCursor = response.data.cursor;
+                    setAllCursor(nextCursor);
+                    setHasMoreAll(!!nextCursor && response.data.orders.length === 10);
+                }
+            } else {
+                toast.error(response.message || 'Failed to load more orders');
+            }
+        } catch (error) {
+            console.error('Error loading more all orders:', error);
+            // @ts-ignore
+            if (error?.response?.status === 401) {
+                handleAuthError();
+            } else {
+                toast.error('An error occurred while loading more orders');
+            }
+        } finally {
+            setIsLoadingMoreAll(false);
+        }
+    };
 
     if (!hasHydrated) {
         return (
@@ -140,50 +227,66 @@ function OrdersListContent() {
                         }
                     />
                 ) : (
-                    <div className="space-y-4">
-                        {orders
-                            .filter((order) => order && (order.uuid || order.id))
-                            .map((order) => {
-                                const orderId = order.id || '';
-                                const orderDisplayId = orderId ? orderId.slice(0, 8) : 'N/A';
-                                const total = getOrderTotal(order);
-                                const status = getOrderStatus(order);
-                                return (
-                                    <Link
-                                        key={orderId}
-                                        href={`/orders/${orderId}`}
-                                        className="block rounded-lg border-2 border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
-                                    >
-                                        <div className="flex items-center justify-between">
-                                            <div>
-                                                <h3 className="text-lg font-semibold text-gray-900">
-                                                    Order #{orderDisplayId}
-                                                </h3>
-                                                <p className="mt-1 text-sm text-gray-600">
-                                                    {order.createdAt ? formatDate(order.createdAt) : 'N/A'}
-                                                </p>
+                    <>
+                        <div className="space-y-4">
+                            {orders
+                                .filter((order) => order && (order.uuid || order.id))
+                                .map((order) => {
+                                    const orderId = order.id || '';
+                                    const orderDisplayId = orderId ? orderId.slice(0, 8) : 'N/A';
+                                    const total = getOrderTotal(order);
+                                    const status = getOrderStatus(order);
+                                    return (
+                                        <Link
+                                            key={orderId}
+                                            href={`/orders/${orderId}`}
+                                            className="block rounded-lg border-2 border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+                                        >
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <h3 className="text-lg font-semibold text-gray-900">
+                                                        Order #{orderDisplayId}
+                                                    </h3>
+                                                    <p className="mt-1 text-sm text-gray-600">
+                                                        {order.createdAt ? formatDate(order.createdAt) : 'N/A'}
+                                                    </p>
+                                                </div>
+                                                <div className="text-right">
+                                                    <p className="text-lg font-bold text-gray-900">
+                                                        {formatPrice(total)}
+                                                    </p>
+                                                    <span
+                                                        className={`mt-1 inline-block rounded-full px-3 py-1 text-xs font-semibold ${
+                                                            status === 'completed'
+                                                                ? 'bg-green-100 text-green-800'
+                                                                : status === 'canceled'
+                                                                  ? 'bg-red-100 text-red-800'
+                                                                  : 'bg-yellow-100 text-yellow-800'
+                                                        }`}
+                                                    >
+                                                        {status.replaceAll('_', ' ')}
+                                                    </span>
+                                                </div>
                                             </div>
-                                            <div className="text-right">
-                                                <p className="text-lg font-bold text-gray-900">
-                                                    {formatPrice(total)}
-                                                </p>
-                                                <span
-                                                    className={`mt-1 inline-block rounded-full px-3 py-1 text-xs font-semibold ${
-                                                        status === 'completed'
-                                                            ? 'bg-green-100 text-green-800'
-                                                            : status === 'canceled'
-                                                              ? 'bg-red-100 text-red-800'
-                                                              : 'bg-yellow-100 text-yellow-800'
-                                                    }`}
-                                                >
-                                                    {status.replaceAll('_', ' ')}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </Link>
-                                );
-                            })}
-                    </div>
+                                        </Link>
+                                    );
+                                })}
+                        </div>
+                        {hasMore && cursor && (
+                            <div className="mt-6 flex justify-center">
+                                <Button
+                                    onClick={loadMoreOrders}
+                                    disabled={isLoadingMore}
+                                    isLoading={isLoadingMore}
+                                    variant="outline"
+                                    size="lg"
+                                    className="min-w-[200px] border-2 border-gray-300 px-8 py-3 font-semibold hover:border-gray-400 hover:bg-gray-50"
+                                >
+                                    {isLoadingMore ? 'Loading...' : 'Load More Orders'}
+                                </Button>
+                            </div>
+                        )}
+                    </>
                 )}
 
                 {isAdmin && (

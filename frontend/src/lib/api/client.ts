@@ -100,13 +100,27 @@ apiClient.interceptors.response.use(
     (response) => response,
     (error: AxiosError<ApiResponse>) => {
         if (error.response?.status === 401) {
-            // Don't auto-logout immediately - let components handle the error
-            // Components will show appropriate error messages
-            console.warn('401 Unauthorized response:', {
-                url: error.config?.url,
-                message: error.response?.data?.message,
-                hasToken: typeof window !== 'undefined' && !!localStorage.getItem('auth_token'),
-            });
+            // Clear invalid/expired token from storage
+            if (typeof window !== 'undefined') {
+                console.warn('401 Unauthorized - clearing invalid token:', {
+                    url: error.config?.url,
+                    message: error.response?.data?.message,
+                });
+                localStorage.removeItem('auth_token');
+                // Also clear Zustand auth storage
+                try {
+                    const authStorage = localStorage.getItem('auth-storage');
+                    if (authStorage) {
+                        const parsed = JSON.parse(authStorage);
+                        parsed.state.token = null;
+                        parsed.state.isAuthenticated = false;
+                        localStorage.setItem('auth-storage', JSON.stringify(parsed));
+                    }
+                } catch (e) {
+                    // If parsing fails, just remove it
+                    localStorage.removeItem('auth-storage');
+                }
+            }
         }
         return Promise.reject(error);
     }

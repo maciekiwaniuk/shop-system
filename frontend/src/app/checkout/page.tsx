@@ -20,6 +20,7 @@ export default function CheckoutPage() {
     const getItemCount = useCartStore((state) => state.getItemCount);
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const hasHydrated = useAuthStore((state) => state.hasHydrated);
+    const logout = useAuthStore((state) => state.logout);
     const [isLoading, setIsLoading] = useState(false);
     const isNavigatingRef = useRef(false);
 
@@ -78,7 +79,11 @@ export default function CheckoutPage() {
             }
         } catch (error: any) {
             console.error('Checkout error:', error);
-            if (error?.response?.data) {
+            if (error?.response?.status === 401) {
+                logout();
+                toast.error('Session expired. Please log in again.');
+                router.replace('/login?redirect=/checkout');
+            } else if (error?.response?.data) {
                 const errorData = error.response.data;
                 if (errorData.errors) {
                     Object.entries(errorData.errors).forEach(([field, message]) => {

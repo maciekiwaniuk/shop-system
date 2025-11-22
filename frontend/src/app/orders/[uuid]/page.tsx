@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense, useRef } from 'react';
+import { useState, useEffect, Suspense, useRef, useCallback } from 'react';
 import { useParams, useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '@/lib/store/authStore';
@@ -20,13 +20,21 @@ function OrderDetailContent() {
     const uuid = params.uuid as string;
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const hasHydrated = useAuthStore((state) => state.hasHydrated);
+    const logout = useAuthStore((state) => state.logout);
     const [order, setOrder] = useState<Order | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isProcessing, setIsProcessing] = useState(false);
     const [isPolling, setIsPolling] = useState(false);
     const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
     const pollingAttemptsRef = useRef(0);
+    const loadingRef = useRef(false);
     const maxPollingAttempts = 30; // 30 seconds (30 attempts × 1 second)
+
+    const handleAuthError = useCallback(() => {
+        logout();
+        toast.error('Session expired. Please log in again.');
+        router.replace(`/login?redirect=${encodeURIComponent(pathname)}`);
+    }, [logout, router, pathname]);
 
     useEffect(() => {
         if (!hasHydrated) return;
@@ -35,7 +43,10 @@ function OrderDetailContent() {
             return;
         }
 
+        if (loadingRef.current) return; // Prevent duplicate requests
+
         const loadOrder = async () => {
+            loadingRef.current = true;
             try {
                 const response = await ordersApi.getByUuid(uuid);
                 if (response.success && response.data) {
@@ -44,19 +55,24 @@ function OrderDetailContent() {
                     toast.error(response.message || 'Order not found');
                     router.push('/orders');
                 }
-            } catch (error) {
+            } catch (error: any) {
                 console.error('Error loading order:', error);
-                toast.error('Failed to load order');
-                router.push('/orders');
+                if (error?.response?.status === 401) {
+                    handleAuthError();
+                } else {
+                    toast.error('Failed to load order');
+                    router.push('/orders');
+                }
             } finally {
                 setIsLoading(false);
+                loadingRef.current = false;
             }
         };
 
         if (uuid) {
             loadOrder();
         }
-    }, [uuid, hasHydrated, isAuthenticated, router, pathname]);
+    }, [uuid, hasHydrated, isAuthenticated, router, pathname, handleAuthError]);
 
     // Cleanup polling interval on unmount
     useEffect(() => {
