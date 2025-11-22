@@ -44,6 +44,7 @@ class Order
      * @var Collection<int, OrderStatusUpdate>
      */
     #[ORM\OneToMany(targetEntity: OrderStatusUpdate::class, mappedBy: 'order', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdAt' => 'DESC'])]
     #[ORM\JoinColumn(name: 'id', referencedColumnName: 'order_id', nullable: false)]
     #[Groups(['default'])]
     private Collection $ordersStatusUpdates;
@@ -112,6 +113,10 @@ class Order
 
     public function updateStatus(OrderStatus $orderStatusUpdate): self
     {
+        $currentStatus = $this->getCurrentStatus();
+        if (in_array($currentStatus, [OrderStatus::COMPLETED->value, OrderStatus::CANCELED->value])) {
+            return $this;
+        }
         $this->ordersStatusUpdates->add(
             new OrderStatusUpdate(
                 order: $this,
@@ -126,7 +131,9 @@ class Order
 
     public function getCurrentStatus(): string
     {
-        return $this->ordersStatusUpdates->last()->getStatus();
+        // OrderBy DESC means first() is the newest
+        $latest = $this->ordersStatusUpdates->first();
+        return $latest ? $latest->getStatus() : OrderStatus::WAITING_FOR_PAYMENT->value;
     }
 
     public function setCompletedAt(DateTimeImmutable $completedAt): self

@@ -113,8 +113,10 @@ function OrdersListContent() {
 
     const getOrderStatus = (o: Order): string => {
         const updates = o.ordersStatusUpdates || [];
-        const last = updates[updates.length - 1];
-        return last?.status ?? 'waiting_for_payment';
+        if (updates.length === 0) return 'waiting_for_payment';
+        // Backend returns statuses in descending order (newest first)
+        // So we take the FIRST item, not the last
+        return updates[0]?.status ?? 'waiting_for_payment';
     };
 
     const getOrderTotal = (o: Order): number => {

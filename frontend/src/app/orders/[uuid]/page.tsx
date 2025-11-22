@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense, useRef } from 'react';
 import { useParams, useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '@/lib/store/authStore';
@@ -10,7 +10,7 @@ import { Order } from '@/types/order';
 import { Button } from '@/components/ui/Button';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { formatPrice, formatDate } from '@/lib/utils/format';
-import { ArrowLeft, CreditCard, X } from 'lucide-react';
+import { ArrowLeft, CreditCard, X, Loader2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 function OrderDetailContent() {
@@ -23,6 +23,10 @@ function OrderDetailContent() {
     const [order, setOrder] = useState<Order | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [isPolling, setIsPolling] = useState(false);
+    const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+    const pollingAttemptsRef = useRef(0);
+    const maxPollingAttempts = 30; // 30 seconds (30 attempts × 1 second)
 
     useEffect(() => {
         if (!hasHydrated) return;
@@ -54,10 +58,75 @@ function OrderDetailContent() {
         }
     }, [uuid, hasHydrated, isAuthenticated, router, pathname]);
 
+    // Cleanup polling interval on unmount
+    useEffect(() => {
+        return () => {
+            if (pollingIntervalRef.current) {
+                clearInterval(pollingIntervalRef.current);
+            }
+        };
+    }, []);
+
+    const stopPolling = () => {
+        if (pollingIntervalRef.current) {
+            clearInterval(pollingIntervalRef.current);
+            pollingIntervalRef.current = null;
+        }
+        setIsPolling(false);
+        pollingAttemptsRef.current = 0;
+    };
+
+    const startPolling = async (expectedStatus: 'completed' | 'canceled') => {
+        setIsPolling(true);
+        pollingAttemptsRef.current = 0;
+
+        const pollOrder = async () => {
+            try {
+                pollingAttemptsRef.current += 1;
+
+                const response = await ordersApi.getByUuid(uuid);
+                if (response.success && response.data) {
+                    const currentStatus = getOrderStatus(response.data);
+                    
+                    // Check if status has changed to expected status
+                    if (currentStatus === expectedStatus) {
+                        setOrder(response.data);
+                        stopPolling();
+                        const message = expectedStatus === 'completed' 
+                            ? 'Order completed!' 
+                            : 'Order canceled!';
+                        toast.success(message);
+                        return;
+                    }
+
+                    // Update order data even if status hasn't changed yet
+                    setOrder(response.data);
+                }
+
+                // Stop polling after max attempts
+                if (pollingAttemptsRef.current >= maxPollingAttempts) {
+                    stopPolling();
+                    toast.error('Status update is taking longer than expected. Please refresh the page.');
+                }
+            } catch (error) {
+                console.error('Polling error:', error);
+                // Continue polling even on error, might be temporary network issue
+            }
+        };
+
+        // Poll immediately first time
+        await pollOrder();
+
+        // Then set up interval polling
+        pollingIntervalRef.current = setInterval(pollOrder, 1000); // Poll every 1 second
+    };
+
     const getOrderStatus = (o: Order): string => {
         const updates = o.ordersStatusUpdates || [];
-        const last = updates[updates.length - 1];
-        return last?.status ?? 'waiting_for_payment';
+        if (updates.length === 0) return 'waiting_for_payment';
+        // Backend returns statuses in descending order (newest first)
+        // So we take the FIRST item, not the last
+        return updates[0]?.status ?? 'waiting_for_payment';
     };
 
     const getOrderTotal = (o: Order): number => {
@@ -79,14 +148,13 @@ function OrderDetailContent() {
             // The transaction ID is the order UUID
             const response = await paymentsApi.completeTransaction(orderId);
             if (response.success) {
-                toast.success('Payment completed successfully!');
-                // Reload order to get updated status
-                const orderResponse = await ordersApi.getByUuid(uuid);
-                if (orderResponse.success && orderResponse.data) {
-                    setOrder(orderResponse.data);
-                }
+                toast.success('Payment initiated! Waiting for confirmation...');
+                setIsProcessing(false);
+                // Start polling for status update
+                await startPolling('completed');
             } else {
                 toast.error(response.message || 'Failed to complete payment');
+                setIsProcessing(false);
             }
         } catch (error: any) {
             console.error('Payment error:', error);
@@ -95,7 +163,6 @@ function OrderDetailContent() {
             } else {
                 toast.error('An error occurred while processing payment');
             }
-        } finally {
             setIsProcessing(false);
         }
     };
@@ -114,14 +181,13 @@ function OrderDetailContent() {
             // The transaction ID is the order UUID
             const response = await paymentsApi.cancelTransaction(orderId);
             if (response.success) {
-                toast.success('Transaction cancelled successfully!');
-                // Reload order to get updated status
-                const orderResponse = await ordersApi.getByUuid(uuid);
-                if (orderResponse.success && orderResponse.data) {
-                    setOrder(orderResponse.data);
-                }
+                toast.success('Cancellation initiated! Waiting for confirmation...');
+                setIsProcessing(false);
+                // Start polling for status update
+                await startPolling('canceled');
             } else {
                 toast.error(response.message || 'Failed to cancel transaction');
+                setIsProcessing(false);
             }
         } catch (error: any) {
             console.error('Cancel error:', error);
@@ -130,7 +196,6 @@ function OrderDetailContent() {
             } else {
                 toast.error('An error occurred while cancelling transaction');
             }
-        } finally {
             setIsProcessing(false);
         }
     };
@@ -160,8 +225,8 @@ function OrderDetailContent() {
     }
 
     const status = getOrderStatus(order);
-    const canPay = status === 'waiting_for_payment';
-    const canCancel = status === 'waiting_for_payment';
+    const canPay = status === 'waiting_for_payment' && !isPolling;
+    const canCancel = status === 'waiting_for_payment' && !isPolling;
     const total = getOrderTotal(order);
 
     return (
@@ -181,17 +246,25 @@ function OrderDetailContent() {
                             <h1 className="text-3xl font-bold text-gray-900">Order Details</h1>
                             <p className="mt-1 text-sm text-gray-600">Order #{(order.id || '').slice(0, 8)}</p>
                         </div>
-                        <span
-                            className={`inline-block rounded-full px-4 py-2 text-sm font-semibold ${
-                                status === 'completed'
-                                    ? 'bg-green-100 text-green-800'
-                                    : status === 'canceled'
-                                      ? 'bg-red-100 text-red-800'
-                                      : 'bg-yellow-100 text-yellow-800'
-                            }`}
-                        >
-                            {status.replaceAll('_', ' ')}
-                        </span>
+                        <div className="flex items-center gap-3">
+                            {isPolling && (
+                                <div className="flex items-center gap-2 text-sm text-gray-600">
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                    <span>Updating...</span>
+                                </div>
+                            )}
+                            <span
+                                className={`inline-block rounded-full px-4 py-2 text-sm font-semibold ${
+                                    status === 'completed'
+                                        ? 'bg-green-100 text-green-800'
+                                        : status === 'canceled'
+                                          ? 'bg-red-100 text-red-800'
+                                          : 'bg-yellow-100 text-yellow-800'
+                                }`}
+                            >
+                                {status.replaceAll('_', ' ')}
+                            </span>
+                        </div>
                     </div>
 
                     <div className="grid gap-6 lg:grid-cols-3">
@@ -259,7 +332,18 @@ function OrderDetailContent() {
                                 </div>
 
                                 {/* Payment Actions */}
-                                {(canPay || canCancel) && (
+                                {isPolling && (
+                                    <div className="mt-6 rounded-lg bg-blue-50 p-4 text-center">
+                                        <div className="flex items-center justify-center gap-2 text-blue-700">
+                                            <Loader2 className="h-5 w-5 animate-spin" />
+                                            <span className="font-medium">Processing your request...</span>
+                                        </div>
+                                        <p className="mt-2 text-sm text-blue-600">
+                                            This may take a few seconds. Please wait.
+                                        </p>
+                                    </div>
+                                )}
+                                {(canPay || canCancel) && !isPolling && (
                                     <div className="mt-6 space-y-3">
                                         {canPay && (
                                             <Button
