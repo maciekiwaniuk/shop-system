@@ -1,10 +1,9 @@
 'use client';
 
-import { useState, useEffect, useCallback, Suspense } from 'react';
+import { useState, useEffect, useCallback, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { ProductGrid } from '@/components/product/ProductGrid';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
-import { Button } from '@/components/ui/Button';
 import { productsApi } from '@/lib/api/products';
 import { Product } from '@/types/product';
 import { toast } from 'react-hot-toast';
@@ -15,11 +14,17 @@ function HomePageContent() {
 
     const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [offset, setOffset] = useState(1);
+    const [offset, setOffset] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const sentinelRef = useRef<HTMLDivElement>(null);
+    const loadingRef = useRef(false); // Prevent duplicate requests
+    const offsetRef = useRef(0); // Track current offset accurately
 
     const loadProducts = useCallback(async (currentOffset: number, search?: string | null) => {
+        if (loadingRef.current) return; // Prevent duplicate requests
+        loadingRef.current = true;
+
         try {
             if (search) {
                 const response = await productsApi.search(search);
@@ -56,10 +61,17 @@ function HomePageContent() {
                             paginatedData.offset + productsList.length < paginatedData.total;
                     }
 
-                    if (currentOffset === 1) {
+                    if (currentOffset === 0) {
                         setProducts(productsList);
+                        offsetRef.current = productsList.length;
                     } else {
-                        setProducts((prev) => [...prev, ...productsList]);
+                        setProducts((prev) => {
+                            // Deduplicate by ID to prevent race conditions
+                            const existingIds = new Set(prev.map(p => p.id));
+                            const newProducts = productsList.filter(p => !existingIds.has(p.id));
+                            return [...prev, ...newProducts];
+                        });
+                        offsetRef.current += productsList.length;
                     }
                     setHasMore(hasMoreProducts);
                 } else {
@@ -72,24 +84,49 @@ function HomePageContent() {
         } finally {
             setIsLoading(false);
             setIsLoadingMore(false);
+            loadingRef.current = false; // Reset loading flag
         }
     }, []);
 
     useEffect(() => {
         setIsLoading(true);
-        setOffset(1);
+        setOffset(0);
+        offsetRef.current = 0;
         setProducts([]);
-        loadProducts(1, searchPhrase);
+        loadProducts(0, searchPhrase);
     }, [searchPhrase, loadProducts]);
 
-    const loadMore = () => {
-        if (!isLoadingMore && hasMore && !searchPhrase) {
+    const loadMore = useCallback(() => {
+        if (!isLoadingMore && hasMore && !searchPhrase && !loadingRef.current) {
             setIsLoadingMore(true);
-            const nextOffset = offset + 12;
+            const nextOffset = offsetRef.current;
             setOffset(nextOffset);
             loadProducts(nextOffset);
         }
-    };
+    }, [isLoadingMore, hasMore, searchPhrase, loadProducts]);
+
+    // Infinite scroll with IntersectionObserver
+    useEffect(() => {
+        if (!sentinelRef.current || searchPhrase) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const [entry] = entries;
+                if (entry.isIntersecting && hasMore && !isLoadingMore && !isLoading) {
+                    loadMore();
+                }
+            },
+            { rootMargin: '200px' } // Trigger 200px before reaching the sentinel
+        );
+
+        observer.observe(sentinelRef.current);
+
+        return () => {
+            if (sentinelRef.current) {
+                observer.unobserve(sentinelRef.current);
+            }
+        };
+    }, [hasMore, isLoadingMore, isLoading, searchPhrase, loadMore]);
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -111,20 +148,25 @@ function HomePageContent() {
                 {/* Products Grid */}
                 <ProductGrid products={products} isLoading={isLoading} />
 
-                {/* Load More Button */}
-                {hasMore && !searchPhrase && !isLoading && (
-                    <div className="mt-12 flex justify-center">
-                        <Button
-                            onClick={loadMore}
-                            disabled={isLoadingMore}
-                            isLoading={isLoadingMore}
-                            variant="outline"
-                            size="lg"
-                            className="min-w-[200px] border-2 border-gray-300 px-8 py-3 font-semibold hover:border-gray-400 hover:bg-gray-50"
-                        >
-                            {isLoadingMore ? 'Loading...' : 'Load More Products'}
-                        </Button>
-                    </div>
+                {/* Infinite Scroll Sentinel & Loading Indicator */}
+                {!searchPhrase && !isLoading && (
+                    <>
+                        {hasMore && (
+                            <div ref={sentinelRef} className="mt-12 flex justify-center">
+                                {isLoadingMore && (
+                                    <div className="flex items-center gap-2 text-gray-600">
+                                        <LoadingSpinner size="md" />
+                                        <span>Loading more products...</span>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        {!hasMore && products.length > 0 && (
+                            <div className="mt-12 text-center text-gray-500">
+                                <p>You've reached the end of the products list</p>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
         </div>

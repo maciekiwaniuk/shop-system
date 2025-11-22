@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '@/lib/store/authStore';
@@ -21,6 +21,49 @@ export default function AdminProductsPage() {
     const isAdmin = useIsAdmin();
     const [products, setProducts] = useState<Product[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+    const sentinelRef = useRef<HTMLDivElement>(null);
+    const loadingRef = useRef(false); // Prevent duplicate requests
+    const offsetRef = useRef(0); // Track current offset accurately
+
+    const loadProducts = useCallback(async (currentOffset: number) => {
+        if (loadingRef.current) return; // Prevent duplicate requests
+        loadingRef.current = true;
+
+        try {
+            const response = await productsApi.getPaginated({ offset: currentOffset, limit: 20 });
+            if (response.success && response.data) {
+                const productsList = Array.isArray(response.data)
+                    ? response.data
+                    : response.data.products || [];
+
+                if (currentOffset === 0) {
+                    setProducts(productsList);
+                    offsetRef.current = productsList.length;
+                } else {
+                    setProducts((prev) => {
+                        // Deduplicate by ID to prevent race conditions
+                        const existingIds = new Set(prev.map(p => p.id));
+                        const newProducts = productsList.filter(p => !existingIds.has(p.id));
+                        return [...prev, ...newProducts];
+                    });
+                    offsetRef.current += productsList.length;
+                }
+
+                setHasMore(productsList.length === 20);
+            } else {
+                toast.error(response.message || 'Failed to load products');
+            }
+        } catch (error) {
+            console.error('Error loading products:', error);
+            toast.error('An error occurred while loading products');
+        } finally {
+            setIsLoading(false);
+            setIsLoadingMore(false);
+            loadingRef.current = false; // Reset loading flag
+        }
+    }, []);
 
     useEffect(() => {
         if (!hasHydrated) return;
@@ -34,27 +77,40 @@ export default function AdminProductsPage() {
             return;
         }
 
-        const loadProducts = async () => {
-            try {
-                const response = await productsApi.getPaginated({ offset: 0, limit: 100 });
-                if (response.success && response.data) {
-                    const productsList = Array.isArray(response.data)
-                        ? response.data
-                        : response.data.products || [];
-                    setProducts(productsList);
-                } else {
-                    toast.error(response.message || 'Failed to load products');
+        offsetRef.current = 0;
+        loadProducts(0);
+    }, [hasHydrated, isAuthenticated, isAdmin, router, pathname, loadProducts]);
+
+    const loadMore = useCallback(() => {
+        if (!isLoadingMore && hasMore && !loadingRef.current) {
+            setIsLoadingMore(true);
+            const nextOffset = offsetRef.current;
+            loadProducts(nextOffset);
+        }
+    }, [isLoadingMore, hasMore, loadProducts]);
+
+    // Infinite scroll with IntersectionObserver
+    useEffect(() => {
+        if (!sentinelRef.current) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const [entry] = entries;
+                if (entry.isIntersecting && hasMore && !isLoadingMore && !isLoading) {
+                    loadMore();
                 }
-            } catch (error) {
-                console.error('Error loading products:', error);
-                toast.error('An error occurred while loading products');
-            } finally {
-                setIsLoading(false);
+            },
+            { rootMargin: '200px' }
+        );
+
+        observer.observe(sentinelRef.current);
+
+        return () => {
+            if (sentinelRef.current) {
+                observer.unobserve(sentinelRef.current);
             }
         };
-
-        loadProducts();
-    }, [hasHydrated, isAuthenticated, isAdmin, router, pathname]);
+    }, [hasMore, isLoadingMore, isLoading, loadMore]);
 
     const handleDelete = async (productId: number) => {
         if (!confirm('Are you sure you want to delete this product?')) {
@@ -177,6 +233,27 @@ export default function AdminProductsPage() {
                         </table>
                     </div>
                 </div>
+
+                {/* Infinite Scroll Sentinel & Loading Indicator */}
+                {!isLoading && (
+                    <>
+                        {hasMore && (
+                            <div ref={sentinelRef} className="mt-8 flex justify-center">
+                                {isLoadingMore && (
+                                    <div className="flex items-center gap-2 text-gray-600">
+                                        <LoadingSpinner size="md" />
+                                        <span>Loading more products...</span>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        {!hasMore && products.length > 0 && (
+                            <div className="mt-8 text-center text-gray-500">
+                                <p>You've reached the end of the products list</p>
+                            </div>
+                        )}
+                    </>
+                )}
             </div>
         </div>
     );

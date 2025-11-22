@@ -52,15 +52,17 @@ function OrdersListContent() {
             try {
                 const response = await ordersApi.getMyPaginated(undefined, 10);
                 if (response.success && response.data) {
-                    if (Array.isArray(response.data)) {
-                        setOrders(response.data);
-                        setHasMore(response.data.length === 10);
-                    } else if (response.data.orders) {
-                        setOrders(response.data.orders);
-                        const nextCursor = response.data.cursor;
+                    const ordersList = Array.isArray(response.data) ? response.data : response.data.orders || [];
+                    setOrders(ordersList);
+                    
+                    // Set cursor to last order's ID if we got a full page
+                    if (ordersList.length === 10) {
+                        const lastOrder = ordersList[ordersList.length - 1];
+                        const nextCursor = lastOrder?.id || lastOrder?.uuid;
                         setCursor(nextCursor);
-                        // Has more if we got a cursor and full page of results
-                        setHasMore(!!nextCursor && response.data.orders.length === 10);
+                        setHasMore(true);
+                    } else {
+                        setHasMore(false);
                     }
                 } else {
                     toast.error(response.message || 'Failed to load orders');
@@ -89,14 +91,18 @@ function OrdersListContent() {
         try {
             const response = await ordersApi.getMyPaginated(cursor, 10);
             if (response.success && response.data) {
-                if (Array.isArray(response.data)) {
-                    setOrders(prev => [...prev, ...response.data]);
-                    setHasMore(response.data.length === 10);
-                } else if (response.data.orders) {
-                    setOrders(prev => [...prev, ...response.data.orders]);
-                    const nextCursor = response.data.cursor;
+                const ordersList = Array.isArray(response.data) ? response.data : response.data.orders || [];
+                setOrders(prev => [...prev, ...ordersList]);
+                
+                // Set cursor to last order's ID if we got a full page
+                if (ordersList.length === 10) {
+                    const lastOrder = ordersList[ordersList.length - 1];
+                    const nextCursor = lastOrder?.id || lastOrder?.uuid;
                     setCursor(nextCursor);
-                    setHasMore(!!nextCursor && response.data.orders.length === 10);
+                    setHasMore(true);
+                } else {
+                    setHasMore(false);
+                    setCursor(undefined);
                 }
             } else {
                 toast.error(response.message || 'Failed to load more orders');
@@ -121,14 +127,17 @@ function OrdersListContent() {
             try {
                 const response = await ordersApi.getPaginated(undefined, 10);
                 if (response.success && response.data) {
-                    if (Array.isArray(response.data)) {
-                        setAllOrders(response.data);
-                        setHasMoreAll(response.data.length === 10);
-                    } else if (response.data.orders) {
-                        setAllOrders(response.data.orders);
-                        const nextCursor = response.data.cursor;
+                    const ordersList = Array.isArray(response.data) ? response.data : response.data.orders || [];
+                    setAllOrders(ordersList);
+                    
+                    // Set cursor to last order's ID if we got a full page
+                    if (ordersList.length === 10) {
+                        const lastOrder = ordersList[ordersList.length - 1];
+                        const nextCursor = lastOrder?.id || lastOrder?.uuid;
                         setAllCursor(nextCursor);
-                        setHasMoreAll(!!nextCursor && response.data.orders.length === 10);
+                        setHasMoreAll(true);
+                    } else {
+                        setHasMoreAll(false);
                     }
                 } else {
                     toast.error(response.message || 'Failed to load all orders');
@@ -153,14 +162,18 @@ function OrdersListContent() {
         try {
             const response = await ordersApi.getPaginated(allCursor, 10);
             if (response.success && response.data) {
-                if (Array.isArray(response.data)) {
-                    setAllOrders(prev => [...prev, ...response.data]);
-                    setHasMoreAll(response.data.length === 10);
-                } else if (response.data.orders) {
-                    setAllOrders(prev => [...prev, ...response.data.orders]);
-                    const nextCursor = response.data.cursor;
+                const ordersList = Array.isArray(response.data) ? response.data : response.data.orders || [];
+                setAllOrders(prev => [...prev, ...ordersList]);
+                
+                // Set cursor to last order's ID if we got a full page
+                if (ordersList.length === 10) {
+                    const lastOrder = ordersList[ordersList.length - 1];
+                    const nextCursor = lastOrder?.id || lastOrder?.uuid;
                     setAllCursor(nextCursor);
-                    setHasMoreAll(!!nextCursor && response.data.orders.length === 10);
+                    setHasMoreAll(true);
+                } else {
+                    setHasMoreAll(false);
+                    setAllCursor(undefined);
                 }
             } else {
                 toast.error(response.message || 'Failed to load more orders');
@@ -291,56 +304,72 @@ function OrdersListContent() {
 
                 {isAdmin && (
                     <div className="mt-12">
-                        <h2 className="mb-6 text-2xl font-bold text-gray-900">All Orders</h2>
+                        <h2 className="mb-6 text-2xl font-bold text-gray-900">All Orders (Admin)</h2>
                         {allOrders.length === 0 ? (
                             <div className="rounded-lg border-2 border-gray-200 bg-white p-6 text-sm text-gray-600">
                                 No orders to display.
                             </div>
                         ) : (
-                            <div className="space-y-4">
-                                {allOrders
-                                    .filter((order) => order && (order.uuid || order.id))
-                                    .map((order) => {
-                                        const orderId = order.id || '';
-                                        const orderDisplayId = orderId ? orderId.slice(0, 8) : 'N/A';
-                                        const total = getOrderTotal(order);
-                                        const status = getOrderStatus(order);
-                                        return (
-                                            <Link
-                                                key={`all-${orderId}`}
-                                                href={`/orders/${orderId}`}
-                                                className="block rounded-lg border-2 border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
-                                            >
-                                                <div className="flex items-center justify-between">
-                                                    <div>
-                                                        <h3 className="text-lg font-semibold text-gray-900">
-                                                            Order #{orderDisplayId}
-                                                        </h3>
-                                                        <p className="mt-1 text-sm text-gray-600">
-                                                            {order.createdAt ? formatDate(order.createdAt) : 'N/A'}
-                                                        </p>
+                            <>
+                                <div className="space-y-4">
+                                    {allOrders
+                                        .filter((order) => order && (order.uuid || order.id))
+                                        .map((order) => {
+                                            const orderId = order.id || '';
+                                            const orderDisplayId = orderId ? orderId.slice(0, 8) : 'N/A';
+                                            const total = getOrderTotal(order);
+                                            const status = getOrderStatus(order);
+                                            return (
+                                                <Link
+                                                    key={`all-${orderId}`}
+                                                    href={`/orders/${orderId}`}
+                                                    className="block rounded-lg border-2 border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+                                                >
+                                                    <div className="flex items-center justify-between">
+                                                        <div>
+                                                            <h3 className="text-lg font-semibold text-gray-900">
+                                                                Order #{orderDisplayId}
+                                                            </h3>
+                                                            <p className="mt-1 text-sm text-gray-600">
+                                                                {order.createdAt ? formatDate(order.createdAt) : 'N/A'}
+                                                            </p>
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <p className="text-lg font-bold text-gray-900">
+                                                                {formatPrice(total)}
+                                                            </p>
+                                                            <span
+                                                                className={`mt-1 inline-block rounded-full px-3 py-1 text-xs font-semibold ${
+                                                                    status === 'completed'
+                                                                        ? 'bg-green-100 text-green-800'
+                                                                        : status === 'canceled'
+                                                                          ? 'bg-red-100 text-red-800'
+                                                                          : 'bg-yellow-100 text-yellow-800'
+                                                                }`}
+                                                            >
+                                                                {status.replaceAll('_', ' ')}
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                    <div className="text-right">
-                                                        <p className="text-lg font-bold text-gray-900">
-                                                            {formatPrice(total)}
-                                                        </p>
-                                                        <span
-                                                            className={`mt-1 inline-block rounded-full px-3 py-1 text-xs font-semibold ${
-                                                                status === 'completed'
-                                                                    ? 'bg-green-100 text-green-800'
-                                                                    : status === 'canceled'
-                                                                      ? 'bg-red-100 text-red-800'
-                                                                      : 'bg-yellow-100 text-yellow-800'
-                                                            }`}
-                                                        >
-                                                            {status.replaceAll('_', ' ')}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </Link>
-                                        );
-                                    })}
-                            </div>
+                                                </Link>
+                                            );
+                                        })}
+                                </div>
+                                {hasMoreAll && allCursor && (
+                                    <div className="mt-6 flex justify-center">
+                                        <Button
+                                            onClick={loadMoreAllOrders}
+                                            disabled={isLoadingMoreAll}
+                                            isLoading={isLoadingMoreAll}
+                                            variant="outline"
+                                            size="lg"
+                                            className="min-w-[200px] border-2 border-gray-300 px-8 py-3 font-semibold hover:border-gray-400 hover:bg-gray-50"
+                                        >
+                                            {isLoadingMoreAll ? 'Loading...' : 'Load More Orders'}
+                                        </Button>
+                                    </div>
+                                )}
+                            </>
                         )}
                     </div>
                 )}

@@ -34,15 +34,16 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
     /**
      * @return array<Product>
      */
-    public function getPaginatedById(int $offset = 1, int $limit = 10): array
+    public function getPaginatedById(int $offset = 0, int $limit = 10): array
     {
         $limit = min($limit, 20);
+        $offset = max(0, $offset);
 
         return $this->createQueryBuilder('p')
             ->select('p')
             ->andWhere('p.deletedAt IS NULL')
-            ->andWhere('p.id >= :offset')
-            ->setParameter('offset', $offset)
+            ->orderBy('p.id', 'ASC')
+            ->setFirstResult($offset)
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
