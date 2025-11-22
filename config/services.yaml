@@ -57,6 +57,10 @@ services:
             $logger: '@Psr\Log\LoggerInterface'
             $paymentsServiceUrl: '%payments_service_url%'
 
+    App\Common\Interface\Console\ShowFailedMessagesCommand:
+        arguments:
+            $failedTransport: '@messenger.transport.failed'
+
 imports:
     - { resource: 'services/commands.yaml' }
     - { resource: 'services/queries.yaml' }

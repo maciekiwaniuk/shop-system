@@ -31,6 +31,19 @@ At the beginning, this project was a simple monolith to learn Symfony. Later, it
     - Check `frontend/package.json` for frontend JavaScript dependencies.
     - Check `microservices/payments/go.mod` for Go microservice dependencies.
 
+### Maintaining Cursor Rules
+- **Rule**: Cursor rules must be kept up to date and reflect the current state of the project.
+    - When making significant changes that affect architecture, patterns, workflows, or project structure, automatically update the relevant cursor rules files.
+    - Examples of changes requiring rule updates:
+        - Adding or removing services, modules, or microservices
+        - Changing communication patterns (sync/async, messaging, APIs)
+        - Modifying deployment or development workflows
+        - Introducing new technologies or frameworks
+        - Changing architectural patterns or best practices
+        - Updates to configuration files or directory structures
+    - Cursor rules are located in `.cursor/rules/` and are numbered to indicate priority and category.
+    - Keep documentation accurate to ensure AI assistance remains effective and aligned with project standards.
+
 ## Project Overview
 The main application is built in PHP with Symfony as a modular monolith. The payments microservice is written in Go using the Gin framework. Both the monolith and the payments microservice use ports and adapters architecture and CQRS.
 

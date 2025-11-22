@@ -65,8 +65,6 @@ services:
             - "443:443"
         volumes:
             - ../:/var/www:cached
-        environment:
-            SERVER_NAME: localhost
         depends_on:
             - shop-system-mysql
             - shop-system-elasticsearch
@@ -87,7 +85,8 @@ services:
         env_file:
             - ../microservices/payments/.env
         depends_on:
-            - shop-system-backend
+            - shop-system-rabbitmq
+            - shop-system-mysql
 
 #    shop-system-seeder:
 #        container_name: shop-system-seeder
@@ -103,16 +102,31 @@ services:
 #        depends_on:
 #            - shop-system-mysql
 
-#    shop-system-queue:
-#        container_name: shop-system-queue
-#        build:
-#            context: ./docker/php
-#        restart: always
-#        volumes:
-#            - ../:/var/www:cached
-#        depends_on:
-#            - shop-system-backend
-#        command: sh -c "sleep 10 && php bin/console messenger:consume async -vv"
+    shop-system-worker-async:
+        container_name: shop-system-worker-async
+        build:
+            context: ./docker/php
+        restart: always
+        volumes:
+            - ../:/var/www:cached
+        depends_on:
+            - shop-system-backend
+            - shop-system-rabbitmq
+            - shop-system-mysql
+        command: sh -c "sleep 10 && php bin/console messenger:consume async -vv"
+
+    shop-system-worker-payments:
+        container_name: shop-system-worker-payments
+        build:
+            context: ./docker/php
+        restart: always
+        volumes:
+            - ../:/var/www:cached
+        depends_on:
+            - shop-system-backend
+            - shop-system-rabbitmq
+            - shop-system-mysql
+        command: sh -c "sleep 10 && php bin/console messenger:consume payments_events -vv"
 
     shop-system-frontend:
         container_name: shop-system-frontend

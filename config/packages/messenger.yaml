@@ -1,13 +1,33 @@
 framework:
     messenger:
+        failure_transport: failed
+
+        buses:
+            messenger.bus.default:
+                middleware:
+                    - App\Common\Infrastructure\Messenger\ErrorLoggingMiddleware
+
         transports:
             sync:
                 dsn: 'sync://'
             async:
                 dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
+                retry_strategy:
+                    max_retries: 3
+                    delay: 1000
+                    multiplier: 2
+                    max_delay: 0
+                options:
+                    exchange:
+                        name: messages
             payments_events:
                 dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
                 serializer: 'App\Module\Commerce\Infrastructure\Messaging\PaymentsEventSerializer'
+                retry_strategy:
+                    max_retries: 3
+                    delay: 1000
+                    multiplier: 2
+                    max_delay: 0
                 options:
                     exchange:
                         name: commerce.payments_events
@@ -17,6 +37,11 @@ framework:
                             binding_keys:
                                 - transaction_completed
                                 - transaction_canceled
+            failed:
+                dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
+                options:
+                    exchange:
+                        name: failed
 
         routing:
             'App\Module\Auth\Application\Command\SendWelcomeEmail\SendWelcomeEmailCommand': async
@@ -44,3 +69,5 @@ when@test:
         messenger:
             transports:
                 async: 'sync://'
+                payments_events: 'sync://'
+                failed: 'sync://'

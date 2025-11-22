@@ -69,10 +69,105 @@ This interaction is a mix of synchronous and asynchronous patterns.
 
 ### Payments (Go) → Backend (PHP) - *Asynchronous*
 
-- **How**: After a transaction's state is changed (e.g., paid or canceled), the Go microservice publishes an event to a RabbitMQ exchange. The PHP backend has a consumer that listens for these events.
+- **How**: After a transaction's state is changed (e.g., paid or canceled), the Go microservice publishes an event to a RabbitMQ exchange. The PHP backend has consumer workers that listen for these events.
 - **Example Flow (Payment Completion)**:
     1. The user "pays" for the order on the frontend, which calls the `/transactions/complete` endpoint on the Go microservice.
     2. The `CompleteTransactionHandler` in the Go service updates the transaction status in its database to "paid".
     3. It then uses an `EventPublisher` to publish a `TransactionCompletedEvent` (containing the transaction ID) to RabbitMQ.
-    4. In the PHP backend, the `TransactionCompletedEventHandler` (a Symfony Messenger consumer) receives this message from the queue.
-    5. The handler then dispatches a `ChangeOrderStatusCommand` within the `Commerce` module to update the corresponding order's status to `COMPLETED`.
+    4. The payments consumer worker in the PHP backend receives this message from the `payments_events` queue.
+    5. The `TransactionCompletedEventHandler` (marked with `#[AsMessageHandler]`) processes the event and dispatches a `ChangeOrderStatusCommand` within the `Commerce` module to update the corresponding order's status to `COMPLETED`.
+
+---
+
+## 4. Message Queue & Consumer Workers
+
+The system uses RabbitMQ with Symfony Messenger for asynchronous message processing. There are two types of workers running as separate Docker containers/Kubernetes pods.
+
+### Worker Types
+
+#### Async Worker (`shop-system-worker-async`)
+- **Consumes from**: `async` transport (queue: `messages`)
+- **Processes**: Symfony async commands (e.g., `SendWelcomeEmailCommand`)
+- **Serialization**: PHP native serialization (Symfony default)
+- **Use case**: Background tasks like sending emails, generating reports
+
+#### Payments Worker (`shop-system-worker-payments`)
+- **Consumes from**: `payments_events` transport (queue: `payments_events_queue`)
+- **Processes**: Payment events from Go microservice
+- **Serialization**: `PaymentsEventSerializer` (custom JSON deserializer)
+- **Routing Keys**: `transaction_completed`, `transaction_canceled`
+- **Use case**: Reacting to payment status changes
+
+### Message Flow
+
+```
+Symfony Async Command → async transport → RabbitMQ → Async Worker → Handler
+Go Payment Event → payments_events exchange → RabbitMQ → Payments Worker → Handler
+```
+
+### Configuration
+
+Located in `config/packages/messenger.yaml`:
+
+- **Transports**: `async`, `payments_events`, `failed` (DLQ)
+- **Retry Strategy**: 3 retries with exponential backoff (1s → 2s → 4s)
+- **Failed Messages**: Automatically routed to `failed` transport after max retries
+- **Middleware**: `ErrorLoggingMiddleware` logs all errors with detailed context
+
+### Error Handling
+
+- **ErrorLoggingMiddleware** (`src/Common/Infrastructure/Messenger/ErrorLoggingMiddleware.php`):
+    - Intercepts all exceptions in message handlers
+    - Logs exception details, message data, and stack trace
+    - Re-throws to allow retry mechanism
+    - Only processes messages from transport (not locally dispatched)
+
+- **Dead Letter Queue (DLQ)**:
+    - Failed messages (after 3 retries) go to `failed` transport
+    - View: `php bin/console app:messenger:failed-messages`
+    - Retry: `php bin/console messenger:failed:retry --force`
+
+### Running Workers
+
+**Docker Compose** (local development):
+```bash
+# Workers start automatically with docker-compose up
+docker logs -f shop-system-worker-async
+docker logs -f shop-system-worker-payments
+```
+
+**Kubernetes**:
+```bash
+kubectl apply -f k8s/local/backend/queue.yaml
+kubectl logs -f deployment/queue -n shop-system
+```
+
+**Manual** (for testing):
+```bash
+php bin/console messenger:consume async -vv
+php bin/console messenger:consume payments_events -vv
+```
+
+### Message Formats
+
+**Symfony Async Message** (PHP serialized):
+```
+O:36:"Symfony\\Component\\Messenger\\Envelope":2:{...}
+```
+
+**Payment Event** (JSON from Go):
+```json
+{
+    "transaction_id": "12b0d3e0-befa-11f0-aa62-2f547971bbe0",
+    "canceled_at": "2025-11-11T12:33:31Z",
+    "routing_key": "transaction_canceled"
+}
+```
+
+### Best Practices
+
+- **Rule**: Message handlers must be idempotent (safe to retry)
+- **Rule**: Always log errors with context in handlers
+- **Rule**: Use `#[AsMessageHandler]` attribute on handler classes
+- **Rule**: Async command handlers must have `void` return type
+- **Rule**: Monitor the `failed` transport regularly for problematic messages

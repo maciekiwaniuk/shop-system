@@ -70,6 +70,43 @@ Each module follows a strict 4-layer hexagonal structure. When adding new classe
 - **Rule**: Query handlers **MUST** return a `QueryResult` object containing the requested data, e.g., `QueryResult::success($userData)`.
 - **Rule**: For performance, query handlers should bypass the Domain/Aggregates and query the database directly (e.g., using Doctrine DQL) to build read-model DTOs tailored for the client.
 
+#### Symfony Messenger & Async Processing
+
+The application uses Symfony Messenger for message handling with RabbitMQ as the transport.
+
+**Transports** (configured in `config/packages/messenger.yaml`):
+- `sync`: In-memory, synchronous processing
+- `async`: RabbitMQ queue for async Symfony commands
+- `payments_events`: RabbitMQ queue for payment events from Go microservice (uses custom `PaymentsEventSerializer`)
+- `failed`: Dead Letter Queue for messages that fail after retries
+
+**Retry Strategy**:
+- Max retries: 3 attempts
+- Backoff: Exponential (1s → 2s → 4s)
+- Failed messages are automatically routed to `failed` transport after exhausting retries
+
+**Error Handling**:
+- `ErrorLoggingMiddleware` (`src/Common/Infrastructure/Messenger/ErrorLoggingMiddleware.php`) intercepts all exceptions
+- Logs detailed context: exception details, message data, stack trace
+- Re-throws exception to allow retry mechanism to work
+
+**Message Handlers**:
+- **Rule**: All message handlers must use `#[AsMessageHandler]` attribute
+- **Rule**: Async command handlers must have `void` return type
+- **Rule**: Event handlers must have `void` return type
+- **Rule**: Handlers must be idempotent (safe to retry multiple times)
+- **Rule**: Always log errors with context in handlers using `LoggerInterface`
+
+**Running Workers**:
+- `docker-compose`: Workers start automatically (`shop-system-worker-async`, `shop-system-worker-payments`)
+- `kubernetes`: Deploy via `k8s/local/backend/queue.yaml`
+- `manual`: `php bin/console messenger:consume async -vv`
+
+**Managing Failed Messages**:
+- View count: `php bin/console app:messenger:failed-messages`
+- List details: `php bin/console messenger:failed:show`
+- Retry all: `php bin/console messenger:failed:retry --force`
+
 ## 4. Database & Persistence
 
 - **Rule**: Each module has its own dedicated database and its own migrations in `migrations/{ModuleName}/`. This enforces strict module separation.
