@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: frontend
+    namespace: shop-system
+    labels:
+        app.kubernetes.io/name: shop-system
+        app.kubernetes.io/component: frontend
+        app.kubernetes.io/instance: local
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app.kubernetes.io/component: frontend
+    template:
+        metadata:
+            labels:
+                app.kubernetes.io/name: shop-system
+                app.kubernetes.io/component: frontend
+                app.kubernetes.io/instance: local
+        spec:
+            containers:
+                - name: frontend
+                  image: maciekiwaniuk/shop-system-frontend:latest
+                  ports:
+                      - containerPort: 3000
+                        name: http
+                  envFrom:
+                      - configMapRef: { name: frontend-config }
+                  livenessProbe:
+                      httpGet:
+                          path: /
+                          port: 3000
+                      initialDelaySeconds: 30
+                      periodSeconds: 10
+                      timeoutSeconds: 5
+                      failureThreshold: 3
+                  readinessProbe:
+                      httpGet:
+                          path: /
+                          port: 3000
+                      initialDelaySeconds: 20
+                      periodSeconds: 5
+                      timeoutSeconds: 3
+                      failureThreshold: 3
+                  resources:
+                      requests:
+                          memory: "256Mi"
+                          cpu: "200m"
+                      limits:
+                          memory: "512Mi"
+                          cpu: "1000m"

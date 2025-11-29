@@ -24,6 +24,22 @@ spec:
                   volumeMounts:
                       - mountPath: /data
                         name: redis-storage
+                  livenessProbe:
+                      exec:
+                          command:
+                              - redis-cli
+                              - ping
+                      initialDelaySeconds: 15
+                      periodSeconds: 10
+                      timeoutSeconds: 3
+                  readinessProbe:
+                      exec:
+                          command:
+                              - redis-cli
+                              - ping
+                      initialDelaySeconds: 5
+                      periodSeconds: 5
+                      timeoutSeconds: 3
             volumes:
                 - name: redis-storage
                   persistentVolumeClaim:

@@ -33,10 +33,27 @@ spec:
                 - name: backend
                   image: maciekiwaniuk/shop-system-backend:latest
                   ports:
-                      - containerPort: 9000
+                      - containerPort: 80
+                        name: http
                   envFrom:
                       - configMapRef: { name: backend-config }
                       - secretRef:    { name: backend-secrets }
                   volumeMounts:
                       - name: app-code
                         mountPath: /var/www
+                  livenessProbe:
+                      httpGet:
+                          path: /
+                          port: 80
+                      initialDelaySeconds: 30
+                      periodSeconds: 10
+                      timeoutSeconds: 5
+                      failureThreshold: 3
+                  readinessProbe:
+                      httpGet:
+                          path: /
+                          port: 80
+                      initialDelaySeconds: 20
+                      periodSeconds: 5
+                      timeoutSeconds: 3
+                      failureThreshold: 3

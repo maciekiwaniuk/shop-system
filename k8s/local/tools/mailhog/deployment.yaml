@@ -22,4 +22,16 @@ spec:
                   image: mailhog/mailhog
                   ports:
                       - containerPort: 8025
+                        name: ui
                       - containerPort: 1025
+                        name: smtp
+                  livenessProbe:
+                      tcpSocket:
+                          port: 8025
+                      initialDelaySeconds: 10
+                      periodSeconds: 10
+                  readinessProbe:
+                      tcpSocket:
+                          port: 8025
+                      initialDelaySeconds: 5
+                      periodSeconds: 5

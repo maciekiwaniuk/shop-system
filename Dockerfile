@@ -2,7 +2,7 @@ FROM dunglas/frankenphp:1-php8.4
 
 WORKDIR /var/www
 
-COPY development/docker/php/php.ini /usr/local/etc/php/conf.d/docker-php-config.ini
+COPY ./php.ini /usr/local/etc/php/conf.d/docker-php-config.ini
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gnupg \
@@ -39,6 +39,7 @@ RUN set -eux; \
 
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
 ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV APP_ENV=prod
 
 COPY . /var/www
 
@@ -46,6 +47,6 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 RUN chown -R www-data:www-data /var/www/var
 
-COPY development/docker/php/Caddyfile /etc/frankenphp/Caddyfile
+COPY ./Caddyfile /etc/frankenphp/Caddyfile
 
 CMD [ "frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile" ]

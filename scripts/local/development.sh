@@ -1,2 +1,2 @@
-./run.sh
+./run-minikube.sh
 ./display-access.sh

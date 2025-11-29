@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: frontend-config
+    namespace: shop-system
+    labels:
+        app.kubernetes.io/name: shop-system
+        app.kubernetes.io/component: frontend
+        app.kubernetes.io/instance: local
+data:
+    NEXT_PUBLIC_API_URL: "http://backend"
+    NEXT_PUBLIC_PAYMENTS_URL: "http://payments:8080"
+    NODE_ENV: "development"

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: payments
+    namespace: shop-system
+    labels:
+        app.kubernetes.io/name: shop-system
+        app.kubernetes.io/component: payments
+        app.kubernetes.io/instance: local
+spec:
+    type: ClusterIP
+    selector:
+        app.kubernetes.io/component: payments
+    ports:
+        - name: http
+          protocol: TCP
+          port: 8080
+          targetPort: 8080

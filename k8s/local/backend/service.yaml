@@ -12,6 +12,7 @@ spec:
     selector:
         app.kubernetes.io/component: backend
     ports:
-        - protocol: TCP
-          port: 9000
-          targetPort: 9000
+        - name: http
+          protocol: TCP
+          port: 80
+          targetPort: 80

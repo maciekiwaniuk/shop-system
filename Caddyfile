@@ -1,0 +1,21 @@
+{
+    auto_https off
+}
+
+:80 {
+    root * /var/www/public
+    encode zstd gzip
+    
+    php_server
+    
+    try_files {path} {path}/ /index.php?{query}
+    
+    request_body {
+        max_size 100M
+    }
+    
+    log {
+        output stderr
+        format console
+    }
+}

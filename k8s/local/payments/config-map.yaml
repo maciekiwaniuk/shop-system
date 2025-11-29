@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: payments-config
+    namespace: shop-system
+    labels:
+        app.kubernetes.io/name: shop-system
+        app.kubernetes.io/component: payments
+        app.kubernetes.io/instance: local
+data:
+    PORT: "8080"
+    GIN_MODE: "debug"
+    DB_HOST: "mysql"
+    DB_PORT: "3306"
+    DB_NAME: "shop_system_payments"
+    RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672/"
+    REDIS_HOST: "redis"
+    REDIS_PORT: "6379"
+    REDIS_PASSWORD: ""
+    REDIS_DATABASE: "2"
+    LOG_LEVEL: "info"
+    MONOLITH_URL: "http://backend"
+
