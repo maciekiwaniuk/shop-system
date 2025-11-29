@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-    name: shop-system-prod
-    labels:
-        app.kubernetes.io/name: shop-system
-        app.kubernetes.io/instance: prod
