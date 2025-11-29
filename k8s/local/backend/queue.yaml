@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: queue
+    name: backend-queue-async-commands
     namespace: shop-system
     labels:
         app.kubernetes.io/name: shop-system
-        app.kubernetes.io/component: queue
+        app.kubernetes.io/component: backend-queue-async-commands
         app.kubernetes.io/instance: local
 spec:
-    replicas: 2
+    replicas: 1
     selector:
         matchLabels:
-            app.kubernetes.io/component: queue
+            app.kubernetes.io/component: backend-queue-async-commands
     template:
         metadata:
             labels:
                 app.kubernetes.io/name: shop-system
-                app.kubernetes.io/component: queue
+                app.kubernetes.io/component: backend-queue-async-commands
         spec:
             terminationGracePeriodSeconds: 90
             volumes:
@@ -33,6 +33,48 @@ spec:
                 - name: queue-worker
                   image: maciekiwaniuk/shop-system-backend:latest
                   command: ["php", "/var/www/bin/console", "messenger:consume", "async", "--memory-limit=128M", "--time-limit=3600", "-vv"]
+                  envFrom:
+                      - configMapRef: { name: backend-config }
+                      - secretRef:    { name: backend-secrets }
+                  volumeMounts:
+                      - name: app-code
+                        mountPath: /var/www
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: backend-queue-payments-events
+    namespace: shop-system
+    labels:
+        app.kubernetes.io/name: shop-system
+        app.kubernetes.io/component: backend-queue-payments-events
+        app.kubernetes.io/instance: local
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app.kubernetes.io/component: backend-queue-payments-events
+    template:
+        metadata:
+            labels:
+                app.kubernetes.io/name: shop-system
+                app.kubernetes.io/component: backend-queue-payments-events
+        spec:
+            terminationGracePeriodSeconds: 90
+            volumes:
+                - name: app-code
+                  emptyDir: {}
+            initContainers:
+                - name: setup-code
+                  image: maciekiwaniuk/shop-system-backend:latest
+                  command: ["cp", "-a", "/var/www/.", "/app"]
+                  volumeMounts:
+                      - name: app-code
+                        mountPath: /app
+            containers:
+                - name: queue-worker
+                  image: maciekiwaniuk/shop-system-backend:latest
+                  command: ["php", "/var/www/bin/console", "messenger:consume", "payments_events", "--memory-limit=128M", "--time-limit=3600", "-vv"]
                   envFrom:
                       - configMapRef: { name: backend-config }
                       - secretRef:    { name: backend-secrets }
