@@ -37,16 +37,19 @@ async function proxy(request: NextRequest, path: string[]) {
 	});
 }
 
-export async function GET(request: NextRequest, context: { params: { path: string[] } }) {
-	return proxy(request, context.params.path || []);
+export async function GET(request: NextRequest, context: { params: Promise<{ path: string[] }> }) {
+	const { path } = await context.params;
+	return proxy(request, path || []);
 }
 
-export async function POST(request: NextRequest, context: { params: { path: string[] } }) {
-	return proxy(request, context.params.path || []);
+export async function POST(request: NextRequest, context: { params: Promise<{ path: string[] }> }) {
+	const { path } = await context.params;
+	return proxy(request, path || []);
 }
 
-export async function PUT(request: NextRequest, context: { params: { path: string[] } }) {
-	return proxy(request, context.params.path || []);
+export async function PUT(request: NextRequest, context: { params: Promise<{ path: string[] }> }) {
+	const { path } = await context.params;
+	return proxy(request, path || []);
 }
 
 export async function OPTIONS() {

@@ -58,7 +58,7 @@ function OrdersListContent() {
                     // Set cursor to last order's ID if we got a full page
                     if (ordersList.length === 10) {
                         const lastOrder = ordersList[ordersList.length - 1];
-                        const nextCursor = lastOrder?.id || lastOrder?.uuid;
+                        const nextCursor = lastOrder?.id;
                         setCursor(nextCursor);
                         setHasMore(true);
                     } else {
@@ -97,7 +97,7 @@ function OrdersListContent() {
                 // Set cursor to last order's ID if we got a full page
                 if (ordersList.length === 10) {
                     const lastOrder = ordersList[ordersList.length - 1];
-                    const nextCursor = lastOrder?.id || lastOrder?.uuid;
+                    const nextCursor = lastOrder?.id;
                     setCursor(nextCursor);
                     setHasMore(true);
                 } else {
@@ -133,7 +133,7 @@ function OrdersListContent() {
                     // Set cursor to last order's ID if we got a full page
                     if (ordersList.length === 10) {
                         const lastOrder = ordersList[ordersList.length - 1];
-                        const nextCursor = lastOrder?.id || lastOrder?.uuid;
+                        const nextCursor = lastOrder?.id;
                         setAllCursor(nextCursor);
                         setHasMoreAll(true);
                     } else {
@@ -168,7 +168,7 @@ function OrdersListContent() {
                 // Set cursor to last order's ID if we got a full page
                 if (ordersList.length === 10) {
                     const lastOrder = ordersList[ordersList.length - 1];
-                    const nextCursor = lastOrder?.id || lastOrder?.uuid;
+                    const nextCursor = lastOrder?.id;
                     setAllCursor(nextCursor);
                     setHasMoreAll(true);
                 } else {
@@ -243,7 +243,7 @@ function OrdersListContent() {
                     <>
                         <div className="space-y-4">
                             {orders
-                                .filter((order) => order && (order.uuid || order.id))
+                                .filter((order) => order && order.id)
                                 .map((order) => {
                                     const orderId = order.id || '';
                                     const orderDisplayId = orderId ? orderId.slice(0, 8) : 'N/A';
@@ -313,7 +313,7 @@ function OrdersListContent() {
                             <>
                                 <div className="space-y-4">
                                     {allOrders
-                                        .filter((order) => order && (order.uuid || order.id))
+                                        .filter((order) => order && order.id)
                                         .map((order) => {
                                             const orderId = order.id || '';
                                             const orderDisplayId = orderId ? orderId.slice(0, 8) : 'N/A';
