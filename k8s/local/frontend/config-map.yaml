@@ -8,6 +8,6 @@ metadata:
         app.kubernetes.io/component: frontend
         app.kubernetes.io/instance: local
 data:
-    NEXT_PUBLIC_API_URL: "http://backend"
-    NEXT_PUBLIC_PAYMENTS_URL: "http://payments:8080"
+    NEXT_PUBLIC_API_URL: "http://192.168.49.2:30081"
+    NEXT_PUBLIC_PAYMENTS_URL: "http://192.168.49.2:30082"
     NODE_ENV: "development"

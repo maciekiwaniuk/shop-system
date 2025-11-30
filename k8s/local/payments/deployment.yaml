@@ -30,7 +30,7 @@ spec:
                       - secretRef:    { name: payments-secrets }
                   livenessProbe:
                       httpGet:
-                          path: /health
+                          path: /api/v1/health
                           port: 8080
                       initialDelaySeconds: 20
                       periodSeconds: 10
@@ -38,7 +38,7 @@ spec:
                       failureThreshold: 3
                   readinessProbe:
                       httpGet:
-                          path: /health
+                          path: /api/v1/health
                           port: 8080
                       initialDelaySeconds: 10
                       periodSeconds: 5

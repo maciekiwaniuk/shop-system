@@ -8,7 +8,7 @@ metadata:
         app.kubernetes.io/component: backend
         app.kubernetes.io/instance: local
 data:
-    APP_ENV: "dev"
+    APP_ENV: "prod"
     COMPOSE_PROJECT_NAME: "shop_system"
     MYSQL_HOST: "mysql"
     MYSQL_PORT: "3306"

@@ -43,7 +43,7 @@ spec:
                         mountPath: /var/www
                   livenessProbe:
                       httpGet:
-                          path: /
+                          path: /api/v1/health
                           port: 80
                       initialDelaySeconds: 30
                       periodSeconds: 10
@@ -51,7 +51,7 @@ spec:
                       failureThreshold: 3
                   readinessProbe:
                       httpGet:
-                          path: /
+                          path: /api/v1/health
                           port: 80
                       initialDelaySeconds: 20
                       periodSeconds: 5

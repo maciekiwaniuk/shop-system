@@ -1,19 +1,22 @@
 #!/bin/bash
 set -e
 
-echo "Deploying backend to kubernetes..."
+echo "Deploying backend..."
 
 echo "Creating namespace..."
 kubectl apply -f namespace.yaml
 
-echo "Deploying config maps..."
-kubectl apply -f config-maps/
+echo "Deploying config map..."
+kubectl apply -f backend/config-map.yaml
 
-echo "Deploying secrets..."
-kubectl apply -f secrets/
+echo "Deploying secret..."
+kubectl apply -f backend/secret.yaml
 
-echo "Deploying services..."
-kubectl apply -f services/
+echo "Deploying service..."
+kubectl apply -f backend/service.yaml
 
-echo "Deploying applications..."
-kubectl apply -f app/
+echo "Deploying deployment..."
+kubectl apply -f backend/deployment.yaml
+
+echo "Deploying queues..."
+kubectl apply -f backend/queue.yaml

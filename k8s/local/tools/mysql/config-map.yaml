@@ -18,4 +18,3 @@ data:
 
         GRANT ALL PRIVILEGES ON *.* TO 'shop_user'@'%';
         FLUSH PRIVILEGES;
-
