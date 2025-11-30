@@ -17,3 +17,6 @@ kubectl apply -f payments/service.yaml
 
 echo "Deploying deployment..."
 kubectl apply -f payments/deployment.yaml
+
+echo "Forcing pod restart to pull new image..."
+kubectl rollout restart deployment/payments -n shop-system

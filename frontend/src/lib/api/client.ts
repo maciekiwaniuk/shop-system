@@ -1,8 +1,10 @@
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { ApiResponse } from '@/types/api';
+import { getRuntimeConfig } from '@/lib/config';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/api/v1';
-const PAYMENTS_API_BASE_URL = process.env.NEXT_PUBLIC_PAYMENTS_URL || '/payments';
+// Initialize with temporary values - will be updated at runtime
+let API_BASE_URL = 'http://localhost/api/v1';
+let PAYMENTS_API_BASE_URL = '/payments';
 
 // Create axios instance for main API
 export const apiClient: AxiosInstance = axios.create({
@@ -19,6 +21,33 @@ export const paymentsClient: AxiosInstance = axios.create({
         'Content-Type': 'application/json',
     },
 });
+
+// Initialize runtime config
+let configInitialized = false;
+
+export async function initializeApiClients() {
+    if (configInitialized) {
+        console.log('[API Client] Already initialized');
+        return;
+    }
+    
+    console.log('[API Client] Fetching runtime configuration...');
+    const config = await getRuntimeConfig();
+    console.log('[API Client] Received config:', config);
+    
+    API_BASE_URL = config.apiUrl;
+    PAYMENTS_API_BASE_URL = config.paymentsUrl;
+    
+    apiClient.defaults.baseURL = API_BASE_URL;
+    paymentsClient.defaults.baseURL = PAYMENTS_API_BASE_URL;
+    
+    console.log('[API Client] Initialized with URLs:', {
+        apiUrl: API_BASE_URL,
+        paymentsUrl: PAYMENTS_API_BASE_URL,
+    });
+    
+    configInitialized = true;
+}
 
 // Public endpoints that must never send Authorization
 const PUBLIC_PATHS = [

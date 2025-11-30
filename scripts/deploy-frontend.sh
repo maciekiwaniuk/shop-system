@@ -14,3 +14,6 @@ kubectl apply -f frontend/service.yaml
 
 echo "Deploying deployment..."
 kubectl apply -f frontend/deployment.yaml
+
+echo "Forcing pod restart to pull new image..."
+kubectl rollout restart deployment/frontend -n shop-system

@@ -20,3 +20,6 @@ kubectl apply -f backend/deployment.yaml
 
 echo "Deploying queues..."
 kubectl apply -f backend/queue.yaml
+
+echo "Forcing pod restart to pull new image..."
+kubectl rollout restart deployment/backend -n shop-system

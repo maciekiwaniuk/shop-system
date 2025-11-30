@@ -19,7 +19,7 @@ data:
     MESSENGER_TRANSPORT_DSN: "amqp://guest:guest@rabbitmq:5672/%2f/messages"
     JWT_TOKEN_TTL: "3600"
     MAILER_DSN: "smtp://mailhog:1025"
-    CORS_ALLOW_ORIGIN: "^https?://(localhost|127\\.0\\.0\\.1)(:[0-9]+)?$"
+    CORS_ALLOW_ORIGIN: "^https?://(localhost|127\\.0\\.0\\.1|192\\.168\\.49\\.2)(:[0-9]+)?$"
     ELASTICSEARCH_HOST: "elasticsearch"
     ELASTICSEARCH_PORT: "9200"
     ELASTICSEARCH_SCHEME: "http"
