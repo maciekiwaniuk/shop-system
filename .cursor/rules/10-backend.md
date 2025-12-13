@@ -2,6 +2,12 @@
 
 The backend is a modular monolith built with PHP and Symfony, following Hexagonal Architecture, CQRS, and Domain-Driven Design (DDD) principles. Adherence to these patterns is strict to ensure code quality, maintainability, and scalability.
 
+## 0. Runtime & Web Server
+
+- **Runtime**: FrankenPHP (`dunglas/frankenphp:1-php8.4`)
+- **Web Server**: Caddy (embedded in FrankenPHP)
+- **Configuration**: `Caddyfile` in project root and `development/docker/php/Caddyfile` for local development
+
 ## 1. Modular Monolith
 
 - The application is divided into business-capability-aligned modules located in `src/Module/`.

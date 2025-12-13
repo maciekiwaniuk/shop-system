@@ -11,9 +11,9 @@ At the beginning, this project was a simple monolith to learn Symfony. Later, it
 ## Technology Stack & Development Environment
 
 ### Core Technologies
-- **Backend**: PHP, Symfony, PHPUnit
+- **Backend**: PHP, Symfony, FrankenPHP, PHPUnit
 - **Payments Microservice**: Go, Gin
-- **Frontend**: TypeScript, React, Next.js, Tailwind CSS
+- **Frontend**: TypeScript, React, Next.js, Bun, Tailwind CSS
 - **Databases & Storage**: MySQL, Elasticsearch, Redis
 - **Messaging**: RabbitMQ
 - **Architecture**: Microservices, CQRS, Hexagonal Architecture, DDD

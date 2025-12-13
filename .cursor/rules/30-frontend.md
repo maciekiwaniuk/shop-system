@@ -2,6 +2,37 @@
 
 The frontend is a Next.js application written in TypeScript, using Tailwind CSS for styling and Zustand for state management. It communicates with the backend via a RESTful API.
 
+## 0. Runtime & Package Manager
+
+- **Package Manager**: Bun (`oven/bun:1.3-alpine`)
+- **Build Runtime**: Bun
+- **Production Runtime**: Node.js
+- **Lockfile**: `bun.lock` (binary format)
+
+### Two-Stage Docker Build Strategy (Bun → Node)
+
+The Dockerfile uses a 2-stage build:
+1. **builder stage (Bun)**: `bun install` + `next build` executed via Bun (`bun --bun ...`)
+2. **runtime stage (Node)**: runs the generated Next.js standalone server via `node server.js`
+
+#### Bun Build Crash Fix
+
+Next.js may attempt to prerender its internal `/_global-error` route during build. With Bun + React 19 this can crash with a `useContext`-related error.
+To prevent that, the app provides an explicit `src/app/global-error.tsx` error boundary.
+
+### Running Bun Commands Locally
+
+- **Rule**: Do not install Bun directly on the host machine. Use the Docker container to run Bun commands.
+- **Rule**: When running Bun commands outside of the development environment (e.g., to regenerate `bun.lock` or add dependencies), use the Docker image:
+
+```bash
+# From the project root directory
+docker run --rm -v ./frontend:/app -w /app oven/bun:1.3-alpine bun install
+docker run --rm -v ./frontend:/app -w /app oven/bun:1.3-alpine bun add <package-name>
+```
+
+- **Rule**: The `development/docker-compose.yml` handles running the frontend dev server automatically via the `shop-system-frontend` service.
+
 ## 1. Project Structure
 
 The source code is located in `frontend/src/`. Key directories are:
