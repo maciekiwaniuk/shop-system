@@ -79,29 +79,24 @@ nelmio_api_doc:
                         createdAt:
                             type: string
                             format: date-time
-                            example: "2024-01-15T10:30:00+00:00"
+                            example: "2024-01-15 10:30:00"
                         updatedAt:
                             type: string
                             format: date-time
-                            example: "2024-01-15T10:30:00+00:00"
-                Order:
+                            example: "2024-01-15 10:30:00"
+                ProductSearchResult:
                     type: object
                     properties:
-                        id:
-                            type: integer
-                            example: 1
-                        uuid:
+                        name:
                             type: string
-                            format: uuid
-                            example: "550e8400-e29b-41d4-a716-446655440000"
-                        status:
-                            type: string
-                            enum: [pending, paid, shipped, delivered, cancelled]
-                            example: "pending"
-                        totalPrice:
+                            example: "iPhone 15 Pro"
+                        price:
                             type: number
                             format: float
-                            example: 1999.98
+                            example: 999.99
+                        slug:
+                            type: string
+                            example: "iphone-15-pro"
                         createdAt:
                             type: string
                             format: date-time
@@ -110,39 +105,127 @@ nelmio_api_doc:
                             type: string
                             format: date-time
                             example: "2024-01-15T10:30:00+00:00"
-                PaginatedProducts:
+                Client:
                     type: object
                     properties:
-                        products:
-                            type: array
-                            items:
-                                $ref: '#/components/schemas/Product'
-                        total:
-                            type: integer
-                            example: 100
-                        offset:
-                            type: integer
-                            example: 0
-                        limit:
-                            type: integer
-                            example: 10
-                PaginatedOrders:
-                    type: object
-                    properties:
-                        orders:
-                            type: array
-                            items:
-                                $ref: '#/components/schemas/Order'
-                        total:
-                            type: integer
-                            example: 50
-                        cursor:
+                        id:
                             type: string
+                            format: uuid
                             example: "550e8400-e29b-41d4-a716-446655440000"
-                        limit:
+                        email:
+                            type: string
+                            format: email
+                            example: "user@example.com"
+                        name:
+                            type: string
+                            example: "John"
+                        surname:
+                            type: string
+                            example: "Doe"
+                        updatedAt:
+                            type: string
+                            format: date-time
+                            example: "2024-01-15 10:30:00"
+                        createdAt:
+                            type: string
+                            format: date-time
+                            example: "2024-01-15 10:30:00"
+                ClientDetails:
+                    type: object
+                    properties:
+                        email:
+                            type: string
+                            format: email
+                            example: "user@example.com"
+                        name:
+                            type: string
+                            example: "John"
+                        surname:
+                            type: string
+                            example: "Doe"
+                OrderProduct:
+                    type: object
+                    properties:
+                        product:
+                            $ref: '#/components/schemas/Product'
+                        productQuantity:
                             type: integer
-                            example: 10
+                            example: 2
+                        productPricePerPiece:
+                            type: number
+                            format: float
+                            example: 999.99
+                OrderStatusUpdate:
+                    type: object
+                    properties:
+                        id:
+                            type: string
+                            format: uuid
+                            example: "550e8400-e29b-41d4-a716-446655440000"
+                        status:
+                            type: string
+                            enum: [waiting_for_payment, completed, canceled]
+                            example: "waiting_for_payment"
+                        createdAt:
+                            type: string
+                            format: date-time
+                            example: "2024-01-15 10:30:00"
+                Order:
+                    type: object
+                    properties:
+                        id:
+                            type: string
+                            format: uuid
+                            example: "550e8400-e29b-41d4-a716-446655440000"
+                        client:
+                            $ref: '#/components/schemas/Client'
+                        ordersProducts:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/OrderProduct'
+                        ordersStatusUpdates:
+                            type: array
+                            items:
+                                $ref: '#/components/schemas/OrderStatusUpdate'
+                        completedAt:
+                            type: string
+                            format: date-time
+                            nullable: true
+                            example: null
+                        createdAt:
+                            type: string
+                            format: date-time
+                            example: "2024-01-15 10:30:00"
+                PaginatedProducts:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Product'
+                PaginatedOrders:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Order'
         paths:
+            /api/v1/health:
+                get:
+                    tags:
+                        - System
+                    summary: Health check
+                    description: Verify the backend is running
+                    responses:
+                        200:
+                            description: Backend is working
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            success:
+                                                type: boolean
+                                                example: true
+                                            message:
+                                                type: string
+                                                example: "Backend is working"
+            
             /api/v1/login:
                 post:
                     tags:
@@ -275,9 +358,9 @@ nelmio_api_doc:
                           required: true
                           schema:
                               type: integer
-                              minimum: 0
-                              example: 0
-                          description: Number of items to skip
+                              minimum: 1
+                              example: 1
+                          description: 1-based offset (first item is 1)
                         - name: limit
                           in: query
                           required: true
@@ -593,7 +676,7 @@ nelmio_api_doc:
                                             data:
                                                 type: array
                                                 items:
-                                                    $ref: '#/components/schemas/Product'
+                                                    $ref: '#/components/schemas/ProductSearchResult'
                         400:
                             description: Validation error
                             content:
@@ -618,7 +701,64 @@ nelmio_api_doc:
                     tags:
                         - Orders
                     summary: Get Paginated Orders
-                    description: Retrieve a paginated list of orders
+                    description: Retrieve a paginated list of orders (Admin only)
+                    security:
+                        - Bearer: []
+                    parameters:
+                        - name: cursor
+                          in: query
+                          required: false
+                          schema:
+                              type: string
+                              format: uuid
+                              example: "550e8400-e29b-41d4-a716-446655440000"
+                          description: Cursor for pagination (UUID)
+                        - name: limit
+                          in: query
+                          required: true
+                          schema:
+                              type: integer
+                              minimum: 1
+                              example: 10
+                          description: Number of items to return
+                    responses:
+                        200:
+                            description: Orders retrieved successfully
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            success:
+                                                type: boolean
+                                                example: true
+                                            data:
+                                                $ref: '#/components/schemas/PaginatedOrders'
+                        400:
+                            description: Validation error
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        401:
+                            description: Unauthorized
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        403:
+                            description: Forbidden
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+            
+            /api/v1/orders/get-my-paginated:
+                get:
+                    tags:
+                        - Orders
+                    summary: Get My Paginated Orders
+                    description: Retrieve a paginated list of orders for the currently authenticated client
                     security:
                         - Bearer: []
                     parameters:
@@ -781,6 +921,13 @@ nelmio_api_doc:
                                             message:
                                                 type: string
                                                 example: "Successfully created order."
+                                            data:
+                                                type: object
+                                                properties:
+                                                    id:
+                                                        type: string
+                                                        format: uuid
+                                                        example: "550e8400-e29b-41d4-a716-446655440000"
                         400:
                             description: Validation error
                             content:
@@ -828,8 +975,8 @@ nelmio_api_doc:
                                     properties:
                                         status:
                                             type: string
-                                            enum: [pending, paid, shipped, delivered, cancelled]
-                                            example: "paid"
+                                            enum: [waiting_for_payment, completed, canceled]
+                                            example: "completed"
                                             description: New order status
                     responses:
                         202:
@@ -859,6 +1006,104 @@ nelmio_api_doc:
                                         $ref: '#/components/schemas/Error'
                         403:
                             description: Forbidden - Admin access required
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+            
+            /api/v1/orders/get-client-details/{id}:
+                get:
+                    tags:
+                        - Orders
+                    summary: Get Client Details
+                    description: Retrieve basic client details (Admin or the same client)
+                    security:
+                        - Bearer: []
+                    parameters:
+                        - name: id
+                          in: path
+                          required: true
+                          schema:
+                              type: string
+                              format: uuid
+                              example: "550e8400-e29b-41d4-a716-446655440000"
+                          description: Client ID (UUID)
+                    responses:
+                        200:
+                            description: Client details retrieved successfully
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            success:
+                                                type: boolean
+                                                example: true
+                                            data:
+                                                $ref: '#/components/schemas/ClientDetails'
+                        401:
+                            description: Unauthorized
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        403:
+                            description: Forbidden
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        404:
+                            description: Client not found
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+            
+            /api/v1/clients/details/{id}:
+                get:
+                    tags:
+                        - Clients
+                    summary: Get Client Details
+                    description: Retrieve basic client details (Admin or the same client)
+                    security:
+                        - Bearer: []
+                    parameters:
+                        - name: id
+                          in: path
+                          required: true
+                          schema:
+                              type: string
+                              format: uuid
+                              example: "550e8400-e29b-41d4-a716-446655440000"
+                          description: Client ID (UUID)
+                    responses:
+                        200:
+                            description: Client details retrieved successfully
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            success:
+                                                type: boolean
+                                                example: true
+                                            data:
+                                                $ref: '#/components/schemas/ClientDetails'
+                        401:
+                            description: Unauthorized
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        403:
+                            description: Forbidden
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/Error'
+                        404:
+                            description: Client not found
                             content:
                                 application/json:
                                     schema:
