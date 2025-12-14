@@ -16,6 +16,7 @@ use App\Module\Commerce\Application\Query\FindClientById\FindClientByIdQuery;
 use App\Module\Commerce\Application\Query\FindOrderByUuid\FindOrderByUuidQuery;
 use App\Module\Commerce\Application\Query\GetPaginatedOrders\GetPaginatedOrdersQuery;
 use App\Module\Commerce\Application\Query\GetPaginatedOrdersForClient\GetPaginatedOrdersForClientQuery;
+use App\Module\Commerce\Application\Voter\ClientsVoter;
 use App\Module\Commerce\Application\Voter\OrdersVoter;
 use App\Module\Commerce\Domain\Repository\ClientRepositoryInterface;
 use App\Module\Commerce\Domain\Repository\OrderRepositoryInterface;
@@ -98,6 +99,15 @@ class OrdersController extends AbstractController
     {
         $queryResult = $this->queryBus->handle(new FindOrderByUuidQuery($uuid));
 
+        if (!$queryResult->success || $queryResult->data === null) {
+            return $this->json([
+                'success' => false,
+                'message' => $queryResult->statusCode === Response::HTTP_NOT_FOUND
+                    ? 'Order not found.'
+                    : 'Something went wrong while showing order.',
+            ], $queryResult->statusCode);
+        }
+
         $order = $this->orderRepository->getReference($queryResult->data['id']);
         if (!$this->isGranted(OrdersVoter::SHOW, $order)) {
             throw $this->createAccessDeniedException();
@@ -167,6 +177,7 @@ class OrdersController extends AbstractController
     }
 
     #[Route('/get-client-details/{id}', methods: [Request::METHOD_GET])]
+    #[IsGranted(ClientsVoter::GET_DETAILS, subject: 'id')]
     public function getClientDetails(string $id): Response
     {
         $queryResult = $this->queryBus->handle(new FindClientByIdQuery($id));
