@@ -12,7 +12,7 @@ COPY . .
 
 RUN bun run build
 
-FROM node:23-alpine
+FROM oven/bun:1.3-alpine
 
 WORKDIR /app
 
@@ -26,4 +26,4 @@ COPY --from=builder /app/.next/static ./.next/static
 
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+CMD ["bun", "server.js"]

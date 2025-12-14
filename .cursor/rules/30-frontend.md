@@ -6,14 +6,14 @@ The frontend is a Next.js application written in TypeScript, using Tailwind CSS 
 
 - **Package Manager**: Bun (`oven/bun:1.3-alpine`)
 - **Build Runtime**: Bun
-- **Production Runtime**: Node.js
+- **Production Runtime**: Bun
 - **Lockfile**: `bun.lock` (binary format)
 
-### Two-Stage Docker Build Strategy (Bun → Node)
+### Two-Stage Docker Build Strategy (Bun → Bun)
 
 The Dockerfile uses a 2-stage build:
 1. **builder stage (Bun)**: `bun install` + `next build` executed via Bun (`bun --bun ...`)
-2. **runtime stage (Node)**: runs the generated Next.js standalone server via `node server.js`
+2. **runtime stage (Bun)**: runs the generated Next.js standalone server via `bun server.js`
 
 #### Bun Build Crash Fix
 
