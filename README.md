@@ -25,6 +25,26 @@ A **simple e-commerce system** built with modern, popular technologies, showcasi
 ![Golang](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white)
 ![Gin](https://img.shields.io/badge/Gin-00ADD8?style=for-the-badge&logo=go&logoColor=white)
 
+## Visual overview
+
+![Frontend landing page (shop UI preview)](docs/images/landing-page.png)
+
+### Emails
+
+![Emails preview (transactional messages rendered via Twig)](docs/images/emails.png)
+
+### Database structure
+
+![Database structure (bounded contexts and separated databases)](docs/images/database-structure.png)
+
+This diagram shows structure of database - separated databases per module/service, with data replication rather than a shared database.
+
+### CI pipeline
+
+![Continuous integration overview](docs/images/continuous-integration.png)
+
+For now CI is only configured for backend.
+
 ## General description
 
 At the beginning, when I started this project to learn Symfony, I made it as a simple monolith. Later, I decided to learn about the modular monolith, and then the hexagonal architecture. That’s how this project has been evolving alongside my experience and curiosity about learning new approaches and technologies.
@@ -55,35 +75,13 @@ cd development && ./build.sh
 - **RabbitMQ Management**: http://localhost:15672
 - **MailHog**: http://localhost:8025
 
-## API Overview
+## API documentation
 
-The API follows RESTful principles with consistent response formats. All protected endpoints require a JWT token in the Authorization header.
+The API is available at http://localhost/api/doc
 
-### Authentication
-```http
-POST /api/v1/register
-POST /api/v1/login
-```
+![API documentation header (Nelmio/Swagger UI)](docs/images/docs-header.png)
 
-### Products
-```http
-GET    /api/v1/products/get-paginated 
-POST   /api/v1/products/create 
-GET    /api/v1/products/show/{slug}
-PUT    /api/v1/products/update/{id}
-DELETE /api/v1/products/delete/{id}
-GET    /api/v1/products/search
-```
-
-### Orders
-```http
-GET  /api/v1/orders/get-paginated
-POST /api/v1/orders/create
-GET  /api/v1/orders/show/{uuid}
-POST /api/v1/orders/change-status/{uuid}
-```
-
-**Full API Documentation**: http://localhost/api/doc
+![API documentation details (example endpoints and schemas)](docs/images/docs-details.png)
 
 ## Testing
 
